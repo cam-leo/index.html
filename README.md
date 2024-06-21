@@ -3,11 +3,16 @@
 
 This repository contains data and SQL queries for analyzing powerlifting competition results.
 
+## Data File (Large)
+
+Due to size limitations on GitHub, the `openpowerlifting.csv` file is hosted externally.
+
+### Download Instructions
+
+To access the powerlifting data, please download it from https://www.kaggle.com/datasets/open-powerlifting/powerlifting-database/data?select=openpowerlifting-2024-01-06-4c732975.csv.
+
 ## Files Included
 
-- **openpowerlifting.csv**: CSV file containing data on powerlifting competition results.
-- **openpowerlifting-2024-01-06-4c732975.csv**: CSV file containing data on powerlifting competition results, more recently updated on January 6.
-- **usapl.csv**: CSV file containing data only on members associated with USAPL federation.
 - **openpl.sql**: SQL queries for analyzing the powerlifting data.
 
 ## Overview
