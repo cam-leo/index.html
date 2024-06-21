@@ -5,7 +5,7 @@ This repository contains data and SQL queries for analyzing powerlifting competi
 
 ## Data File (Large)
 
-Due to size limitations on GitHub, the `openpowerlifting.csv` file is hosted externally.
+Due to size limitations on GitHub, the `openpowerlifting-20204-01-06-4c732975.csv` file is hosted externally.
 
 ### Download Instructions
 
