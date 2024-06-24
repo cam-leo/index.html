@@ -1,4 +1,4 @@
-[2024-06-24T21-37_export.csv](https://github.com/user-attachments/files/15961614/2024-06-24T21-37_export.csv)[2024-06-24T21-35_export.csv](https://github.com/user-attachments/files/15961603/2024-06-24T21-35_export.csv)# LeoCam
+
 # Powerlifting Data Analysis
 
 This repository contains data and SQL queries for analyzing powerlifting competition results.
