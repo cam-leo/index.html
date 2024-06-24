@@ -1,0 +1,1301 @@
+LifterID,TrainingDate,Squat,BenchPress,Deadlift,Program,SleepHours,SocialMediaPosts
+Blaine Sumner,2018-09-03,232,153,212,Smolov,7.8,1
+Blaine Sumner,2018-09-10,246,198,174,Smolov,6.9,4
+Blaine Sumner,2018-09-17,143,174,156,Smolov,8.4,4
+Blaine Sumner,2018-09-24,139,148,118,5/3/1,5.2,1
+Blaine Sumner,2018-10-01,128,165,126,Starting Strength,5.1,1
+Blaine Sumner,2018-10-08,135,62,114,Smolov,8.0,5
+Blaine Sumner,2018-10-15,275,186,289,5/3/1,8.5,1
+Blaine Sumner,2018-10-22,138,140,291,5/3/1,8.4,3
+Blaine Sumner,2018-10-29,233,172,225,Starting Strength,5.7,4
+Blaine Sumner,2018-11-05,141,141,242,Smolov,8.0,0
+Blaine Sumner,2018-11-12,300,67,101,Starting Strength,8.4,2
+Blaine Sumner,2018-11-19,152,134,300,5/3/1,8.4,4
+Blaine Sumner,2018-11-26,243,116,250,Smolov,8.0,0
+Blaine Sumner,2018-12-03,213,136,161,5/3/1,6.1,5
+Blaine Sumner,2018-12-10,203,183,240,5/3/1,6.7,4
+Blaine Sumner,2018-12-17,150,97,334,Smolov,7.7,1
+Blaine Sumner,2018-12-24,145,129,333,5/3/1,6.1,0
+Blaine Sumner,2018-12-31,236,168,290,Smolov,8.3,5
+Blaine Sumner,2019-01-07,287,139,226,5/3/1,6.0,4
+Blaine Sumner,2019-01-14,132,172,329,Starting Strength,5.2,4
+Blaine Sumner,2019-01-21,257,145,125,5/3/1,6.7,0
+Blaine Sumner,2019-01-28,107,197,130,Starting Strength,8.8,1
+Blaine Sumner,2019-02-04,180,100,260,5/3/1,5.3,4
+Blaine Sumner,2019-02-11,299,134,335,Starting Strength,7.0,0
+Blaine Sumner,2019-02-18,266,180,268,Starting Strength,6.9,2
+Blaine Sumner,2019-02-25,279,90,245,Starting Strength,6.8,0
+Blaine Sumner,2018-11-11,286,95,152,5/3/1,6.5,0
+Blaine Sumner,2018-11-18,166,96,312,Starting Strength,6.9,4
+Blaine Sumner,2018-11-25,265,87,253,5/3/1,8.7,5
+Blaine Sumner,2018-12-02,216,155,260,Smolov,7.2,2
+Blaine Sumner,2018-12-09,193,154,164,Starting Strength,8.0,5
+Blaine Sumner,2018-12-16,139,196,133,5/3/1,6.3,2
+Blaine Sumner,2018-12-23,191,132,122,Starting Strength,6.3,5
+Blaine Sumner,2018-12-30,237,79,181,5/3/1,8.5,1
+Blaine Sumner,2019-01-06,245,189,290,Smolov,8.8,3
+Blaine Sumner,2019-01-13,263,143,262,Starting Strength,5.2,0
+Blaine Sumner,2019-01-20,176,117,305,Smolov,7.7,3
+Blaine Sumner,2019-01-27,270,154,155,Starting Strength,7.2,5
+Blaine Sumner,2019-02-03,171,154,283,Starting Strength,5.3,1
+Blaine Sumner,2019-02-10,174,103,228,5/3/1,6.9,0
+Blaine Sumner,2019-02-17,169,156,120,5/3/1,7.4,0
+Blaine Sumner,2019-02-24,254,114,174,Smolov,7.4,4
+Blaine Sumner,2019-03-03,108,183,209,5/3/1,8.7,2
+Blaine Sumner,2019-03-10,281,116,316,Starting Strength,8.3,2
+Blaine Sumner,2019-03-17,297,64,135,5/3/1,7.8,1
+Blaine Sumner,2019-03-24,188,60,231,Smolov,6.3,0
+Blaine Sumner,2019-03-31,226,63,305,Starting Strength,7.0,4
+Blaine Sumner,2019-04-07,235,65,114,Starting Strength,5.7,5
+Blaine Sumner,2019-04-14,178,119,244,5/3/1,8.3,3
+Blaine Sumner,2019-04-21,271,63,273,Smolov,8.2,3
+Blaine Sumner,2019-04-28,276,114,216,5/3/1,7.8,3
+Blaine Sumner,2019-05-05,169,200,311,Smolov,5.4,0
+Blaine Sumner,2014-11-16,291,64,285,5/3/1,6.4,1
+Blaine Sumner,2014-11-23,300,70,173,Starting Strength,7.4,4
+Blaine Sumner,2014-11-30,173,183,268,Starting Strength,7.9,0
+Blaine Sumner,2014-12-07,178,146,156,Starting Strength,6.4,1
+Blaine Sumner,2014-12-14,178,167,236,Smolov,6.2,0
+Blaine Sumner,2014-12-21,206,97,313,5/3/1,5.7,3
+Blaine Sumner,2014-12-28,130,97,212,5/3/1,6.9,2
+Blaine Sumner,2015-01-04,230,65,298,Starting Strength,7.2,2
+Blaine Sumner,2015-01-11,216,183,195,Smolov,5.2,4
+Blaine Sumner,2015-01-18,294,91,153,Starting Strength,5.5,4
+Blaine Sumner,2015-01-25,102,164,318,Smolov,5.8,0
+Blaine Sumner,2015-02-01,102,141,350,Smolov,5.9,1
+Blaine Sumner,2015-02-08,120,63,275,Starting Strength,8.6,3
+Blaine Sumner,2015-02-15,270,158,266,Smolov,8.1,5
+Blaine Sumner,2015-02-22,212,187,214,5/3/1,7.9,4
+Blaine Sumner,2015-03-01,130,115,175,5/3/1,7.9,0
+Blaine Sumner,2015-03-08,196,101,264,5/3/1,5.4,2
+Blaine Sumner,2015-03-15,253,121,219,5/3/1,7.3,4
+Blaine Sumner,2015-03-22,120,166,118,5/3/1,8.3,4
+Blaine Sumner,2015-03-29,262,73,327,Smolov,8.3,1
+Blaine Sumner,2015-04-05,123,148,232,Smolov,7.9,0
+Blaine Sumner,2015-04-12,138,118,346,Starting Strength,7.9,2
+Blaine Sumner,2015-04-19,174,89,134,Smolov,6.3,4
+Blaine Sumner,2015-04-26,183,162,290,Smolov,7.8,2
+Blaine Sumner,2015-05-03,271,99,162,5/3/1,8.6,2
+Blaine Sumner,2015-05-10,128,122,110,Smolov,6.4,0
+Brian Siders,2009-11-16,222,154,190,Starting Strength,5.2,4
+Brian Siders,2009-11-23,203,171,121,5/3/1,8.5,4
+Brian Siders,2009-11-30,152,123,206,Starting Strength,6.5,5
+Brian Siders,2009-12-07,211,176,281,Smolov,5.6,5
+Brian Siders,2009-12-14,178,60,302,5/3/1,7.7,1
+Brian Siders,2009-12-21,289,156,334,Starting Strength,5.3,2
+Brian Siders,2009-12-28,296,108,111,Starting Strength,6.9,3
+Brian Siders,2010-01-04,154,66,102,Smolov,7.9,5
+Brian Siders,2010-01-11,261,86,196,Smolov,7.1,5
+Brian Siders,2010-01-18,194,119,188,5/3/1,6.3,2
+Brian Siders,2010-01-25,176,177,130,5/3/1,7.0,2
+Brian Siders,2010-02-01,266,81,122,Starting Strength,7.5,2
+Brian Siders,2010-02-08,247,163,277,Smolov,7.3,4
+Brian Siders,2010-02-15,136,174,171,Starting Strength,5.7,3
+Brian Siders,2010-02-22,163,126,160,5/3/1,6.1,5
+Brian Siders,2010-03-01,227,159,334,Starting Strength,7.1,2
+Brian Siders,2010-03-08,219,170,269,5/3/1,8.8,3
+Brian Siders,2010-03-15,259,157,229,Starting Strength,5.3,2
+Brian Siders,2010-03-22,146,61,264,5/3/1,9.0,2
+Brian Siders,2010-03-29,164,196,254,5/3/1,8.8,3
+Brian Siders,2010-04-05,223,134,340,5/3/1,7.1,5
+Brian Siders,2010-04-12,227,197,330,5/3/1,7.5,5
+Brian Siders,2010-04-19,219,149,181,Smolov,6.2,4
+Brian Siders,2010-04-26,283,129,246,Starting Strength,6.3,0
+Brian Siders,2010-05-03,300,160,121,Smolov,5.7,1
+Brian Siders,2010-05-10,251,115,261,Starting Strength,5.8,2
+Blaine Sumner,2017-11-19,181,156,325,Starting Strength,6.0,4
+Blaine Sumner,2017-11-26,176,196,170,Smolov,8.5,0
+Blaine Sumner,2017-12-03,239,81,268,Smolov,5.8,5
+Blaine Sumner,2017-12-10,245,101,241,Smolov,8.8,3
+Blaine Sumner,2017-12-17,222,113,261,Smolov,5.1,3
+Blaine Sumner,2017-12-24,277,76,231,5/3/1,6.4,4
+Blaine Sumner,2017-12-31,201,95,350,5/3/1,6.2,5
+Blaine Sumner,2018-01-07,226,169,127,Smolov,5.3,1
+Blaine Sumner,2018-01-14,112,98,161,5/3/1,5.7,1
+Blaine Sumner,2018-01-21,260,119,138,Starting Strength,5.5,3
+Blaine Sumner,2018-01-28,268,119,263,Smolov,8.8,0
+Blaine Sumner,2018-02-04,168,180,269,Smolov,6.4,1
+Blaine Sumner,2018-02-11,179,173,177,Smolov,6.4,3
+Blaine Sumner,2018-02-18,251,149,191,5/3/1,8.9,2
+Blaine Sumner,2018-02-25,121,96,155,Smolov,8.6,4
+Blaine Sumner,2018-03-04,126,66,173,Starting Strength,5.5,2
+Blaine Sumner,2018-03-11,240,108,340,Starting Strength,8.5,0
+Blaine Sumner,2018-03-18,149,122,217,Starting Strength,5.3,0
+Blaine Sumner,2018-03-25,136,78,106,5/3/1,7.8,3
+Blaine Sumner,2018-04-01,183,143,120,Smolov,6.4,3
+Blaine Sumner,2018-04-08,152,69,223,5/3/1,7.5,4
+Blaine Sumner,2018-04-15,213,146,341,5/3/1,5.9,5
+Blaine Sumner,2018-04-22,258,103,311,5/3/1,7.4,4
+Blaine Sumner,2018-04-29,172,158,292,5/3/1,6.8,3
+Blaine Sumner,2018-05-06,270,186,265,Smolov,7.8,2
+Blaine Sumner,2018-05-13,251,90,168,Smolov,7.1,1
+Brian Siders,2007-06-04,289,94,248,Smolov,8.4,0
+Brian Siders,2007-06-11,275,77,301,Starting Strength,8.3,5
+Brian Siders,2007-06-18,223,148,314,5/3/1,6.4,1
+Brian Siders,2007-06-25,251,180,293,Smolov,8.3,0
+Brian Siders,2007-07-02,282,65,137,5/3/1,7.4,4
+Brian Siders,2007-07-09,145,171,111,5/3/1,8.7,5
+Brian Siders,2007-07-16,276,125,305,Smolov,6.6,0
+Brian Siders,2007-07-23,236,80,247,5/3/1,7.0,5
+Brian Siders,2007-07-30,254,191,146,5/3/1,5.8,1
+Brian Siders,2007-08-06,100,74,311,Starting Strength,6.7,1
+Brian Siders,2007-08-13,193,88,193,Smolov,6.2,4
+Brian Siders,2007-08-20,119,67,269,Starting Strength,8.8,3
+Brian Siders,2007-08-27,133,86,111,5/3/1,7.8,4
+Brian Siders,2007-09-03,230,170,333,5/3/1,8.9,2
+Brian Siders,2007-09-10,287,136,206,5/3/1,8.8,4
+Brian Siders,2007-09-17,167,62,222,Starting Strength,6.4,5
+Brian Siders,2007-09-24,221,184,123,Smolov,6.9,0
+Brian Siders,2007-10-01,229,116,313,Starting Strength,6.9,3
+Brian Siders,2007-10-08,157,131,118,5/3/1,8.1,5
+Brian Siders,2007-10-15,183,88,225,Starting Strength,8.9,5
+Brian Siders,2007-10-22,234,76,295,Smolov,6.1,0
+Brian Siders,2007-10-29,147,142,329,Smolov,6.1,5
+Brian Siders,2007-11-05,110,157,217,Starting Strength,5.2,0
+Brian Siders,2007-11-12,117,60,289,5/3/1,8.9,5
+Brian Siders,2007-11-19,220,174,143,Smolov,7.6,5
+Brian Siders,2007-11-26,130,141,145,5/3/1,6.7,0
+Blaine Sumner,2015-11-22,229,168,176,Starting Strength,5.3,5
+Blaine Sumner,2015-11-29,188,183,132,Starting Strength,7.5,2
+Blaine Sumner,2015-12-06,189,142,253,Starting Strength,7.3,1
+Blaine Sumner,2015-12-13,251,88,171,Starting Strength,7.7,2
+Blaine Sumner,2015-12-20,130,93,228,Starting Strength,8.4,2
+Blaine Sumner,2015-12-27,262,183,208,Smolov,7.2,5
+Blaine Sumner,2016-01-03,147,148,132,5/3/1,5.8,4
+Blaine Sumner,2016-01-10,280,160,255,Starting Strength,7.9,1
+Blaine Sumner,2016-01-17,270,154,234,5/3/1,6.0,1
+Blaine Sumner,2016-01-24,258,120,243,Smolov,8.6,5
+Blaine Sumner,2016-01-31,299,140,190,Starting Strength,5.5,5
+Blaine Sumner,2016-02-07,161,98,306,Smolov,6.4,4
+Blaine Sumner,2016-02-14,151,173,334,Smolov,6.8,2
+Blaine Sumner,2016-02-21,263,106,155,5/3/1,6.9,5
+Blaine Sumner,2016-02-28,293,98,113,Smolov,7.5,1
+Blaine Sumner,2016-03-06,210,107,232,5/3/1,8.8,3
+Blaine Sumner,2016-03-13,235,108,260,5/3/1,7.2,5
+Blaine Sumner,2016-03-20,170,64,315,Starting Strength,6.6,5
+Blaine Sumner,2016-03-27,244,195,286,Starting Strength,5.8,5
+Blaine Sumner,2016-04-03,118,196,146,Smolov,6.9,0
+Blaine Sumner,2016-04-10,180,175,177,Smolov,7.3,3
+Blaine Sumner,2016-04-17,291,179,153,Starting Strength,8.2,2
+Blaine Sumner,2016-04-24,298,164,251,5/3/1,8.6,0
+Blaine Sumner,2016-05-01,206,115,148,Smolov,5.5,0
+Blaine Sumner,2016-05-08,200,200,317,Smolov,7.5,5
+Blaine Sumner,2016-05-15,268,171,292,Smolov,8.2,3
+Joseph Cappellino,2018-09-03,124,86,231,Starting Strength,8.8,0
+Joseph Cappellino,2018-09-10,260,71,114,Smolov,7.3,5
+Joseph Cappellino,2018-09-17,142,159,146,5/3/1,5.6,2
+Joseph Cappellino,2018-09-24,120,92,336,5/3/1,8.7,3
+Joseph Cappellino,2018-10-01,156,117,234,5/3/1,6.4,0
+Joseph Cappellino,2018-10-08,266,132,125,5/3/1,6.0,4
+Joseph Cappellino,2018-10-15,149,188,342,Smolov,7.4,1
+Joseph Cappellino,2018-10-22,160,153,183,Smolov,8.7,0
+Joseph Cappellino,2018-10-29,175,69,107,Starting Strength,7.2,1
+Joseph Cappellino,2018-11-05,257,160,226,Smolov,7.2,4
+Joseph Cappellino,2018-11-12,200,173,102,5/3/1,8.3,4
+Joseph Cappellino,2018-11-19,254,173,339,Starting Strength,6.4,2
+Joseph Cappellino,2018-11-26,252,126,293,5/3/1,5.8,1
+Joseph Cappellino,2018-12-03,286,157,152,5/3/1,8.2,3
+Joseph Cappellino,2018-12-10,115,196,156,5/3/1,6.9,2
+Joseph Cappellino,2018-12-17,105,115,248,5/3/1,7.1,3
+Joseph Cappellino,2018-12-24,110,127,197,5/3/1,7.6,2
+Joseph Cappellino,2018-12-31,146,159,269,5/3/1,5.7,1
+Joseph Cappellino,2019-01-07,176,103,137,Starting Strength,5.3,0
+Joseph Cappellino,2019-01-14,194,183,158,5/3/1,5.6,3
+Joseph Cappellino,2019-01-21,168,153,213,5/3/1,8.9,3
+Joseph Cappellino,2019-01-28,108,190,115,5/3/1,8.3,5
+Joseph Cappellino,2019-02-04,152,96,318,5/3/1,5.3,3
+Joseph Cappellino,2019-02-11,210,156,263,Smolov,5.5,5
+Joseph Cappellino,2019-02-18,242,120,163,Starting Strength,5.0,2
+Joseph Cappellino,2019-02-25,172,160,237,Smolov,5.7,4
+Brian Siders,2005-10-31,191,70,293,Starting Strength,5.9,2
+Brian Siders,2005-11-07,201,183,164,5/3/1,5.9,3
+Brian Siders,2005-11-14,174,194,193,Starting Strength,5.8,4
+Brian Siders,2005-11-21,208,111,158,Starting Strength,5.3,3
+Brian Siders,2005-11-28,113,77,269,Smolov,7.2,2
+Brian Siders,2005-12-05,245,118,134,Starting Strength,7.6,1
+Brian Siders,2005-12-12,231,130,211,Starting Strength,6.5,2
+Brian Siders,2005-12-19,174,115,212,Starting Strength,7.4,2
+Brian Siders,2005-12-26,122,73,122,5/3/1,6.7,4
+Brian Siders,2006-01-02,244,186,190,Starting Strength,7.2,1
+Brian Siders,2006-01-09,226,198,107,Smolov,6.3,1
+Brian Siders,2006-01-16,218,122,301,Starting Strength,8.8,2
+Brian Siders,2006-01-23,158,171,191,5/3/1,6.7,0
+Brian Siders,2006-01-30,221,172,243,Starting Strength,7.9,0
+Brian Siders,2006-02-06,154,144,120,Starting Strength,5.3,0
+Brian Siders,2006-02-13,199,65,285,Smolov,6.8,4
+Brian Siders,2006-02-20,155,71,193,5/3/1,8.2,4
+Brian Siders,2006-02-27,194,77,194,Starting Strength,5.1,3
+Brian Siders,2006-03-06,136,135,259,5/3/1,8.2,3
+Brian Siders,2006-03-13,283,156,290,Smolov,8.1,0
+Brian Siders,2006-03-20,124,133,274,5/3/1,7.0,2
+Brian Siders,2006-03-27,128,167,181,5/3/1,6.5,2
+Brian Siders,2006-04-03,152,118,263,Smolov,7.7,0
+Brian Siders,2006-04-10,116,80,309,Smolov,7.4,4
+Brian Siders,2006-04-17,129,84,267,Smolov,7.3,4
+Brian Siders,2006-04-24,100,142,194,Smolov,8.5,5
+Joseph Cappellino,2018-11-11,212,78,212,Smolov,8.6,3
+Joseph Cappellino,2018-11-18,142,186,195,5/3/1,5.2,5
+Joseph Cappellino,2018-11-25,221,154,160,Smolov,7.8,0
+Joseph Cappellino,2018-12-02,248,198,276,5/3/1,8.5,5
+Joseph Cappellino,2018-12-09,163,118,184,5/3/1,6.6,3
+Joseph Cappellino,2018-12-16,218,81,106,Smolov,8.9,1
+Joseph Cappellino,2018-12-23,169,174,245,Starting Strength,7.8,3
+Joseph Cappellino,2018-12-30,278,61,155,Smolov,6.3,5
+Joseph Cappellino,2019-01-06,227,106,154,Starting Strength,6.6,0
+Joseph Cappellino,2019-01-13,102,190,145,Starting Strength,7.4,4
+Joseph Cappellino,2019-01-20,126,162,240,Smolov,8.1,1
+Joseph Cappellino,2019-01-27,198,153,307,Starting Strength,7.7,0
+Joseph Cappellino,2019-02-03,181,63,295,Starting Strength,7.3,0
+Joseph Cappellino,2019-02-10,296,178,299,5/3/1,7.9,5
+Joseph Cappellino,2019-02-17,237,165,228,5/3/1,5.1,4
+Joseph Cappellino,2019-02-24,295,70,263,Smolov,5.9,0
+Joseph Cappellino,2019-03-03,219,74,286,Starting Strength,8.0,5
+Joseph Cappellino,2019-03-10,226,121,149,Starting Strength,7.9,2
+Joseph Cappellino,2019-03-17,160,149,123,Starting Strength,6.2,3
+Joseph Cappellino,2019-03-24,167,90,141,5/3/1,6.6,3
+Joseph Cappellino,2019-03-31,251,103,209,5/3/1,6.5,2
+Joseph Cappellino,2019-04-07,119,111,187,5/3/1,8.2,4
+Joseph Cappellino,2019-04-14,261,69,269,5/3/1,6.8,2
+Joseph Cappellino,2019-04-21,275,60,245,5/3/1,6.1,5
+Joseph Cappellino,2019-04-28,148,175,118,5/3/1,7.2,0
+Joseph Cappellino,2019-05-05,272,92,259,Starting Strength,5.2,5
+Brian Siders,2007-12-15,169,99,290,Starting Strength,6.5,3
+Brian Siders,2007-12-22,181,97,240,Smolov,5.3,3
+Brian Siders,2007-12-29,230,137,283,Starting Strength,7.5,5
+Brian Siders,2008-01-05,120,147,178,5/3/1,5.7,5
+Brian Siders,2008-01-12,227,69,309,Smolov,7.5,1
+Brian Siders,2008-01-19,167,80,107,Starting Strength,7.4,3
+Brian Siders,2008-01-26,197,80,168,Smolov,5.8,5
+Brian Siders,2008-02-02,212,192,177,Starting Strength,6.1,2
+Brian Siders,2008-02-09,105,132,342,Smolov,6.2,0
+Brian Siders,2008-02-16,246,136,322,Smolov,7.4,2
+Brian Siders,2008-02-23,296,196,214,5/3/1,5.2,0
+Brian Siders,2008-03-01,129,170,146,Starting Strength,8.8,0
+Brian Siders,2008-03-08,232,67,269,Smolov,8.2,1
+Brian Siders,2008-03-15,234,150,167,Smolov,5.5,1
+Brian Siders,2008-03-22,182,108,131,5/3/1,6.4,1
+Brian Siders,2008-03-29,191,196,318,5/3/1,9.0,3
+Brian Siders,2008-04-05,289,102,167,Smolov,9.0,3
+Brian Siders,2008-04-12,176,63,308,Smolov,5.2,1
+Brian Siders,2008-04-19,231,101,236,5/3/1,6.0,3
+Brian Siders,2008-04-26,202,177,196,Starting Strength,8.3,3
+Brian Siders,2008-05-03,150,115,255,5/3/1,7.6,5
+Brian Siders,2008-05-10,223,73,264,5/3/1,5.4,0
+Brian Siders,2008-05-17,163,111,136,Starting Strength,7.9,5
+Brian Siders,2008-05-24,264,134,193,Smolov,5.2,3
+Brian Siders,2008-05-31,194,149,294,5/3/1,6.0,2
+Brian Siders,2008-06-07,236,150,262,Starting Strength,5.6,0
+Joseph Cappellino,2015-11-22,274,130,238,Starting Strength,7.1,0
+Joseph Cappellino,2015-11-29,198,152,310,Smolov,5.9,5
+Joseph Cappellino,2015-12-06,250,78,137,Starting Strength,8.2,5
+Joseph Cappellino,2015-12-13,110,120,237,5/3/1,7.9,5
+Joseph Cappellino,2015-12-20,291,162,296,Starting Strength,8.2,5
+Joseph Cappellino,2015-12-27,171,119,101,5/3/1,8.3,5
+Joseph Cappellino,2016-01-03,167,96,167,Starting Strength,7.5,4
+Joseph Cappellino,2016-01-10,211,164,121,5/3/1,8.8,5
+Joseph Cappellino,2016-01-17,198,183,217,Smolov,6.7,5
+Joseph Cappellino,2016-01-24,142,158,121,Starting Strength,8.6,5
+Joseph Cappellino,2016-01-31,248,116,342,Starting Strength,5.9,0
+Joseph Cappellino,2016-02-07,220,162,208,Starting Strength,8.6,2
+Joseph Cappellino,2016-02-14,254,150,205,5/3/1,6.8,2
+Joseph Cappellino,2016-02-21,183,147,266,Smolov,5.8,4
+Joseph Cappellino,2016-02-28,166,154,203,Starting Strength,5.6,4
+Joseph Cappellino,2016-03-06,199,169,303,Smolov,5.2,3
+Joseph Cappellino,2016-03-13,275,196,230,5/3/1,6.4,4
+Joseph Cappellino,2016-03-20,192,113,208,Starting Strength,6.8,0
+Joseph Cappellino,2016-03-27,181,118,158,5/3/1,6.9,0
+Joseph Cappellino,2016-04-03,245,182,131,Smolov,8.0,3
+Joseph Cappellino,2016-04-10,280,166,239,Smolov,7.8,2
+Joseph Cappellino,2016-04-17,181,166,305,Starting Strength,6.9,1
+Joseph Cappellino,2016-04-24,292,151,295,5/3/1,6.4,1
+Joseph Cappellino,2016-05-01,155,71,191,Smolov,8.3,5
+Joseph Cappellino,2016-05-08,245,97,170,5/3/1,7.7,5
+Joseph Cappellino,2016-05-15,166,118,294,Starting Strength,5.4,1
+Brian Siders,2006-01-07,199,74,193,Starting Strength,6.4,2
+Brian Siders,2006-01-14,243,183,295,5/3/1,7.8,2
+Brian Siders,2006-01-21,235,142,152,5/3/1,8.1,1
+Brian Siders,2006-01-28,235,185,181,5/3/1,5.8,0
+Brian Siders,2006-02-04,226,136,301,Smolov,5.7,4
+Brian Siders,2006-02-11,195,125,195,Starting Strength,5.6,3
+Brian Siders,2006-02-18,166,123,179,Smolov,9.0,3
+Brian Siders,2006-02-25,176,101,226,Starting Strength,5.4,2
+Brian Siders,2006-03-04,281,65,299,5/3/1,6.2,5
+Brian Siders,2006-03-11,140,182,308,5/3/1,8.3,1
+Brian Siders,2006-03-18,149,93,327,Starting Strength,8.9,5
+Brian Siders,2006-03-25,154,181,161,5/3/1,7.7,0
+Brian Siders,2006-04-01,287,133,233,Smolov,6.2,3
+Brian Siders,2006-04-08,120,124,137,Starting Strength,5.9,5
+Brian Siders,2006-04-15,241,95,127,5/3/1,6.9,2
+Brian Siders,2006-04-22,229,168,252,5/3/1,7.1,4
+Brian Siders,2006-04-29,295,75,334,Starting Strength,8.7,2
+Brian Siders,2006-05-06,215,160,110,Smolov,8.1,4
+Brian Siders,2006-05-13,277,72,257,Starting Strength,6.0,4
+Brian Siders,2006-05-20,178,155,306,Smolov,8.1,5
+Brian Siders,2006-05-27,295,187,129,Starting Strength,7.8,5
+Brian Siders,2006-06-03,195,109,301,5/3/1,8.8,2
+Brian Siders,2006-06-10,202,117,308,Smolov,7.9,3
+Brian Siders,2006-06-17,147,173,241,Starting Strength,6.6,1
+Brian Siders,2006-06-24,270,62,100,5/3/1,7.6,5
+Brian Siders,2006-07-01,221,137,187,Starting Strength,5.2,1
+Joseph Cappellino,2014-11-16,116,192,248,Starting Strength,5.0,5
+Joseph Cappellino,2014-11-23,111,106,104,5/3/1,5.7,2
+Joseph Cappellino,2014-11-30,189,97,136,Starting Strength,5.7,0
+Joseph Cappellino,2014-12-07,211,175,156,Smolov,8.7,3
+Joseph Cappellino,2014-12-14,258,136,170,5/3/1,5.8,4
+Joseph Cappellino,2014-12-21,168,69,101,Starting Strength,7.3,5
+Joseph Cappellino,2014-12-28,279,180,157,Starting Strength,8.4,3
+Joseph Cappellino,2015-01-04,147,147,111,5/3/1,7.1,2
+Joseph Cappellino,2015-01-11,142,170,348,Starting Strength,5.2,3
+Joseph Cappellino,2015-01-18,281,181,123,Smolov,5.6,4
+Joseph Cappellino,2015-01-25,124,198,282,Starting Strength,7.0,5
+Joseph Cappellino,2015-02-01,104,103,307,Smolov,5.5,5
+Joseph Cappellino,2015-02-08,134,81,240,Smolov,6.7,1
+Joseph Cappellino,2015-02-15,240,64,236,5/3/1,7.6,4
+Joseph Cappellino,2015-02-22,186,196,275,Starting Strength,5.8,1
+Joseph Cappellino,2015-03-01,297,199,263,Smolov,6.9,0
+Joseph Cappellino,2015-03-08,212,166,241,Starting Strength,7.8,3
+Joseph Cappellino,2015-03-15,253,195,266,Smolov,5.8,5
+Joseph Cappellino,2015-03-22,125,178,314,Starting Strength,8.0,4
+Joseph Cappellino,2015-03-29,175,103,191,Starting Strength,5.2,2
+Joseph Cappellino,2015-04-05,227,99,264,Starting Strength,6.6,0
+Joseph Cappellino,2015-04-12,187,98,298,Smolov,7.3,1
+Joseph Cappellino,2015-04-19,297,136,162,5/3/1,8.6,4
+Joseph Cappellino,2015-04-26,299,193,297,Starting Strength,8.1,5
+Joseph Cappellino,2015-05-03,205,88,219,Starting Strength,5.2,0
+Joseph Cappellino,2015-05-10,141,72,336,Smolov,8.8,2
+Brian Siders,2004-11-07,232,165,169,Smolov,7.0,1
+Brian Siders,2004-11-14,199,134,181,Starting Strength,7.2,0
+Brian Siders,2004-11-21,276,178,183,Smolov,5.2,5
+Brian Siders,2004-11-28,248,89,334,Starting Strength,5.3,3
+Brian Siders,2004-12-05,181,193,279,5/3/1,8.8,3
+Brian Siders,2004-12-12,231,173,333,5/3/1,6.6,4
+Brian Siders,2004-12-19,160,65,260,5/3/1,8.6,1
+Brian Siders,2004-12-26,124,118,180,Starting Strength,7.7,2
+Brian Siders,2005-01-02,101,194,124,5/3/1,6.4,1
+Brian Siders,2005-01-09,186,119,103,Smolov,8.8,1
+Brian Siders,2005-01-16,259,89,207,5/3/1,8.3,2
+Brian Siders,2005-01-23,175,98,128,Smolov,5.1,5
+Brian Siders,2005-01-30,151,83,288,Smolov,7.3,4
+Brian Siders,2005-02-06,201,134,234,5/3/1,7.7,0
+Brian Siders,2005-02-13,275,193,150,Smolov,8.8,5
+Brian Siders,2005-02-20,175,141,228,Starting Strength,6.3,0
+Brian Siders,2005-02-27,242,118,175,Smolov,5.5,0
+Brian Siders,2005-03-06,193,167,269,5/3/1,9.0,4
+Brian Siders,2005-03-13,199,85,237,Starting Strength,7.2,4
+Brian Siders,2005-03-20,163,116,274,Starting Strength,8.2,5
+Brian Siders,2005-03-27,206,114,279,Smolov,5.7,0
+Brian Siders,2005-04-03,226,90,321,5/3/1,8.2,2
+Brian Siders,2005-04-10,281,190,144,5/3/1,6.3,2
+Brian Siders,2005-04-17,160,124,261,Starting Strength,6.2,0
+Brian Siders,2005-04-24,139,169,153,Starting Strength,8.4,1
+Brian Siders,2005-05-01,173,62,291,Starting Strength,6.8,4
+Joseph Cappellino,2013-12-22,290,140,137,Smolov,7.4,0
+Joseph Cappellino,2013-12-29,135,129,251,Smolov,5.4,1
+Joseph Cappellino,2014-01-05,243,194,259,Starting Strength,8.1,3
+Joseph Cappellino,2014-01-12,169,74,259,5/3/1,6.2,3
+Joseph Cappellino,2014-01-19,164,199,219,Starting Strength,8.6,2
+Joseph Cappellino,2014-01-26,216,105,298,5/3/1,5.1,2
+Joseph Cappellino,2014-02-02,267,132,317,5/3/1,7.4,5
+Joseph Cappellino,2014-02-09,175,122,227,Starting Strength,5.3,2
+Joseph Cappellino,2014-02-16,136,198,343,Starting Strength,5.8,2
+Joseph Cappellino,2014-02-23,247,74,193,Starting Strength,5.4,5
+Joseph Cappellino,2014-03-02,189,157,113,Starting Strength,8.9,4
+Joseph Cappellino,2014-03-09,277,189,175,5/3/1,8.1,3
+Joseph Cappellino,2014-03-16,120,158,271,5/3/1,8.6,4
+Joseph Cappellino,2014-03-23,276,122,156,Smolov,8.7,4
+Joseph Cappellino,2014-03-30,288,80,264,Starting Strength,7.6,3
+Joseph Cappellino,2014-04-06,254,150,194,Smolov,7.9,0
+Joseph Cappellino,2014-04-13,255,173,301,Smolov,5.4,1
+Joseph Cappellino,2014-04-20,111,181,319,5/3/1,8.2,1
+Joseph Cappellino,2014-04-27,116,151,212,Smolov,6.1,2
+Joseph Cappellino,2014-05-04,184,182,135,Smolov,8.0,4
+Joseph Cappellino,2014-05-11,160,189,214,Smolov,8.2,5
+Joseph Cappellino,2014-05-18,182,160,147,Smolov,5.1,2
+Joseph Cappellino,2014-05-25,170,174,270,Smolov,7.2,1
+Joseph Cappellino,2014-06-01,184,141,334,Smolov,5.5,2
+Joseph Cappellino,2014-06-08,260,106,237,Starting Strength,7.2,0
+Joseph Cappellino,2014-06-15,223,168,328,5/3/1,7.5,2
+Joseph Cappellino,2020-12-16,175,124,198,Smolov,7.6,3
+Joseph Cappellino,2020-12-23,104,100,232,Starting Strength,6.0,5
+Joseph Cappellino,2020-12-30,163,164,100,5/3/1,5.5,0
+Joseph Cappellino,2021-01-06,283,72,212,Starting Strength,8.7,4
+Joseph Cappellino,2021-01-13,128,125,268,5/3/1,5.5,4
+Joseph Cappellino,2021-01-20,158,183,100,Starting Strength,5.2,1
+Joseph Cappellino,2021-01-27,246,195,250,Starting Strength,8.4,3
+Joseph Cappellino,2021-02-03,219,88,290,Starting Strength,6.9,2
+Joseph Cappellino,2021-02-10,206,168,274,Smolov,5.3,1
+Joseph Cappellino,2021-02-17,194,128,209,Smolov,5.9,5
+Joseph Cappellino,2021-02-24,214,192,216,Smolov,7.7,5
+Joseph Cappellino,2021-03-03,141,176,260,Smolov,5.3,4
+Joseph Cappellino,2021-03-10,220,112,343,Smolov,6.3,2
+Joseph Cappellino,2021-03-17,230,62,127,Smolov,8.6,4
+Joseph Cappellino,2021-03-24,150,113,264,Starting Strength,5.4,3
+Joseph Cappellino,2021-03-31,244,189,219,5/3/1,5.8,0
+Joseph Cappellino,2021-04-07,223,183,241,Smolov,8.0,4
+Joseph Cappellino,2021-04-14,281,185,214,5/3/1,8.5,4
+Joseph Cappellino,2021-04-21,149,103,242,Starting Strength,5.7,4
+Joseph Cappellino,2021-04-28,135,151,154,Starting Strength,6.5,3
+Joseph Cappellino,2021-05-05,215,192,251,Starting Strength,7.0,3
+Joseph Cappellino,2021-05-12,102,162,151,Smolov,6.9,0
+Joseph Cappellino,2021-05-19,279,198,298,Starting Strength,7.3,1
+Joseph Cappellino,2021-05-26,193,195,162,5/3/1,6.5,2
+Joseph Cappellino,2021-06-02,297,77,117,Starting Strength,8.6,2
+Joseph Cappellino,2021-06-09,129,96,322,Smolov,8.7,1
+Brian Siders,2004-01-11,154,182,130,Smolov,6.4,0
+Brian Siders,2004-01-18,194,161,144,Starting Strength,5.3,0
+Brian Siders,2004-01-25,170,157,144,Starting Strength,5.9,4
+Brian Siders,2004-02-01,173,121,307,Starting Strength,8.7,4
+Brian Siders,2004-02-08,216,100,280,Smolov,7.3,1
+Brian Siders,2004-02-15,199,102,116,Smolov,5.6,3
+Brian Siders,2004-02-22,188,165,122,Smolov,6.9,2
+Brian Siders,2004-02-29,206,68,245,5/3/1,7.6,4
+Brian Siders,2004-03-07,170,160,239,Starting Strength,5.2,0
+Brian Siders,2004-03-14,157,190,118,Starting Strength,6.0,3
+Brian Siders,2004-03-21,107,148,107,Starting Strength,5.6,3
+Brian Siders,2004-03-28,195,169,164,5/3/1,5.1,5
+Brian Siders,2004-04-04,286,184,151,Smolov,5.7,4
+Brian Siders,2004-04-11,194,190,260,Starting Strength,7.6,1
+Brian Siders,2004-04-18,228,192,271,Smolov,7.4,3
+Brian Siders,2004-04-25,236,85,218,Starting Strength,8.4,3
+Brian Siders,2004-05-02,141,117,196,Smolov,7.0,1
+Brian Siders,2004-05-09,272,178,269,5/3/1,5.6,0
+Brian Siders,2004-05-16,188,167,109,Starting Strength,6.3,1
+Brian Siders,2004-05-23,265,187,322,5/3/1,6.6,5
+Brian Siders,2004-05-30,252,122,155,Smolov,6.5,1
+Brian Siders,2004-06-06,141,147,105,5/3/1,7.0,0
+Brian Siders,2004-06-13,232,101,295,Starting Strength,6.1,0
+Brian Siders,2004-06-20,250,193,297,Smolov,8.3,5
+Brian Siders,2004-06-27,246,65,349,Starting Strength,7.0,0
+Brian Siders,2004-07-04,262,182,329,Starting Strength,7.0,5
+Ray Williams #1,2018-09-03,185,153,185,Starting Strength,8.6,3
+Ray Williams #1,2018-09-10,252,172,310,5/3/1,6.6,0
+Ray Williams #1,2018-09-17,110,134,328,5/3/1,7.7,2
+Ray Williams #1,2018-09-24,224,178,145,Smolov,5.3,0
+Ray Williams #1,2018-10-01,261,75,145,Starting Strength,8.8,5
+Ray Williams #1,2018-10-08,118,144,152,5/3/1,5.2,0
+Ray Williams #1,2018-10-15,268,132,309,5/3/1,6.6,0
+Ray Williams #1,2018-10-22,202,111,142,Smolov,8.5,2
+Ray Williams #1,2018-10-29,136,188,302,Smolov,5.6,4
+Ray Williams #1,2018-11-05,173,93,252,Smolov,5.8,2
+Ray Williams #1,2018-11-12,239,184,220,Smolov,7.8,2
+Ray Williams #1,2018-11-19,242,129,258,5/3/1,5.2,2
+Ray Williams #1,2018-11-26,199,87,179,Smolov,5.3,1
+Ray Williams #1,2018-12-03,279,113,227,5/3/1,5.6,4
+Ray Williams #1,2018-12-10,268,113,201,Smolov,5.1,0
+Ray Williams #1,2018-12-17,283,117,287,Starting Strength,5.9,2
+Ray Williams #1,2018-12-24,145,61,186,Smolov,8.3,0
+Ray Williams #1,2018-12-31,272,162,167,Starting Strength,5.1,1
+Ray Williams #1,2019-01-07,262,156,177,Smolov,5.3,0
+Ray Williams #1,2019-01-14,107,128,286,Smolov,5.2,2
+Ray Williams #1,2019-01-21,269,150,319,Starting Strength,5.2,4
+Ray Williams #1,2019-01-28,249,126,258,Smolov,5.7,3
+Ray Williams #1,2019-02-04,118,118,173,Smolov,7.2,0
+Ray Williams #1,2019-02-11,282,114,207,5/3/1,7.8,5
+Ray Williams #1,2019-02-18,177,106,148,Starting Strength,5.0,5
+Ray Williams #1,2019-02-25,181,187,242,5/3/1,8.3,5
+Cooper Wage,2015-11-22,272,112,250,Starting Strength,8.5,4
+Cooper Wage,2015-11-29,220,172,271,Smolov,5.5,4
+Cooper Wage,2015-12-06,121,79,283,5/3/1,5.3,4
+Cooper Wage,2015-12-13,240,186,146,5/3/1,6.8,1
+Cooper Wage,2015-12-20,109,150,114,Starting Strength,5.3,2
+Cooper Wage,2015-12-27,300,86,283,5/3/1,8.7,0
+Cooper Wage,2016-01-03,231,87,334,Starting Strength,5.1,1
+Cooper Wage,2016-01-10,162,155,317,Starting Strength,6.1,5
+Cooper Wage,2016-01-17,289,144,221,5/3/1,7.8,4
+Cooper Wage,2016-01-24,113,95,216,5/3/1,5.2,4
+Cooper Wage,2016-01-31,185,112,139,5/3/1,7.5,2
+Cooper Wage,2016-02-07,241,144,100,Smolov,7.8,0
+Cooper Wage,2016-02-14,179,71,166,Smolov,8.3,3
+Cooper Wage,2016-02-21,147,92,187,Starting Strength,6.5,4
+Cooper Wage,2016-02-28,182,110,216,5/3/1,8.3,1
+Cooper Wage,2016-03-06,292,75,326,Smolov,8.1,3
+Cooper Wage,2016-03-13,184,97,190,Smolov,6.1,5
+Cooper Wage,2016-03-20,254,178,168,Smolov,6.5,1
+Cooper Wage,2016-03-27,143,195,326,5/3/1,6.8,0
+Cooper Wage,2016-04-03,232,94,343,5/3/1,8.7,2
+Cooper Wage,2016-04-10,140,108,286,Smolov,6.7,5
+Cooper Wage,2016-04-17,134,180,131,Starting Strength,8.1,2
+Cooper Wage,2016-04-24,243,146,134,5/3/1,5.7,5
+Cooper Wage,2016-05-01,140,138,144,5/3/1,5.1,5
+Cooper Wage,2016-05-08,124,69,207,Smolov,6.5,2
+Cooper Wage,2016-05-15,298,141,255,Smolov,7.2,2
+Ray Williams #1,2017-09-04,140,124,276,Starting Strength,8.3,3
+Ray Williams #1,2017-09-11,187,71,257,5/3/1,6.7,2
+Ray Williams #1,2017-09-18,252,72,270,Starting Strength,8.8,1
+Ray Williams #1,2017-09-25,299,132,301,Smolov,5.5,5
+Ray Williams #1,2017-10-02,261,180,256,Starting Strength,8.8,1
+Ray Williams #1,2017-10-09,278,171,310,Smolov,8.4,1
+Ray Williams #1,2017-10-16,103,105,271,5/3/1,8.5,2
+Ray Williams #1,2017-10-23,194,62,339,Starting Strength,6.1,5
+Ray Williams #1,2017-10-30,206,180,279,Starting Strength,8.3,5
+Ray Williams #1,2017-11-06,148,123,166,5/3/1,5.0,1
+Ray Williams #1,2017-11-13,288,102,118,5/3/1,6.6,2
+Ray Williams #1,2017-11-20,105,200,266,Starting Strength,5.6,4
+Ray Williams #1,2017-11-27,120,82,169,Smolov,5.2,3
+Ray Williams #1,2017-12-04,231,87,257,Smolov,5.3,4
+Ray Williams #1,2017-12-11,203,162,258,Starting Strength,6.0,4
+Ray Williams #1,2017-12-18,124,194,335,Starting Strength,6.3,3
+Ray Williams #1,2017-12-25,149,72,252,Starting Strength,6.1,3
+Ray Williams #1,2018-01-01,293,198,175,5/3/1,7.0,4
+Ray Williams #1,2018-01-08,119,125,111,Smolov,7.7,2
+Ray Williams #1,2018-01-15,167,75,298,5/3/1,5.6,1
+Ray Williams #1,2018-01-22,277,179,286,5/3/1,6.1,5
+Ray Williams #1,2018-01-29,199,61,191,Smolov,9.0,1
+Ray Williams #1,2018-02-05,108,158,323,Starting Strength,6.7,0
+Ray Williams #1,2018-02-12,195,113,282,Smolov,6.8,1
+Ray Williams #1,2018-02-19,179,168,202,Starting Strength,7.1,3
+Ray Williams #1,2018-02-26,187,110,288,Starting Strength,8.5,3
+Cooper Wage,2015-07-20,280,123,217,Starting Strength,8.1,4
+Cooper Wage,2015-07-27,211,128,350,5/3/1,7.5,0
+Cooper Wage,2015-08-03,136,71,196,Smolov,7.6,2
+Cooper Wage,2015-08-10,299,66,140,Starting Strength,6.0,5
+Cooper Wage,2015-08-17,187,148,222,Smolov,6.9,4
+Cooper Wage,2015-08-24,136,69,329,Starting Strength,8.2,4
+Cooper Wage,2015-08-31,173,129,327,5/3/1,5.1,0
+Cooper Wage,2015-09-07,260,68,315,5/3/1,5.4,3
+Cooper Wage,2015-09-14,300,120,160,5/3/1,8.9,1
+Cooper Wage,2015-09-21,266,158,240,Smolov,6.3,0
+Cooper Wage,2015-09-28,136,143,175,5/3/1,7.5,5
+Cooper Wage,2015-10-05,260,105,307,Smolov,6.0,5
+Cooper Wage,2015-10-12,166,126,126,Starting Strength,5.6,2
+Cooper Wage,2015-10-19,166,185,280,Starting Strength,6.9,5
+Cooper Wage,2015-10-26,143,161,205,Smolov,8.4,3
+Cooper Wage,2015-11-02,101,110,141,Starting Strength,7.7,5
+Cooper Wage,2015-11-09,235,172,250,5/3/1,7.1,5
+Cooper Wage,2015-11-16,294,119,231,Smolov,6.0,5
+Cooper Wage,2015-11-23,226,123,217,5/3/1,6.6,5
+Cooper Wage,2015-11-30,257,121,336,5/3/1,6.4,5
+Cooper Wage,2015-12-07,110,110,223,5/3/1,7.6,5
+Cooper Wage,2015-12-14,161,166,196,Smolov,6.2,0
+Cooper Wage,2015-12-21,165,147,238,5/3/1,5.1,3
+Cooper Wage,2015-12-28,203,83,341,Smolov,6.4,4
+Cooper Wage,2016-01-04,149,124,102,Starting Strength,8.0,3
+Cooper Wage,2016-01-11,109,134,204,Smolov,5.2,3
+Joseph Cappellino,2017-11-19,154,85,321,5/3/1,7.2,2
+Joseph Cappellino,2017-11-26,190,167,336,5/3/1,8.0,5
+Joseph Cappellino,2017-12-03,195,155,161,Smolov,8.1,1
+Joseph Cappellino,2017-12-10,212,152,243,Smolov,8.8,0
+Joseph Cappellino,2017-12-17,163,150,315,Smolov,8.9,4
+Joseph Cappellino,2017-12-24,229,166,168,Smolov,6.1,3
+Joseph Cappellino,2017-12-31,235,180,185,5/3/1,8.6,5
+Joseph Cappellino,2018-01-07,154,93,113,Smolov,7.0,1
+Joseph Cappellino,2018-01-14,127,110,238,5/3/1,7.5,4
+Joseph Cappellino,2018-01-21,116,186,256,Starting Strength,8.9,1
+Joseph Cappellino,2018-01-28,227,141,327,Smolov,6.0,4
+Joseph Cappellino,2018-02-04,300,110,180,Starting Strength,7.9,3
+Joseph Cappellino,2018-02-11,222,79,145,5/3/1,7.1,2
+Joseph Cappellino,2018-02-18,123,183,159,5/3/1,7.6,0
+Joseph Cappellino,2018-02-25,281,178,209,Starting Strength,7.5,2
+Joseph Cappellino,2018-03-04,178,87,321,Smolov,7.7,3
+Joseph Cappellino,2018-03-11,108,162,317,5/3/1,8.2,2
+Joseph Cappellino,2018-03-18,240,152,152,Starting Strength,6.3,4
+Joseph Cappellino,2018-03-25,147,102,173,Smolov,6.3,1
+Joseph Cappellino,2018-04-01,125,184,299,Smolov,6.0,1
+Joseph Cappellino,2018-04-08,118,135,210,Starting Strength,5.7,2
+Joseph Cappellino,2018-04-15,114,178,136,5/3/1,8.8,1
+Joseph Cappellino,2018-04-22,169,172,148,Starting Strength,6.3,4
+Joseph Cappellino,2018-04-29,264,90,287,Starting Strength,7.0,0
+Joseph Cappellino,2018-05-06,177,121,303,Smolov,7.5,5
+Joseph Cappellino,2018-05-13,211,160,327,5/3/1,6.8,3
+Blaine Sumner,2011-12-25,147,185,257,Starting Strength,7.9,5
+Blaine Sumner,2012-01-01,190,161,281,Starting Strength,8.1,3
+Blaine Sumner,2012-01-08,242,155,126,5/3/1,7.9,5
+Blaine Sumner,2012-01-15,180,92,330,Smolov,8.2,2
+Blaine Sumner,2012-01-22,129,118,129,Starting Strength,8.0,3
+Blaine Sumner,2012-01-29,249,147,195,5/3/1,8.9,2
+Blaine Sumner,2012-02-05,269,184,276,Smolov,6.0,5
+Blaine Sumner,2012-02-12,223,180,202,Starting Strength,8.5,4
+Blaine Sumner,2012-02-19,158,175,278,5/3/1,8.3,3
+Blaine Sumner,2012-02-26,133,95,103,5/3/1,8.0,1
+Blaine Sumner,2012-03-04,218,199,226,Starting Strength,6.0,1
+Blaine Sumner,2012-03-11,260,199,144,5/3/1,6.0,4
+Blaine Sumner,2012-03-18,139,164,240,Starting Strength,8.9,3
+Blaine Sumner,2012-03-25,204,173,265,Starting Strength,7.9,5
+Blaine Sumner,2012-04-01,195,68,103,Starting Strength,8.7,0
+Blaine Sumner,2012-04-08,285,155,112,Starting Strength,7.9,1
+Blaine Sumner,2012-04-15,299,64,245,Smolov,8.9,5
+Blaine Sumner,2012-04-22,182,120,259,Starting Strength,6.1,2
+Blaine Sumner,2012-04-29,163,70,286,Smolov,6.9,4
+Blaine Sumner,2012-05-06,290,109,276,5/3/1,7.9,1
+Blaine Sumner,2012-05-13,148,121,114,Smolov,5.3,5
+Blaine Sumner,2012-05-20,139,146,214,5/3/1,6.8,1
+Blaine Sumner,2012-05-27,296,132,146,Smolov,8.3,1
+Blaine Sumner,2012-06-03,229,87,295,Starting Strength,8.4,3
+Blaine Sumner,2012-06-10,228,138,292,5/3/1,5.9,4
+Blaine Sumner,2012-06-17,284,102,125,5/3/1,6.3,3
+Brian Siders,2003-01-20,147,139,269,5/3/1,7.5,4
+Brian Siders,2003-01-27,288,186,136,Smolov,6.3,0
+Brian Siders,2003-02-03,160,76,213,5/3/1,7.5,4
+Brian Siders,2003-02-10,188,99,199,Starting Strength,5.6,5
+Brian Siders,2003-02-17,198,177,207,5/3/1,8.2,4
+Brian Siders,2003-02-24,115,159,285,Starting Strength,6.1,1
+Brian Siders,2003-03-03,165,94,218,5/3/1,7.8,4
+Brian Siders,2003-03-10,270,71,201,5/3/1,7.3,3
+Brian Siders,2003-03-17,185,167,227,Smolov,6.1,2
+Brian Siders,2003-03-24,202,184,335,5/3/1,5.9,0
+Brian Siders,2003-03-31,158,176,246,Smolov,7.2,5
+Brian Siders,2003-04-07,143,74,228,Starting Strength,7.4,0
+Brian Siders,2003-04-14,176,158,348,5/3/1,5.7,1
+Brian Siders,2003-04-21,173,76,206,Starting Strength,8.1,5
+Brian Siders,2003-04-28,236,181,225,Starting Strength,5.1,4
+Brian Siders,2003-05-05,148,172,192,Starting Strength,6.3,3
+Brian Siders,2003-05-12,298,190,173,Smolov,8.3,1
+Brian Siders,2003-05-19,197,92,348,5/3/1,5.0,4
+Brian Siders,2003-05-26,136,94,102,5/3/1,8.2,2
+Brian Siders,2003-06-02,183,168,246,Smolov,6.2,3
+Brian Siders,2003-06-09,260,76,231,Starting Strength,7.5,1
+Brian Siders,2003-06-16,112,154,195,5/3/1,7.4,4
+Brian Siders,2003-06-23,290,124,118,Starting Strength,5.5,2
+Brian Siders,2003-06-30,251,63,318,Smolov,8.7,5
+Brian Siders,2003-07-07,295,132,214,Smolov,7.6,4
+Brian Siders,2003-07-14,134,119,244,5/3/1,8.5,1
+Ray Williams #1,2017-04-13,296,147,323,Starting Strength,5.7,3
+Ray Williams #1,2017-04-20,228,151,144,Smolov,6.5,5
+Ray Williams #1,2017-04-27,225,161,195,5/3/1,7.1,0
+Ray Williams #1,2017-05-04,175,77,327,Starting Strength,7.5,2
+Ray Williams #1,2017-05-11,221,152,159,Smolov,6.5,5
+Ray Williams #1,2017-05-18,248,127,212,Starting Strength,6.1,0
+Ray Williams #1,2017-05-25,173,171,247,Starting Strength,8.9,3
+Ray Williams #1,2017-06-01,128,124,305,5/3/1,8.9,5
+Ray Williams #1,2017-06-08,298,121,336,Smolov,7.8,4
+Ray Williams #1,2017-06-15,300,89,342,Smolov,8.3,2
+Ray Williams #1,2017-06-22,149,107,131,Smolov,7.4,1
+Ray Williams #1,2017-06-29,141,137,262,Starting Strength,6.5,4
+Ray Williams #1,2017-07-06,107,186,283,5/3/1,7.4,5
+Ray Williams #1,2017-07-13,241,150,182,Smolov,5.5,5
+Ray Williams #1,2017-07-20,151,170,137,Starting Strength,8.7,2
+Ray Williams #1,2017-07-27,262,64,126,Starting Strength,6.2,1
+Ray Williams #1,2017-08-03,207,77,325,Starting Strength,5.1,4
+Ray Williams #1,2017-08-10,223,159,321,Smolov,7.1,1
+Ray Williams #1,2017-08-17,108,125,118,5/3/1,9.0,2
+Ray Williams #1,2017-08-24,175,177,321,Smolov,7.2,0
+Ray Williams #1,2017-08-31,264,113,242,Smolov,5.9,0
+Ray Williams #1,2017-09-07,116,74,333,Starting Strength,5.1,4
+Ray Williams #1,2017-09-14,153,143,297,Starting Strength,5.0,4
+Ray Williams #1,2017-09-21,135,175,348,Starting Strength,7.3,5
+Ray Williams #1,2017-09-28,294,127,320,Smolov,6.0,4
+Ray Williams #1,2017-10-05,294,198,248,Smolov,8.0,5
+Ahmed Hassanin,2020-12-16,263,74,299,Smolov,5.4,5
+Ahmed Hassanin,2020-12-23,300,198,345,Starting Strength,6.4,4
+Ahmed Hassanin,2020-12-30,179,156,144,Starting Strength,8.8,0
+Ahmed Hassanin,2021-01-06,235,109,140,5/3/1,5.0,4
+Ahmed Hassanin,2021-01-13,136,126,323,5/3/1,6.7,4
+Ahmed Hassanin,2021-01-20,241,189,200,Smolov,6.8,4
+Ahmed Hassanin,2021-01-27,113,172,268,Starting Strength,6.2,2
+Ahmed Hassanin,2021-02-03,215,68,148,Smolov,7.3,3
+Ahmed Hassanin,2021-02-10,191,138,142,Starting Strength,6.4,5
+Ahmed Hassanin,2021-02-17,147,168,180,Starting Strength,5.3,0
+Ahmed Hassanin,2021-02-24,169,72,336,Smolov,6.9,3
+Ahmed Hassanin,2021-03-03,143,156,270,Smolov,8.4,1
+Ahmed Hassanin,2021-03-10,140,61,342,Smolov,7.0,4
+Ahmed Hassanin,2021-03-17,243,80,100,Starting Strength,8.4,1
+Ahmed Hassanin,2021-03-24,148,164,233,Smolov,8.3,4
+Ahmed Hassanin,2021-03-31,166,100,290,Smolov,7.4,1
+Ahmed Hassanin,2021-04-07,166,93,178,5/3/1,6.9,4
+Ahmed Hassanin,2021-04-14,284,136,300,5/3/1,6.5,1
+Ahmed Hassanin,2021-04-21,260,193,219,5/3/1,7.7,3
+Ahmed Hassanin,2021-04-28,152,74,254,Starting Strength,8.4,3
+Ahmed Hassanin,2021-05-05,262,124,171,Starting Strength,8.4,5
+Ahmed Hassanin,2021-05-12,121,61,153,Starting Strength,7.2,3
+Ahmed Hassanin,2021-05-19,272,162,348,Smolov,7.6,5
+Ahmed Hassanin,2021-05-26,215,97,222,Smolov,9.0,1
+Ahmed Hassanin,2021-06-02,183,200,166,Starting Strength,8.2,3
+Ahmed Hassanin,2021-06-09,208,126,287,Starting Strength,8.1,1
+Ray Williams #1,2016-04-16,122,62,236,Smolov,5.3,4
+Ray Williams #1,2016-04-23,291,198,197,Smolov,8.8,5
+Ray Williams #1,2016-04-30,167,121,201,5/3/1,5.8,1
+Ray Williams #1,2016-05-07,100,94,251,Starting Strength,5.1,0
+Ray Williams #1,2016-05-14,256,193,312,Starting Strength,5.9,1
+Ray Williams #1,2016-05-21,241,159,133,Smolov,8.5,4
+Ray Williams #1,2016-05-28,290,193,102,Starting Strength,8.1,5
+Ray Williams #1,2016-06-04,206,123,185,Starting Strength,6.5,2
+Ray Williams #1,2016-06-11,272,165,193,Smolov,7.0,3
+Ray Williams #1,2016-06-18,179,182,179,Smolov,5.1,5
+Ray Williams #1,2016-06-25,159,133,238,5/3/1,9.0,2
+Ray Williams #1,2016-07-02,286,88,160,Smolov,5.4,0
+Ray Williams #1,2016-07-09,139,173,336,5/3/1,8.3,4
+Ray Williams #1,2016-07-16,120,121,347,Starting Strength,5.1,1
+Ray Williams #1,2016-07-23,112,105,120,Smolov,7.5,3
+Ray Williams #1,2016-07-30,118,74,302,5/3/1,7.8,4
+Ray Williams #1,2016-08-06,232,184,298,5/3/1,8.6,1
+Ray Williams #1,2016-08-13,204,181,297,Smolov,8.8,0
+Ray Williams #1,2016-08-20,192,108,287,5/3/1,6.0,3
+Ray Williams #1,2016-08-27,205,134,253,5/3/1,7.2,3
+Ray Williams #1,2016-09-03,223,135,261,Smolov,7.6,5
+Ray Williams #1,2016-09-10,215,134,161,Smolov,6.4,1
+Ray Williams #1,2016-09-17,156,192,145,Starting Strength,8.1,0
+Ray Williams #1,2016-09-24,151,170,139,5/3/1,8.9,2
+Ray Williams #1,2016-10-01,243,155,286,5/3/1,6.1,2
+Ray Williams #1,2016-10-08,271,175,157,5/3/1,7.9,5
+Ray Williams #1,2018-04-14,180,68,169,5/3/1,7.8,5
+Ray Williams #1,2018-04-21,270,190,134,Smolov,7.4,2
+Ray Williams #1,2018-04-28,208,190,254,Starting Strength,6.9,4
+Ray Williams #1,2018-05-05,200,117,128,Starting Strength,7.1,4
+Ray Williams #1,2018-05-12,254,115,242,5/3/1,6.8,2
+Ray Williams #1,2018-05-19,226,149,113,5/3/1,7.3,3
+Ray Williams #1,2018-05-26,121,147,282,Starting Strength,7.3,3
+Ray Williams #1,2018-06-02,204,61,339,5/3/1,6.1,5
+Ray Williams #1,2018-06-09,163,141,120,Starting Strength,8.1,4
+Ray Williams #1,2018-06-16,220,98,226,5/3/1,6.3,1
+Ray Williams #1,2018-06-23,223,162,347,Starting Strength,5.1,2
+Ray Williams #1,2018-06-30,248,136,270,Starting Strength,7.9,3
+Ray Williams #1,2018-07-07,249,147,297,Starting Strength,7.9,0
+Ray Williams #1,2018-07-14,131,70,325,Starting Strength,6.5,5
+Ray Williams #1,2018-07-21,122,152,163,5/3/1,6.1,1
+Ray Williams #1,2018-07-28,180,175,170,5/3/1,6.3,1
+Ray Williams #1,2018-08-04,237,80,237,Starting Strength,6.3,3
+Ray Williams #1,2018-08-11,145,186,113,Starting Strength,5.6,2
+Ray Williams #1,2018-08-18,206,99,218,Smolov,5.5,2
+Ray Williams #1,2018-08-25,110,107,200,5/3/1,8.5,1
+Ray Williams #1,2018-09-01,132,139,198,Starting Strength,7.6,5
+Ray Williams #1,2018-09-08,161,73,238,Starting Strength,7.4,5
+Ray Williams #1,2018-09-15,157,138,184,5/3/1,8.8,2
+Ray Williams #1,2018-09-22,152,138,153,Smolov,6.6,5
+Ray Williams #1,2018-09-29,277,177,118,Starting Strength,8.6,5
+Ray Williams #1,2018-10-06,227,106,306,5/3/1,7.5,0
+Frank Allen #1,2022-11-21,176,164,197,Starting Strength,6.6,2
+Frank Allen #1,2022-11-28,219,128,322,5/3/1,8.8,4
+Frank Allen #1,2022-12-05,136,191,167,5/3/1,6.6,5
+Frank Allen #1,2022-12-12,130,70,106,Smolov,6.2,0
+Frank Allen #1,2022-12-19,192,152,313,5/3/1,7.5,5
+Frank Allen #1,2022-12-26,133,152,259,5/3/1,7.7,4
+Frank Allen #1,2023-01-02,126,133,284,Starting Strength,7.8,1
+Frank Allen #1,2023-01-09,179,127,263,Smolov,7.9,1
+Frank Allen #1,2023-01-16,150,171,248,5/3/1,5.1,3
+Frank Allen #1,2023-01-23,270,163,282,5/3/1,8.0,5
+Frank Allen #1,2023-01-30,149,81,140,Smolov,5.1,1
+Frank Allen #1,2023-02-06,113,122,321,5/3/1,5.2,0
+Frank Allen #1,2023-02-13,149,138,126,5/3/1,5.7,5
+Frank Allen #1,2023-02-20,163,138,265,5/3/1,5.0,2
+Frank Allen #1,2023-02-27,123,182,154,5/3/1,5.8,5
+Frank Allen #1,2023-03-06,162,115,234,5/3/1,6.1,1
+Frank Allen #1,2023-03-13,119,159,235,Smolov,7.8,1
+Frank Allen #1,2023-03-20,206,86,248,5/3/1,8.1,3
+Frank Allen #1,2023-03-27,272,60,181,5/3/1,6.7,5
+Frank Allen #1,2023-04-03,285,196,214,Smolov,7.0,0
+Frank Allen #1,2023-04-10,282,152,111,Starting Strength,7.7,5
+Frank Allen #1,2023-04-17,292,68,301,5/3/1,7.1,2
+Frank Allen #1,2023-04-24,206,154,280,Smolov,7.2,1
+Frank Allen #1,2023-05-01,245,189,256,5/3/1,5.2,2
+Frank Allen #1,2023-05-08,197,132,144,Smolov,5.5,5
+Frank Allen #1,2023-05-15,180,139,346,5/3/1,7.9,3
+Joseph Cappellino,2012-12-26,278,163,224,Smolov,8.8,2
+Joseph Cappellino,2013-01-02,111,178,101,5/3/1,5.5,2
+Joseph Cappellino,2013-01-09,288,178,249,Smolov,5.2,0
+Joseph Cappellino,2013-01-16,242,157,117,5/3/1,8.9,4
+Joseph Cappellino,2013-01-23,237,123,171,Starting Strength,6.7,2
+Joseph Cappellino,2013-01-30,163,141,193,Starting Strength,5.7,3
+Joseph Cappellino,2013-02-06,149,96,297,5/3/1,7.0,5
+Joseph Cappellino,2013-02-13,146,127,148,5/3/1,8.1,5
+Joseph Cappellino,2013-02-20,280,114,326,Starting Strength,8.9,3
+Joseph Cappellino,2013-02-27,256,195,334,Smolov,8.7,0
+Joseph Cappellino,2013-03-06,217,161,302,Starting Strength,8.2,4
+Joseph Cappellino,2013-03-13,187,146,287,Starting Strength,9.0,2
+Joseph Cappellino,2013-03-20,112,162,235,5/3/1,8.0,3
+Joseph Cappellino,2013-03-27,182,148,190,Starting Strength,5.4,0
+Joseph Cappellino,2013-04-03,288,149,112,Smolov,8.8,0
+Joseph Cappellino,2013-04-10,190,142,333,Starting Strength,8.7,2
+Joseph Cappellino,2013-04-17,299,181,334,Smolov,7.8,5
+Joseph Cappellino,2013-04-24,155,102,321,Starting Strength,7.5,0
+Joseph Cappellino,2013-05-01,271,179,232,Smolov,6.7,5
+Joseph Cappellino,2013-05-08,150,157,143,Starting Strength,6.1,4
+Joseph Cappellino,2013-05-15,126,121,218,Smolov,6.7,2
+Joseph Cappellino,2013-05-22,271,199,159,5/3/1,8.5,0
+Joseph Cappellino,2013-05-29,114,154,187,Smolov,8.7,0
+Joseph Cappellino,2013-06-05,259,149,294,Starting Strength,5.1,1
+Joseph Cappellino,2013-06-12,273,175,200,Smolov,8.9,1
+Joseph Cappellino,2013-06-19,280,200,231,Smolov,5.4,0
+Quintin Meyer,2018-11-11,166,130,345,Smolov,6.4,5
+Quintin Meyer,2018-11-18,192,62,260,5/3/1,7.4,2
+Quintin Meyer,2018-11-25,152,163,285,Smolov,7.7,2
+Quintin Meyer,2018-12-02,219,123,278,Smolov,7.7,0
+Quintin Meyer,2018-12-09,143,180,338,5/3/1,7.8,2
+Quintin Meyer,2018-12-16,120,100,182,Starting Strength,8.4,2
+Quintin Meyer,2018-12-23,273,192,347,Starting Strength,7.6,4
+Quintin Meyer,2018-12-30,136,106,126,Starting Strength,8.9,2
+Quintin Meyer,2019-01-06,252,134,107,5/3/1,6.2,4
+Quintin Meyer,2019-01-13,143,196,327,Smolov,7.9,1
+Quintin Meyer,2019-01-20,297,112,244,Starting Strength,5.3,0
+Quintin Meyer,2019-01-27,296,135,320,Smolov,6.1,4
+Quintin Meyer,2019-02-03,185,66,253,5/3/1,6.7,3
+Quintin Meyer,2019-02-10,190,181,103,Starting Strength,8.2,2
+Quintin Meyer,2019-02-17,179,183,247,Starting Strength,7.1,3
+Quintin Meyer,2019-02-24,158,89,184,5/3/1,8.8,0
+Quintin Meyer,2019-03-03,184,130,275,5/3/1,7.8,5
+Quintin Meyer,2019-03-10,179,65,180,5/3/1,7.0,1
+Quintin Meyer,2019-03-17,154,65,162,Starting Strength,6.0,0
+Quintin Meyer,2019-03-24,259,165,139,5/3/1,6.0,5
+Quintin Meyer,2019-03-31,164,187,316,5/3/1,6.7,0
+Quintin Meyer,2019-04-07,258,97,308,Smolov,7.0,0
+Quintin Meyer,2019-04-14,197,174,219,5/3/1,7.6,5
+Quintin Meyer,2019-04-21,203,138,161,Starting Strength,7.1,4
+Quintin Meyer,2019-04-28,221,129,232,Starting Strength,7.4,0
+Quintin Meyer,2019-05-05,263,117,265,Starting Strength,5.1,0
+Brad Gillingham,2004-01-11,287,63,291,Starting Strength,5.0,0
+Brad Gillingham,2004-01-18,136,105,211,5/3/1,7.2,1
+Brad Gillingham,2004-01-25,167,173,249,5/3/1,7.7,1
+Brad Gillingham,2004-02-01,275,65,216,5/3/1,8.8,4
+Brad Gillingham,2004-02-08,290,144,230,Starting Strength,8.6,1
+Brad Gillingham,2004-02-15,166,145,260,Smolov,6.9,2
+Brad Gillingham,2004-02-22,251,169,222,Smolov,5.2,2
+Brad Gillingham,2004-02-29,295,171,325,Smolov,7.7,2
+Brad Gillingham,2004-03-07,175,199,260,Starting Strength,6.4,3
+Brad Gillingham,2004-03-14,130,112,136,Starting Strength,7.3,1
+Brad Gillingham,2004-03-21,275,191,141,5/3/1,8.7,2
+Brad Gillingham,2004-03-28,202,99,333,Starting Strength,6.3,5
+Brad Gillingham,2004-04-04,208,152,305,5/3/1,5.7,1
+Brad Gillingham,2004-04-11,192,124,266,Smolov,5.1,4
+Brad Gillingham,2004-04-18,256,76,310,5/3/1,7.7,5
+Brad Gillingham,2004-04-25,148,135,287,Starting Strength,7.4,3
+Brad Gillingham,2004-05-02,176,166,204,Starting Strength,6.6,1
+Brad Gillingham,2004-05-09,179,168,206,Starting Strength,7.2,2
+Brad Gillingham,2004-05-16,190,133,280,Smolov,8.0,5
+Brad Gillingham,2004-05-23,126,167,274,Starting Strength,7.2,1
+Brad Gillingham,2004-05-30,115,67,192,Starting Strength,5.5,0
+Brad Gillingham,2004-06-06,300,132,329,Starting Strength,8.6,0
+Brad Gillingham,2004-06-13,236,63,212,5/3/1,5.7,4
+Brad Gillingham,2004-06-20,163,154,266,5/3/1,6.3,5
+Brad Gillingham,2004-06-27,281,91,153,5/3/1,8.4,4
+Brad Gillingham,2004-07-04,254,173,160,Starting Strength,8.5,1
+Michael Tuchscherer,2007-09-03,147,62,336,Starting Strength,5.8,3
+Michael Tuchscherer,2007-09-10,138,194,178,Smolov,7.3,2
+Michael Tuchscherer,2007-09-17,227,171,290,Smolov,7.9,1
+Michael Tuchscherer,2007-09-24,211,115,173,Starting Strength,5.6,5
+Michael Tuchscherer,2007-10-01,142,74,215,Starting Strength,5.4,1
+Michael Tuchscherer,2007-10-08,128,95,194,Starting Strength,6.4,5
+Michael Tuchscherer,2007-10-15,196,176,197,5/3/1,6.4,3
+Michael Tuchscherer,2007-10-22,203,90,267,Smolov,7.5,4
+Michael Tuchscherer,2007-10-29,177,114,242,5/3/1,6.4,4
+Michael Tuchscherer,2007-11-05,122,153,347,Starting Strength,7.8,0
+Michael Tuchscherer,2007-11-12,260,153,302,Smolov,5.3,1
+Michael Tuchscherer,2007-11-19,110,161,186,5/3/1,7.0,2
+Michael Tuchscherer,2007-11-26,175,173,139,Starting Strength,6.1,2
+Michael Tuchscherer,2007-12-03,265,127,250,Smolov,5.3,1
+Michael Tuchscherer,2007-12-10,149,63,270,Starting Strength,8.6,3
+Michael Tuchscherer,2007-12-17,104,120,208,5/3/1,5.5,5
+Michael Tuchscherer,2007-12-24,238,117,109,Smolov,6.3,4
+Michael Tuchscherer,2007-12-31,181,103,310,Smolov,6.7,1
+Michael Tuchscherer,2008-01-07,277,164,193,Smolov,5.4,1
+Michael Tuchscherer,2008-01-14,261,95,100,5/3/1,7.6,1
+Michael Tuchscherer,2008-01-21,193,64,255,Smolov,8.1,2
+Michael Tuchscherer,2008-01-28,249,85,339,Smolov,8.7,3
+Michael Tuchscherer,2008-02-04,171,102,257,Starting Strength,6.3,1
+Michael Tuchscherer,2008-02-11,233,124,290,Smolov,6.3,5
+Michael Tuchscherer,2008-02-18,124,171,231,Starting Strength,8.0,3
+Michael Tuchscherer,2008-02-25,161,143,202,Starting Strength,7.8,3
+Michael Tuchscherer,2007-12-15,203,75,155,Smolov,6.2,2
+Michael Tuchscherer,2007-12-22,165,156,162,5/3/1,8.9,2
+Michael Tuchscherer,2007-12-29,256,136,284,Starting Strength,7.9,1
+Michael Tuchscherer,2008-01-05,260,200,140,5/3/1,7.6,4
+Michael Tuchscherer,2008-01-12,265,85,154,Starting Strength,5.9,1
+Michael Tuchscherer,2008-01-19,213,93,100,Smolov,7.3,1
+Michael Tuchscherer,2008-01-26,181,177,283,Smolov,8.8,1
+Michael Tuchscherer,2008-02-02,178,156,101,5/3/1,5.5,2
+Michael Tuchscherer,2008-02-09,231,121,295,Smolov,5.8,3
+Michael Tuchscherer,2008-02-16,101,134,291,5/3/1,5.8,4
+Michael Tuchscherer,2008-02-23,179,122,161,5/3/1,7.3,1
+Michael Tuchscherer,2008-03-01,294,168,275,Smolov,7.0,1
+Michael Tuchscherer,2008-03-08,140,123,264,Smolov,8.7,4
+Michael Tuchscherer,2008-03-15,262,75,103,Smolov,8.1,3
+Michael Tuchscherer,2008-03-22,183,96,253,5/3/1,5.2,3
+Michael Tuchscherer,2008-03-29,168,115,210,5/3/1,7.7,5
+Michael Tuchscherer,2008-04-05,123,96,150,Smolov,5.6,1
+Michael Tuchscherer,2008-04-12,159,114,162,5/3/1,8.2,3
+Michael Tuchscherer,2008-04-19,281,128,151,Starting Strength,7.6,0
+Michael Tuchscherer,2008-04-26,212,145,273,Starting Strength,5.5,0
+Michael Tuchscherer,2008-05-03,228,182,298,Starting Strength,6.7,3
+Michael Tuchscherer,2008-05-10,275,165,248,5/3/1,5.4,5
+Michael Tuchscherer,2008-05-17,117,116,128,Starting Strength,6.2,2
+Michael Tuchscherer,2008-05-24,195,190,257,Starting Strength,6.3,5
+Michael Tuchscherer,2008-05-31,261,64,277,Starting Strength,7.3,3
+Michael Tuchscherer,2008-06-07,140,179,214,5/3/1,5.6,1
+Michael Tuchscherer,2007-12-15,184,137,248,Starting Strength,5.9,1
+Michael Tuchscherer,2007-12-22,240,66,342,Smolov,8.3,0
+Michael Tuchscherer,2007-12-29,139,136,157,Starting Strength,7.6,3
+Michael Tuchscherer,2008-01-05,232,93,164,Starting Strength,8.0,3
+Michael Tuchscherer,2008-01-12,294,181,223,Starting Strength,6.4,1
+Michael Tuchscherer,2008-01-19,239,149,227,Starting Strength,8.6,5
+Michael Tuchscherer,2008-01-26,250,142,167,5/3/1,5.4,0
+Michael Tuchscherer,2008-02-02,164,88,102,Starting Strength,8.9,0
+Michael Tuchscherer,2008-02-09,255,139,159,Starting Strength,7.8,4
+Michael Tuchscherer,2008-02-16,129,100,109,Smolov,5.5,0
+Michael Tuchscherer,2008-02-23,300,93,301,Starting Strength,8.5,1
+Michael Tuchscherer,2008-03-01,199,178,119,Starting Strength,8.3,5
+Michael Tuchscherer,2008-03-08,202,200,173,Smolov,6.6,5
+Michael Tuchscherer,2008-03-15,110,72,210,Starting Strength,8.7,1
+Michael Tuchscherer,2008-03-22,236,67,202,Starting Strength,6.4,0
+Michael Tuchscherer,2008-03-29,294,147,162,Smolov,8.4,3
+Michael Tuchscherer,2008-04-05,263,196,330,5/3/1,9.0,4
+Michael Tuchscherer,2008-04-12,166,177,101,Starting Strength,8.7,5
+Michael Tuchscherer,2008-04-19,170,120,283,5/3/1,5.4,0
+Michael Tuchscherer,2008-04-26,140,107,344,5/3/1,5.3,5
+Michael Tuchscherer,2008-05-03,171,107,201,5/3/1,7.2,1
+Michael Tuchscherer,2008-05-10,143,148,124,Smolov,8.5,4
+Michael Tuchscherer,2008-05-17,167,160,259,Smolov,7.3,0
+Michael Tuchscherer,2008-05-24,281,135,156,5/3/1,5.5,5
+Michael Tuchscherer,2008-05-31,149,146,216,Smolov,5.7,3
+Michael Tuchscherer,2008-06-07,173,63,146,Smolov,6.3,5
+Jesus Olivares,2020-06-15,192,72,127,5/3/1,7.3,0
+Jesus Olivares,2020-06-22,224,96,143,5/3/1,7.8,3
+Jesus Olivares,2020-06-29,243,108,319,Starting Strength,8.2,0
+Jesus Olivares,2020-07-06,123,149,207,Smolov,7.9,3
+Jesus Olivares,2020-07-13,273,159,192,Smolov,6.7,1
+Jesus Olivares,2020-07-20,201,125,177,Starting Strength,8.8,0
+Jesus Olivares,2020-07-27,209,73,285,Smolov,6.2,2
+Jesus Olivares,2020-08-03,156,172,231,5/3/1,6.8,1
+Jesus Olivares,2020-08-10,168,76,106,5/3/1,7.1,2
+Jesus Olivares,2020-08-17,180,190,152,Smolov,8.9,2
+Jesus Olivares,2020-08-24,132,109,190,Smolov,6.2,5
+Jesus Olivares,2020-08-31,258,196,214,5/3/1,7.8,2
+Jesus Olivares,2020-09-07,167,166,314,Starting Strength,6.8,1
+Jesus Olivares,2020-09-14,231,144,149,5/3/1,5.6,4
+Jesus Olivares,2020-09-21,252,195,123,Smolov,6.3,0
+Jesus Olivares,2020-09-28,293,68,190,Starting Strength,5.7,0
+Jesus Olivares,2020-10-05,154,126,216,5/3/1,5.4,0
+Jesus Olivares,2020-10-12,278,140,339,Smolov,5.8,3
+Jesus Olivares,2020-10-19,116,90,318,Smolov,7.5,4
+Jesus Olivares,2020-10-26,201,63,244,5/3/1,8.7,3
+Jesus Olivares,2020-11-02,120,172,155,Smolov,8.5,3
+Jesus Olivares,2020-11-09,156,129,203,Smolov,5.9,5
+Jesus Olivares,2020-11-16,216,148,323,Starting Strength,8.1,4
+Jesus Olivares,2020-11-23,203,135,134,Starting Strength,8.7,3
+Jesus Olivares,2020-11-30,149,126,164,Starting Strength,5.4,5
+Jesus Olivares,2020-12-07,201,131,301,Starting Strength,7.5,4
+Jesus Olivares,2020-06-15,287,113,254,Starting Strength,7.0,3
+Jesus Olivares,2020-06-22,300,154,178,5/3/1,7.6,3
+Jesus Olivares,2020-06-29,174,164,252,Smolov,7.0,0
+Jesus Olivares,2020-07-06,113,185,309,Smolov,7.0,2
+Jesus Olivares,2020-07-13,106,164,243,Starting Strength,5.0,2
+Jesus Olivares,2020-07-20,203,67,138,5/3/1,8.5,0
+Jesus Olivares,2020-07-27,273,136,250,5/3/1,7.2,4
+Jesus Olivares,2020-08-03,154,134,265,Smolov,6.5,5
+Jesus Olivares,2020-08-10,149,82,210,Starting Strength,5.2,4
+Jesus Olivares,2020-08-17,234,132,307,Smolov,5.3,1
+Jesus Olivares,2020-08-24,273,162,119,Starting Strength,7.8,4
+Jesus Olivares,2020-08-31,280,103,308,Starting Strength,6.2,0
+Jesus Olivares,2020-09-07,261,166,247,Smolov,7.4,1
+Jesus Olivares,2020-09-14,105,110,180,Starting Strength,8.6,4
+Jesus Olivares,2020-09-21,199,65,252,5/3/1,6.8,3
+Jesus Olivares,2020-09-28,191,196,312,Smolov,6.7,5
+Jesus Olivares,2020-10-05,111,69,260,Starting Strength,8.6,4
+Jesus Olivares,2020-10-12,107,85,285,5/3/1,5.5,5
+Jesus Olivares,2020-10-19,235,78,291,Smolov,6.6,3
+Jesus Olivares,2020-10-26,190,71,178,Starting Strength,7.1,4
+Jesus Olivares,2020-11-02,150,108,183,Starting Strength,6.0,4
+Jesus Olivares,2020-11-09,157,157,317,5/3/1,5.1,5
+Jesus Olivares,2020-11-16,280,102,110,Smolov,5.4,1
+Jesus Olivares,2020-11-23,227,158,306,5/3/1,5.1,5
+Jesus Olivares,2020-11-30,210,119,318,Smolov,5.2,1
+Jesus Olivares,2020-12-07,270,164,167,5/3/1,5.5,1
+Quintin Meyer,2018-09-03,184,124,218,5/3/1,7.5,2
+Quintin Meyer,2018-09-10,196,93,218,Starting Strength,6.3,5
+Quintin Meyer,2018-09-17,216,92,145,5/3/1,7.8,2
+Quintin Meyer,2018-09-24,226,178,325,5/3/1,7.4,3
+Quintin Meyer,2018-10-01,120,63,117,5/3/1,5.2,4
+Quintin Meyer,2018-10-08,175,143,263,Smolov,7.3,4
+Quintin Meyer,2018-10-15,278,85,215,Smolov,7.5,0
+Quintin Meyer,2018-10-22,219,163,284,Smolov,7.0,2
+Quintin Meyer,2018-10-29,127,133,292,Starting Strength,7.4,1
+Quintin Meyer,2018-11-05,134,63,161,Smolov,8.0,3
+Quintin Meyer,2018-11-12,107,170,233,5/3/1,5.6,1
+Quintin Meyer,2018-11-19,104,71,221,Starting Strength,6.9,3
+Quintin Meyer,2018-11-26,255,126,348,5/3/1,8.3,2
+Quintin Meyer,2018-12-03,107,117,237,5/3/1,6.7,4
+Quintin Meyer,2018-12-10,272,131,244,Starting Strength,7.8,4
+Quintin Meyer,2018-12-17,163,95,104,Starting Strength,6.5,2
+Quintin Meyer,2018-12-24,200,78,270,Starting Strength,8.7,1
+Quintin Meyer,2018-12-31,256,116,297,Smolov,7.8,2
+Quintin Meyer,2019-01-07,281,112,183,Smolov,5.1,5
+Quintin Meyer,2019-01-14,248,90,232,5/3/1,6.0,3
+Quintin Meyer,2019-01-21,106,142,153,Starting Strength,6.5,3
+Quintin Meyer,2019-01-28,256,101,309,5/3/1,6.0,4
+Quintin Meyer,2019-02-04,142,96,240,5/3/1,8.3,4
+Quintin Meyer,2019-02-11,292,163,244,Starting Strength,8.7,3
+Quintin Meyer,2019-02-18,148,108,125,Smolov,7.3,5
+Quintin Meyer,2019-02-25,226,95,271,5/3/1,7.8,5
+Randall Harris,2010-12-12,125,117,246,Smolov,5.7,3
+Randall Harris,2010-12-19,190,154,195,Starting Strength,6.1,1
+Randall Harris,2010-12-26,259,176,172,Smolov,6.8,1
+Randall Harris,2011-01-02,249,148,166,5/3/1,8.1,0
+Randall Harris,2011-01-09,217,147,348,5/3/1,9.0,0
+Randall Harris,2011-01-16,157,99,183,Starting Strength,5.6,1
+Randall Harris,2011-01-23,216,121,216,Smolov,6.1,3
+Randall Harris,2011-01-30,196,121,155,Smolov,5.0,3
+Randall Harris,2011-02-06,208,147,265,Starting Strength,5.4,4
+Randall Harris,2011-02-13,206,132,256,5/3/1,7.9,4
+Randall Harris,2011-02-20,164,103,146,Smolov,6.6,0
+Randall Harris,2011-02-27,162,173,114,Smolov,5.4,3
+Randall Harris,2011-03-06,264,91,153,5/3/1,5.8,0
+Randall Harris,2011-03-13,292,178,250,Starting Strength,8.6,3
+Randall Harris,2011-03-20,180,162,104,5/3/1,7.4,0
+Randall Harris,2011-03-27,161,93,104,Starting Strength,6.4,0
+Randall Harris,2011-04-03,257,124,265,5/3/1,6.6,3
+Randall Harris,2011-04-10,105,84,251,Starting Strength,7.6,4
+Randall Harris,2011-04-17,110,61,118,5/3/1,8.1,4
+Randall Harris,2011-04-24,276,186,278,Starting Strength,8.0,2
+Randall Harris,2011-05-01,266,87,100,Starting Strength,5.3,2
+Randall Harris,2011-05-08,119,160,101,Smolov,5.5,2
+Randall Harris,2011-05-15,223,60,201,Starting Strength,7.1,5
+Randall Harris,2011-05-22,131,91,293,5/3/1,8.1,1
+Randall Harris,2011-05-29,237,187,125,5/3/1,5.7,2
+Randall Harris,2011-06-05,115,74,254,5/3/1,5.5,1
+Brad Gillingham,2010-12-12,143,122,336,5/3/1,5.6,5
+Brad Gillingham,2010-12-19,214,119,247,Starting Strength,8.0,4
+Brad Gillingham,2010-12-26,137,192,131,5/3/1,7.8,1
+Brad Gillingham,2011-01-02,225,124,210,5/3/1,5.7,4
+Brad Gillingham,2011-01-09,259,196,140,Starting Strength,6.4,2
+Brad Gillingham,2011-01-16,235,150,129,Starting Strength,5.9,0
+Brad Gillingham,2011-01-23,201,167,204,5/3/1,5.5,2
+Brad Gillingham,2011-01-30,169,189,335,5/3/1,8.5,0
+Brad Gillingham,2011-02-06,135,90,318,Starting Strength,6.1,0
+Brad Gillingham,2011-02-13,223,139,318,Smolov,6.4,0
+Brad Gillingham,2011-02-20,243,135,316,Smolov,7.1,1
+Brad Gillingham,2011-02-27,149,193,196,Smolov,8.5,0
+Brad Gillingham,2011-03-06,206,68,110,Smolov,7.1,3
+Brad Gillingham,2011-03-13,158,63,307,Smolov,8.6,2
+Brad Gillingham,2011-03-20,106,103,137,5/3/1,7.9,3
+Brad Gillingham,2011-03-27,188,82,177,5/3/1,7.0,2
+Brad Gillingham,2011-04-03,187,117,270,Starting Strength,5.2,4
+Brad Gillingham,2011-04-10,248,76,346,5/3/1,7.0,5
+Brad Gillingham,2011-04-17,150,140,100,5/3/1,8.0,4
+Brad Gillingham,2011-04-24,251,145,276,Smolov,5.0,4
+Brad Gillingham,2011-05-01,278,166,131,5/3/1,5.8,4
+Brad Gillingham,2011-05-08,219,122,221,5/3/1,7.8,0
+Brad Gillingham,2011-05-15,135,100,347,5/3/1,5.4,5
+Brad Gillingham,2011-05-22,167,166,318,5/3/1,8.1,1
+Brad Gillingham,2011-05-29,209,155,169,5/3/1,6.6,3
+Brad Gillingham,2011-06-05,113,181,311,Starting Strength,5.1,2
+Ray Bowring,2022-10-15,209,83,275,5/3/1,7.3,1
+Ray Bowring,2022-10-22,240,155,158,5/3/1,9.0,0
+Ray Bowring,2022-10-29,162,112,308,5/3/1,7.2,2
+Ray Bowring,2022-11-05,232,173,216,Starting Strength,5.6,2
+Ray Bowring,2022-11-12,258,196,189,Smolov,5.9,3
+Ray Bowring,2022-11-19,132,66,214,5/3/1,5.0,3
+Ray Bowring,2022-11-26,145,80,302,Starting Strength,7.9,3
+Ray Bowring,2022-12-03,232,109,320,5/3/1,5.7,5
+Ray Bowring,2022-12-10,282,141,267,5/3/1,8.4,1
+Ray Bowring,2022-12-17,291,90,284,5/3/1,8.8,1
+Ray Bowring,2022-12-24,297,69,140,Starting Strength,5.9,4
+Ray Bowring,2022-12-31,142,135,346,Starting Strength,6.4,3
+Ray Bowring,2023-01-07,143,156,139,Starting Strength,6.4,0
+Ray Bowring,2023-01-14,133,60,224,Smolov,8.2,2
+Ray Bowring,2023-01-21,130,154,321,Smolov,5.9,0
+Ray Bowring,2023-01-28,190,189,203,Smolov,5.2,4
+Ray Bowring,2023-02-04,185,164,159,Smolov,7.7,5
+Ray Bowring,2023-02-11,279,81,291,5/3/1,8.5,0
+Ray Bowring,2023-02-18,198,159,122,5/3/1,8.3,2
+Ray Bowring,2023-02-25,286,112,229,Smolov,8.4,1
+Ray Bowring,2023-03-04,237,118,175,Starting Strength,7.3,4
+Ray Bowring,2023-03-11,151,70,243,Smolov,7.2,2
+Ray Bowring,2023-03-18,139,115,332,Starting Strength,6.3,2
+Ray Bowring,2023-03-25,201,169,196,5/3/1,8.7,1
+Ray Bowring,2023-04-01,266,199,278,Smolov,7.1,5
+Ray Bowring,2023-04-08,211,135,337,Smolov,7.8,4
+Cooper Wage,2014-11-16,296,166,183,Smolov,8.5,1
+Cooper Wage,2014-11-23,253,72,298,Starting Strength,7.1,0
+Cooper Wage,2014-11-30,234,131,185,Smolov,5.2,4
+Cooper Wage,2014-12-07,165,164,151,5/3/1,5.5,0
+Cooper Wage,2014-12-14,161,138,265,5/3/1,6.6,0
+Cooper Wage,2014-12-21,223,128,271,5/3/1,8.5,0
+Cooper Wage,2014-12-28,188,196,200,Starting Strength,7.0,0
+Cooper Wage,2015-01-04,135,157,149,Smolov,7.3,2
+Cooper Wage,2015-01-11,207,61,183,Starting Strength,6.7,5
+Cooper Wage,2015-01-18,243,61,260,Smolov,8.7,2
+Cooper Wage,2015-01-25,195,133,319,5/3/1,5.6,2
+Cooper Wage,2015-02-01,263,145,330,Smolov,5.0,5
+Cooper Wage,2015-02-08,257,174,186,Starting Strength,6.5,2
+Cooper Wage,2015-02-15,284,188,324,Smolov,7.5,0
+Cooper Wage,2015-02-22,272,175,193,5/3/1,7.7,0
+Cooper Wage,2015-03-01,168,179,122,Starting Strength,5.1,3
+Cooper Wage,2015-03-08,160,200,124,Smolov,6.2,1
+Cooper Wage,2015-03-15,193,61,258,Starting Strength,8.0,5
+Cooper Wage,2015-03-22,113,136,252,Smolov,7.5,3
+Cooper Wage,2015-03-29,251,194,218,5/3/1,8.0,1
+Cooper Wage,2015-04-05,235,128,204,Smolov,7.3,2
+Cooper Wage,2015-04-12,140,99,334,5/3/1,7.2,0
+Cooper Wage,2015-04-19,195,72,295,5/3/1,7.1,5
+Cooper Wage,2015-04-26,115,80,270,5/3/1,8.2,2
+Cooper Wage,2015-05-03,202,196,219,Smolov,6.9,1
+Cooper Wage,2015-05-10,151,182,298,Starting Strength,7.5,0
+Randall Harris,2006-01-07,240,101,274,5/3/1,8.0,0
+Randall Harris,2006-01-14,284,150,111,Smolov,7.8,0
+Randall Harris,2006-01-21,189,75,243,Smolov,8.5,1
+Randall Harris,2006-01-28,255,166,245,Starting Strength,7.9,4
+Randall Harris,2006-02-04,300,67,171,Smolov,5.3,2
+Randall Harris,2006-02-11,176,121,155,5/3/1,7.9,1
+Randall Harris,2006-02-18,149,199,153,Smolov,6.3,3
+Randall Harris,2006-02-25,287,144,267,Starting Strength,8.4,5
+Randall Harris,2006-03-04,188,182,236,Smolov,5.6,5
+Randall Harris,2006-03-11,290,75,199,Smolov,6.1,2
+Randall Harris,2006-03-18,172,138,258,5/3/1,6.3,0
+Randall Harris,2006-03-25,247,60,289,Starting Strength,7.1,2
+Randall Harris,2006-04-01,196,189,100,Starting Strength,5.7,0
+Randall Harris,2006-04-08,115,142,334,5/3/1,8.8,0
+Randall Harris,2006-04-15,112,96,137,Smolov,6.3,4
+Randall Harris,2006-04-22,175,98,280,5/3/1,7.5,2
+Randall Harris,2006-04-29,152,166,323,Starting Strength,5.3,2
+Randall Harris,2006-05-06,143,165,172,5/3/1,6.9,1
+Randall Harris,2006-05-13,125,107,288,Starting Strength,5.5,5
+Randall Harris,2006-05-20,190,109,323,Starting Strength,6.8,1
+Randall Harris,2006-05-27,218,178,101,Starting Strength,7.7,2
+Randall Harris,2006-06-03,269,137,131,Smolov,6.8,4
+Randall Harris,2006-06-10,137,140,268,Starting Strength,7.4,4
+Randall Harris,2006-06-17,300,92,261,Smolov,6.4,1
+Randall Harris,2006-06-24,124,180,250,5/3/1,8.9,4
+Randall Harris,2006-07-01,118,118,296,Smolov,5.4,4
+Cody Giampa,2019-07-22,117,103,277,Smolov,6.9,4
+Cody Giampa,2019-07-29,126,190,338,Smolov,7.8,1
+Cody Giampa,2019-08-05,279,67,218,5/3/1,5.8,4
+Cody Giampa,2019-08-12,182,149,242,5/3/1,7.8,2
+Cody Giampa,2019-08-19,114,195,296,5/3/1,6.1,3
+Cody Giampa,2019-08-26,277,143,234,Starting Strength,5.3,3
+Cody Giampa,2019-09-02,171,143,274,Starting Strength,8.4,1
+Cody Giampa,2019-09-09,181,138,141,5/3/1,7.4,1
+Cody Giampa,2019-09-16,123,153,341,Starting Strength,7.8,0
+Cody Giampa,2019-09-23,148,164,238,5/3/1,6.9,1
+Cody Giampa,2019-09-30,299,168,125,Starting Strength,6.8,4
+Cody Giampa,2019-10-07,184,99,140,5/3/1,5.8,3
+Cody Giampa,2019-10-14,127,161,312,Starting Strength,6.1,4
+Cody Giampa,2019-10-21,145,111,210,Starting Strength,6.8,2
+Cody Giampa,2019-10-28,190,168,201,Smolov,7.1,4
+Cody Giampa,2019-11-04,146,141,120,Smolov,6.7,2
+Cody Giampa,2019-11-11,118,148,161,Starting Strength,7.0,4
+Cody Giampa,2019-11-18,158,103,314,Starting Strength,5.3,0
+Cody Giampa,2019-11-25,279,116,137,5/3/1,7.4,3
+Cody Giampa,2019-12-02,122,200,165,5/3/1,5.5,2
+Cody Giampa,2019-12-09,125,62,215,5/3/1,7.2,1
+Cody Giampa,2019-12-16,111,164,202,5/3/1,5.1,3
+Cody Giampa,2019-12-23,184,80,245,Smolov,7.4,5
+Cody Giampa,2019-12-30,296,123,156,Smolov,6.9,3
+Cody Giampa,2020-01-06,219,83,240,5/3/1,5.4,4
+Cody Giampa,2020-01-13,192,100,191,Starting Strength,7.4,3
+Joseph Cappellino,2011-12-25,225,93,132,Smolov,6.9,4
+Joseph Cappellino,2012-01-01,180,65,142,Starting Strength,6.6,3
+Joseph Cappellino,2012-01-08,137,115,136,Smolov,5.3,4
+Joseph Cappellino,2012-01-15,235,173,329,Starting Strength,7.6,3
+Joseph Cappellino,2012-01-22,179,144,166,5/3/1,7.7,5
+Joseph Cappellino,2012-01-29,248,130,223,Smolov,8.3,1
+Joseph Cappellino,2012-02-05,147,144,307,Starting Strength,5.4,4
+Joseph Cappellino,2012-02-12,100,79,143,Smolov,8.0,5
+Joseph Cappellino,2012-02-19,134,171,267,Starting Strength,7.0,0
+Joseph Cappellino,2012-02-26,209,174,230,5/3/1,6.1,2
+Joseph Cappellino,2012-03-04,197,179,159,5/3/1,7.5,4
+Joseph Cappellino,2012-03-11,266,98,131,Starting Strength,6.3,2
+Joseph Cappellino,2012-03-18,199,78,161,Starting Strength,7.6,1
+Joseph Cappellino,2012-03-25,156,118,124,5/3/1,5.8,4
+Joseph Cappellino,2012-04-01,112,174,223,Starting Strength,8.2,1
+Joseph Cappellino,2012-04-08,123,84,326,Smolov,6.5,0
+Joseph Cappellino,2012-04-15,212,186,237,Starting Strength,6.7,2
+Joseph Cappellino,2012-04-22,103,167,252,5/3/1,7.3,4
+Joseph Cappellino,2012-04-29,221,67,330,5/3/1,8.1,0
+Joseph Cappellino,2012-05-06,164,134,255,Smolov,8.5,5
+Joseph Cappellino,2012-05-13,275,60,302,Starting Strength,5.5,1
+Joseph Cappellino,2012-05-20,269,134,114,Smolov,8.8,5
+Joseph Cappellino,2012-05-27,277,68,120,Smolov,8.8,5
+Joseph Cappellino,2012-06-03,223,176,298,Smolov,7.3,5
+Joseph Cappellino,2012-06-10,277,109,182,Smolov,7.6,3
+Joseph Cappellino,2012-06-17,157,159,103,Smolov,7.9,2
+Rondel Hunte,2023-03-18,299,148,251,Starting Strength,7.9,1
+Rondel Hunte,2023-03-25,288,196,260,Starting Strength,8.8,3
+Rondel Hunte,2023-04-01,103,103,328,Starting Strength,8.2,5
+Rondel Hunte,2023-04-08,262,159,251,Smolov,7.5,2
+Rondel Hunte,2023-04-15,184,116,326,Smolov,8.6,3
+Rondel Hunte,2023-04-22,128,166,279,Starting Strength,7.2,2
+Rondel Hunte,2023-04-29,136,133,225,5/3/1,6.3,4
+Rondel Hunte,2023-05-06,270,200,292,5/3/1,7.5,3
+Rondel Hunte,2023-05-13,293,178,336,Starting Strength,6.8,1
+Rondel Hunte,2023-05-20,134,103,287,5/3/1,7.9,3
+Rondel Hunte,2023-05-27,238,188,297,5/3/1,5.2,5
+Rondel Hunte,2023-06-03,149,91,112,Starting Strength,6.7,0
+Rondel Hunte,2023-06-10,272,118,193,Starting Strength,6.1,3
+Rondel Hunte,2023-06-17,128,171,146,Starting Strength,8.3,0
+Rondel Hunte,2023-06-24,133,95,256,Starting Strength,5.8,0
+Rondel Hunte,2023-07-01,233,187,274,Starting Strength,8.1,2
+Rondel Hunte,2023-07-08,250,187,250,Starting Strength,6.2,5
+Rondel Hunte,2023-07-15,163,190,289,Smolov,8.0,0
+Rondel Hunte,2023-07-22,160,65,325,Starting Strength,7.8,3
+Rondel Hunte,2023-07-29,274,124,279,Smolov,6.2,4
+Rondel Hunte,2023-08-05,195,148,256,5/3/1,7.1,5
+Rondel Hunte,2023-08-12,253,165,180,Starting Strength,6.0,3
+Rondel Hunte,2023-08-19,186,151,103,Smolov,8.9,2
+Rondel Hunte,2023-08-26,104,106,170,Starting Strength,7.6,1
+Rondel Hunte,2023-09-02,201,66,263,Starting Strength,8.5,4
+Rondel Hunte,2023-09-09,101,146,283,Starting Strength,8.2,5
+Scott Dobbins,2020-12-16,116,121,243,5/3/1,6.1,3
+Scott Dobbins,2020-12-23,156,78,225,Starting Strength,6.2,2
+Scott Dobbins,2020-12-30,202,104,333,Smolov,6.9,0
+Scott Dobbins,2021-01-06,210,88,321,Smolov,6.4,3
+Scott Dobbins,2021-01-13,109,184,160,Starting Strength,5.4,1
+Scott Dobbins,2021-01-20,258,156,215,5/3/1,7.7,0
+Scott Dobbins,2021-01-27,279,64,174,Starting Strength,8.6,1
+Scott Dobbins,2021-02-03,205,87,196,Smolov,6.7,3
+Scott Dobbins,2021-02-10,107,92,239,Starting Strength,5.7,1
+Scott Dobbins,2021-02-17,289,124,119,Smolov,8.8,0
+Scott Dobbins,2021-02-24,299,196,321,5/3/1,7.6,1
+Scott Dobbins,2021-03-03,131,111,171,Smolov,7.9,4
+Scott Dobbins,2021-03-10,119,166,287,Starting Strength,6.7,3
+Scott Dobbins,2021-03-17,246,163,283,Starting Strength,6.9,5
+Scott Dobbins,2021-03-24,215,63,330,Smolov,8.0,3
+Scott Dobbins,2021-03-31,102,79,150,Starting Strength,8.1,3
+Scott Dobbins,2021-04-07,256,179,253,Smolov,5.1,1
+Scott Dobbins,2021-04-14,116,135,174,5/3/1,6.2,3
+Scott Dobbins,2021-04-21,284,163,243,5/3/1,6.0,1
+Scott Dobbins,2021-04-28,268,135,187,Starting Strength,6.0,1
+Scott Dobbins,2021-05-05,205,88,349,Starting Strength,7.0,3
+Scott Dobbins,2021-05-12,160,151,263,Starting Strength,5.3,2
+Scott Dobbins,2021-05-19,148,103,194,5/3/1,8.0,2
+Scott Dobbins,2021-05-26,228,132,280,5/3/1,5.4,3
+Scott Dobbins,2021-06-02,142,171,145,Starting Strength,6.7,0
+Scott Dobbins,2021-06-09,289,187,184,Smolov,8.7,5
+Preston Turner #1,2015-11-22,116,148,324,Starting Strength,8.8,2
+Preston Turner #1,2015-11-29,264,79,309,5/3/1,5.1,2
+Preston Turner #1,2015-12-06,202,184,317,Smolov,7.2,3
+Preston Turner #1,2015-12-13,211,63,244,5/3/1,6.3,4
+Preston Turner #1,2015-12-20,258,155,100,Smolov,8.4,3
+Preston Turner #1,2015-12-27,234,116,217,Starting Strength,7.8,3
+Preston Turner #1,2016-01-03,181,63,270,Smolov,6.8,2
+Preston Turner #1,2016-01-10,273,176,103,5/3/1,7.9,5
+Preston Turner #1,2016-01-17,233,125,222,Smolov,7.1,2
+Preston Turner #1,2016-01-24,271,111,280,5/3/1,6.8,1
+Preston Turner #1,2016-01-31,123,193,244,5/3/1,8.1,3
+Preston Turner #1,2016-02-07,166,124,131,5/3/1,6.4,4
+Preston Turner #1,2016-02-14,256,165,277,Starting Strength,8.5,2
+Preston Turner #1,2016-02-21,166,171,212,Starting Strength,8.3,4
+Preston Turner #1,2016-02-28,117,84,170,5/3/1,8.1,4
+Preston Turner #1,2016-03-06,222,154,111,Starting Strength,5.2,3
+Preston Turner #1,2016-03-13,256,82,278,5/3/1,8.0,4
+Preston Turner #1,2016-03-20,209,131,243,5/3/1,6.8,1
+Preston Turner #1,2016-03-27,178,198,149,Starting Strength,5.5,4
+Preston Turner #1,2016-04-03,217,75,214,Smolov,7.1,5
+Preston Turner #1,2016-04-10,117,169,113,Smolov,8.3,1
+Preston Turner #1,2016-04-17,141,117,340,Starting Strength,5.1,3
+Preston Turner #1,2016-04-24,171,196,318,Starting Strength,5.2,2
+Preston Turner #1,2016-05-01,170,193,246,Starting Strength,8.9,3
+Preston Turner #1,2016-05-08,248,100,191,5/3/1,6.4,3
+Preston Turner #1,2016-05-15,224,96,147,Starting Strength,5.3,0
+Michael Tuchscherer,2008-12-14,139,132,276,Starting Strength,7.8,2
+Michael Tuchscherer,2008-12-21,264,195,166,Smolov,7.4,5
+Michael Tuchscherer,2008-12-28,296,117,305,Starting Strength,6.8,5
+Michael Tuchscherer,2009-01-04,111,63,110,Starting Strength,7.6,3
+Michael Tuchscherer,2009-01-11,163,149,212,Smolov,5.1,0
+Michael Tuchscherer,2009-01-18,149,148,145,Smolov,8.2,5
+Michael Tuchscherer,2009-01-25,234,104,139,Smolov,8.5,4
+Michael Tuchscherer,2009-02-01,297,83,266,Starting Strength,7.3,2
+Michael Tuchscherer,2009-02-08,174,103,170,Starting Strength,8.8,4
+Michael Tuchscherer,2009-02-15,135,76,335,Starting Strength,8.0,4
+Michael Tuchscherer,2009-02-22,236,138,193,Smolov,5.1,4
+Michael Tuchscherer,2009-03-01,221,182,110,Smolov,6.3,4
+Michael Tuchscherer,2009-03-08,106,81,233,Smolov,5.0,5
+Michael Tuchscherer,2009-03-15,216,135,311,5/3/1,6.8,3
+Michael Tuchscherer,2009-03-22,237,121,278,Starting Strength,7.8,4
+Michael Tuchscherer,2009-03-29,300,155,295,Smolov,6.0,5
+Michael Tuchscherer,2009-04-05,293,101,234,5/3/1,8.3,2
+Michael Tuchscherer,2009-04-12,116,105,282,Smolov,6.4,5
+Michael Tuchscherer,2009-04-19,202,79,128,Starting Strength,8.4,4
+Michael Tuchscherer,2009-04-26,169,154,197,Smolov,7.5,0
+Michael Tuchscherer,2009-05-03,260,172,170,Starting Strength,6.4,5
+Michael Tuchscherer,2009-05-10,166,190,224,Starting Strength,5.1,0
+Michael Tuchscherer,2009-05-17,239,145,240,Starting Strength,8.3,3
+Michael Tuchscherer,2009-05-24,173,184,124,5/3/1,6.9,5
+Michael Tuchscherer,2009-05-31,104,100,134,Starting Strength,6.0,1
+Michael Tuchscherer,2009-06-07,224,92,195,5/3/1,7.4,3
