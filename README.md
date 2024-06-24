@@ -87,11 +87,15 @@ This project analyzes powerlifting competition data using SQL queries and visual
 **Purpose:** Analyzes the effectiveness of different training programs.
 **Output:** A table and bar chart showing average gains for squat, bench press, and deadlift across different programs.
 
+![visualization (2)](https://github.com/cam-leo/Powerlifting/assets/172936155/2a48e0d6-8b8e-43de-9582-bc94b500aa2a)
+
 [View CSV data](2024-06-24T21-41_export.csv)
 
 ### 9. display_gym_vs_comp_prs()
 **Purpose:** Compares gym personal records (PRs) with competition PRs.
 **Output:** A scatter plot showing the relationship between recovery days and lift performance, and histograms showing the distribution of improvements.
+
+![visualization (1)](https://github.com/cam-leo/Powerlifting/assets/172936155/c5eebb66-a9dd-45ae-b791-bb2f27556ef2)
 
 [View CSV data](2024-06-24T21-42_export.csv)
 
