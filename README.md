@@ -10,6 +10,7 @@ Due to size limitations on GitHub, the `openpowerlifting-20204-01-06-4c732975.cs
 ### Download Instructions
 
 To access the powerlifting data, please download it from https://www.kaggle.com/datasets/open-powerlifting/powerlifting-database/data?select=openpowerlifting-2024-01-06-4c732975.csv.
+The training_data csv is provided.
 
 ## Files Included
 
