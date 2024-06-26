@@ -18,7 +18,7 @@ The training_data csv is provided.
 
 ## Overview
 
-The `powerlifting_data.csv` file includes detailed information about powerlifting competition results, including lift types, weights lifted, and competition details. The `powerlifting_analysis.sql` file provides SQL queries to analyze this dataset, such as aggregating results, calculating averages, and filtering data based on various criteria.
+The `openpowerlifting-2024-01-06-4c732975.csv` file includes detailed information about powerlifting competition results, including lift types, weights lifted, and competition details. The `openpl.sql` file provides SQL queries to analyze this dataset, such as aggregating results, calculating averages, and filtering data based on various criteria.
 
 ## How to Use
 
