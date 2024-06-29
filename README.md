@@ -3,5 +3,8 @@
 ## Powerlifting
 Data analysis using SQL and Python
 
-##Life Insurance
+## Life Insurance
 Used R
+
+## docs
+random stuff for webpage
