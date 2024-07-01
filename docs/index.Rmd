@@ -1,64 +1,81 @@
 ---
-title: "Life Insurance"
+title: "Life Insurance Analysis"
+author: "Leo Cam"
+date: "2023-01-22"
 output:
-  pdf_document:
-    toc: true
   html_document:
+    df_print: paged
+    self_contained: false
     toc: true
     toc_float: true
-  md_document: default
-date: "2023-01-22"
+    theme: united
+    highlight: tango
+    code_folding: hide
+    number_sections: true
+    css: styles.css
+header-includes:
+  - \usepackage{titlesec}
+  - \titleformat{\section}{\normalfont\Large\bfseries}{\thesection}{1em}{}
+  - \renewcommand{\thesection}{\arabic{section}}
+  - \setcounter{section}{-1}
+runtime: shiny
 ---
 
 
+
+
 ```{r install-packages, include=FALSE}
-# Install packages only if not already installed
-packages <- c("rlang", "caret", "dplyr", "ggplot2", "readr", "shiny")
-installed_packages <- rownames(installed.packages())
+options(repos = c(CRAN = "https://cran.rstudio.com/"))
+packages <- c("shiny", "rlang", "caret", "dplyr", "ggplot2", "readr", "rmarkdown", "htmltools")
+
+# Install and load packages
 for (pkg in packages) {
-  if (!pkg %in% installed_packages) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
     install.packages(pkg)
   }
+  library(pkg, character.only = TRUE)
 }
+
 ```
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, fig.path = "figures/")
+# Load required libraries
+library(shiny)
+library(rlang)
+library(caret)
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(rmarkdown)  # Ensure this loads correctly
+library(knitr)
+library(htmltools)
+
 ```
 
-------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
 
 # Introduction
 
-------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
 
-This document is divided into four parts, each focusing on different aspects of financial and actuarial analysis related to life insurance. The analysis includes calculations of present value, net present value, accumulated value, interest rates, survival probabilities, and the evaluation of annuities and life insurance products
+This document is divided into four parts, each focusing on different aspects of financial and actuarial analysis related to life insurance:
 
-**Part I: Cash Flows**
+**Cash Flows**: Calculate Present Value (PV), Net Present Value (NPV), and Accumulated Value (AV) based on cash transactions.
 
-In this section, we calculate the Present Value (PV), Net Present Value (NPV), Accumulated Value (AV), and interest rates based on a series of positive and negative cash transactions over a timeline. These metrics help in understanding the time value of money and the impact of cash flow timings on the overall financial outcome.
+**Life Tables**: Import and analyze survival probabilities from a mortality dataset.
 
-**Part II: Life Tables**
+**Life Annuities**: Calculate PV and Expected Present Value (EPV) of different annuities.
 
-We import a dataset from mortality.org on Canada and use it to calculate survival probabilities. Life tables are essential tools in actuarial science, providing a detailed view of the mortality rates and survival probabilities across different ages. These tables are used to estimate the expected future lifetime and other mortality-related measures.
+**Life Insurance**: Analyze premiums and EPV of various life insurance products.
 
-**Part III: Life Annuities**
-
-This section deals with the calculation of the Present Value (PV) and Expected Present Value (EPV) of life annuities. Annuities are financial products that provide regular payments over a specified period, often used for retirement planning. We will define and compute the values of various types of annuities, including immediate and deferred annuities.
-
-**Part IV: Life Insurance**
-
-In this final section, we explore various life insurance products, calculating premiums, and the Expected Present Value (EPV) of whole life insurance policies. Life insurance is a contract that pays a benefit to beneficiaries upon the insured's death. We will analyze different scenarios to understand the cost and value of life insurance under varying conditions.
-
-
-------------------------------------------------------------------------------------
-
+---------------------------------------------------------------------------------
 
 # Cash Flows
 
-------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
 
-### Present Value
+## Present Value
 
 Suppose you want to go on a trip 5 years from now. You have expenses of 3000 each year for 4 years (including this year), followed by an expense of 4000 and a final expense of 5000. How much would you have to deposit at this moment in time to cover all of
 these future payments? Assume a constant interest rate of 2.14% and payments would take place at the beginning of the year.
@@ -80,13 +97,15 @@ discount_factors <- v ^ (0:5)
 
 # Present value
 present_val <- sum(cash_flows * discount_factors)
-present_val
+cat("Present Value (PV):", present_val)
 ```
+
 So you would have to make a deposit of 19800.98 at this current time to cover all of these future payments.
 
 ------------------------------------------------------------------------------------
 
-### Net Present Value (NPV)
+## Net Present Value (NPV)
+
 You're the head of a lawn mowing company. You want to invest in a new lawn mower than you are confident will generate cash
 flows of 50 each month for 3 months, followed by 20 for 2 months. The issue is it costs 185 and you're unsure if it will be a profitable investment. To find out if it is a good investment or not, you must calculate the NPV for this investment. Assume the monthly interest rate is 0.6%.
 
@@ -101,14 +120,15 @@ discount_factors <- (1+0.006) ^ - (0:5)
 
 # NPV
 npv <- sum(cash_flows * discount_factors) - 185
-npv
-
+cat("Net Present value (NPV) = ", npv)
 ```
+
 Since our NPV is positive, this indicates that this would be an overall gain ie profit.
 
 ------------------------------------------------------------------------------------
 
-### Accumulated Value
+## Accumulated Value
+
 Suppose instead of making those expenses, you chose to put them into a savings account. What would be your new present value, assuming same interest rate. What would be your new accumulated value?
 
 ```{r}
@@ -123,21 +143,23 @@ discount <- function(s, t, i = 0.0214) {
 
 # Calculate the pv
 pv <- sum(cash_flows * discount(0, 0:5))
-pv
+cat("Present Value =", pv)
 
 # Calculate the value at time 6
 av <- sum(cash_flows * discount(6, 0:5))
 
 # Calculate the value at time 6, starting from present_value
-pv * discount(6, 0)
+cat("Value at time 6 from Present value =", pv * discount(6, 0))
 
-print(av - pv)
+cat("Difference between Accumulated Value and Present Value =", av - pv)
 ```
+
 As you can see, there would be a difference of $2682.41 if you saved the money instead of spending it.
 
 ------------------------------------------------------------------------------------
 
-### Yearly Payments
+## Yearly Payments
+
 Your parents want to start saving money for your university costs. Each year of study will set you guys back by about 7500. You're currently 14 (t=0) and will start attending when you are 19 (t=5). Therefore, your parents will make 1 deposit each year for 4 years (t=1 to t=4). Assume you will attend for 4 years (t=5 to t=22), the constant annual interest rate is 3.14% and each deposit your parents make is equal. Find the amount of the deposit
 
 ```{r}
@@ -159,14 +181,15 @@ PV_payment <- sum(payments * discount_factors)
 
 # Calculate the yearly deposit K in the first 4 years
 yearly_deposit <-  PV_payment / PV_deposit 
-yearly_deposit
+cat("Yearly deposits", yearly_deposit)
 
 ```
 So your parents would have to make a deposit of 6627.546 for each of the 4 years to finance your university.
 
 ------------------------------------------------------------------------------------
 
-### Varying Interest Rates
+## Varying Interest Rates
+
 You want to take out a loan to open a new restaurant. You plan to take 1000 this year and 3000 next year. You plan to repay the money with equal yearly payments for the 10 years after next year (t=2 to t=11). Note this time the interest rate isn't constant but changes over time. For the first 3 years it is 4%, then for the next 3 years it is 4.5%, then for the final 5 years it is 6%. How much will your yearly payments be? 
 
 ```{r}
@@ -191,24 +214,25 @@ repayment_years <- 2:11
 discount_factors_repayments <- discount_factors[repayment_years + 1]
 n_payments <- length(discount_factors_repayments)
 
-# Define the yearly payment variable
+# yearly payment variable
 yearly_payment <- PV_loan / sum(discount_factors_repayments)
 
-# Create the full cash flow vector with the repayments
+# full cash flow vector with the repayments
 cash_flow_full <- c(cash_flow, rep(-yearly_payment, n_payments))
 
 # Calculate the PV of the repayments to check the balance
 PV_repayments <- sum(cash_flow_full * discount_factors)
 
 # Display the yearly payment and the PV balance check
-yearly_payment
-PV_repayments
+cat("Yearly Payments", yearly_payment)
+cat("Present value of the repayments", PV_repayments)
 ```
+
 Our PV is ~0, meaning the PV of the future payments and PV of your loans are equal, hence the yearly payments would be 515.2757
 
 ------------------------------------------------------------------------------------
 
-### Yearly to Monthly Interest Rate
+## Yearly to Monthly Interest Rate
 
 You plan to take out a 100,000 loan with a yearly interest rate of 2.88%. You want to pay back this loan with fixed monthly payments over the next 15 years. Find how much these monthly payments will be.
 
@@ -232,12 +256,12 @@ payments <- rep(1, number_payments)
 
 # Calculate the monthly loan payment K
 K <- 100000 / sum(payments * discount_factors)
-K
+cat("Monthly payments = ", K)
 ```
+
 These monthly payments will be 683.0401
 
-------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
 
 # Life Tables
 
@@ -262,45 +286,31 @@ Tx <- life_table$Tx
 ex <- life_table$ex
 px <- 1 - qx
 ```
-#### Year: 
-Year or range of years (for both period & cohort data)
 
-#### Age:
-Age group for n-year interval from exact age x to just before exact age x+n, where n=1, 4, 5, or infinity
+| **Variable** | **Description** |
+|--------------|-----------------|
+| Year         | Year or range of years (for period and cohort data) |
+| Age          | Age group, representing an n-year interval from exact age x to just before x + n, where n = 1, 4, 5, or infinity |
+| m(x)         | Central death rate between ages x and x + n |
+| q(x)         | Probability of death between ages x and x + n |
+| a(x)         | Average length of survival between ages x and x + n for persons dying in the interval |
+| l(x)         | Number of survivors at exact age x, assuming l(0) = 100,000 |
+| d(x)         | Number of deaths between ages x and x + n |
+| L(x)         | Number of person-years lived between ages x and x + n |
+| T(x)         | Number of person-years remaining after exact age x |
+| e(x)         | Life expectancy at exact age x (in years) |
 
-#### m(x)
-Central death rate between ages x and x+n
-
-#### q(x)
-Probability of death between ages x and x+n
-
-#### a(x)
-Average length of survival between ages x and x+n for persons dying in the interval
-
-#### l(x)
-Number of survivors at exact age x, assuming l(0) = 100,000
-
-#### d(x)
-Number of deaths between ages x and x+n
-
-#### L(x)
-Number of person-years lived between ages x and x+n
-
-#### T(x)
-Number of person-years remaining after exact age x
-
-#### e(x)
-Life expectancy at exact age x (in years)
 
 ------------------------------------------------------------------------------------
 
 ## Mortality Rates
 ```{r}
-# Setting up the plot
-par(xpd = TRUE, mar = c(5, 4, 4, 6) + 0.1) # To ensure plot doesn't cover data
+# Adjusting plot size and margins
+par(xpd = TRUE, mar = c(5, 4, 4, 6) + 0.1, pin = c(5, 4))  # Adjusted margins and aspect ratio
 
+# Function to convert age to numeric
 convert_age <- function(x) {
-  x[x == "110+"] <- "110"  # Age is character in our dataset, need to change to numeric
+  x[x == "110+"] <- NA  # Exclude "110+" from numeric conversion
   suppressWarnings({
     as.numeric(x)
   })
@@ -311,31 +321,45 @@ age <- convert_age(age)
 years <- unique(year)
 color_palette <- colorRampPalette(c("blue", "green", "yellow", "red"))(length(years))
 
-# Initialize plot
-plot2 <- plot(NULL, 
-              xlim = range(age, na.rm = TRUE),  # Exclude NAs from range calculation
-              ylim = range(qx, na.rm = TRUE),   # Exclude NAs from range calculation
-              main = "Mortality rates (Canada, Males & Females, 1921-2021)",
-              xlab = "Age x",
-              ylab = expression(paste("Mortality rate ", q[x])),
-              type = "l"
+# Initialize the plot
+plot(NULL, 
+     xlim = range(age, na.rm = TRUE),  # Exclude NAs from range calculation
+     ylim = c(0, 1.0),   # Set y-axis range from 0 to 1.0
+     main = "Mortality rates (Canada, Males & Females, 1921-2021)",
+     xlab = "Age x",
+     ylab = expression(paste("Mortality rate ", q[x])),
+     type = "n"  # Create an empty plot
 )
 
 # Plot each year's data
 suppressWarnings({
   for (i in seq_along(years)) {
     year_data <- subset(life_table, Year == years[i])
-    lines(year_data$Age, year_data$qx, col = color_palette[i], type = "l")
+    
+    # Exclude "110+" age category
+    year_data <- year_data[year_data$Age != "110+", ]
+    
+    # Convert Age to numeric
+    year_data$Age <- convert_age(year_data$Age)
+    
+    # Ensure data is sorted by Age for proper line connection
+    year_data <- year_data[order(year_data$Age), ]
+    
+    lines(year_data$Age, year_data$qx, col = color_palette[i])
   }
 })
 
 # Colored legend
-legend("topright", inset = c(-0.2,0),
+legend("topright", inset = c(-0.2, 0),
        legend = c("1921", "1955", "1988", "2021"),
        col = color_palette[c(1, which.min(abs(years - 1955)), 
                              which.min(abs(years - 1988)), length(years))],
        lty = 1, 
        title = "Year")
+
+
+
+
 
 ```
 
@@ -424,12 +448,12 @@ px <- 1 - qx
 ```
 
 
-### Probability an invidual of age x dies before age x, future life of age x
+### Probability an invidual of age X dies before age Y, future life of age X
 
 #### Finding the probability that an 23 year old dies before turning 24
 ```{r}
 
-qx[23 + 1]
+cat("qx value", qx[23 + 1])
 
 ```
 As we can see, it is a very low probability, < 0.098%
@@ -438,7 +462,7 @@ As we can see, it is a very low probability, < 0.098%
 
 #### The expected future lifetime of an 23 year old
 ```{r}
-ex[23 + 1]
+cat("ex value", ex[23 + 1])
 
 ```
 It is expected that an average 23 year old from Canada will live for 57.06 more years in Canada in 2021
