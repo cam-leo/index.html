@@ -1,5 +1,7 @@
 # Actuarial Life Insurance and Annuity Calculator
 
+[Link to Project](https://cam-leo.github.io/index.html/)
+
 ## Project Overview
 
 This repository contains an R-based actuarial calculator for life insurance and annuity products. It demonstrates practical application of actuarial mathematics, life table manipulations, and interactive modeling using R and Shiny.
