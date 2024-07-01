@@ -61,7 +61,7 @@ Feel free to explore the projects and reach out if you have any questions or fee
 ## Contact
 
 - **Email:** [camleo.lc@gmail.com](mailto:camleo.lc@gmail.com)
-- **LinkedIn:** [My-Linkedin](www.linkedin.com/in/leo-cam-445a15284)
+- **LinkedIn:** [Leo Cam](https://www.linkedin.com/in/leo-cam-445a15284)
 
 
 
