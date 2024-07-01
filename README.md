@@ -40,7 +40,7 @@ In this project, I analyzed a powerlifting dataset to uncover insights and trend
 
 ### 3. Exam PA Dataset Analysis
 
-**Tools:** Various (please specify the tools used)
+**Tools:** R
 
 This project includes an analysis of a dataset related to Exam PA (Predictive Analytics). The analysis focuses on applying predictive modeling techniques to gain insights from the data.
 
