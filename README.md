@@ -21,7 +21,7 @@ This project involves the computation of present values and the creation of vari
 - Custom functions for present value calculations.
 - Interactive calculators for easy use.
 
-[View Project](link-to-life-insurance-project)
+[View Project](https://github.com/cam-leo/index.html/tree/main/LifeInsurance)
 
 ### 2. Powerlifting Data Analysis
 
@@ -36,7 +36,7 @@ In this project, I analyzed a powerlifting dataset to uncover insights and trend
 - Comprehensive data analysis and visualization using Python.
 - Streamlit web app for interactive data exploration.
 
-[View Project](link-to-powerlifting-project)
+[View Project](https://github.com/cam-leo/index.html/tree/main/Powerlifting)
 
 ### 3. Exam PA Dataset Analysis
 
@@ -50,7 +50,7 @@ This project includes an analysis of a dataset related to Exam PA (Predictive An
 - Application of predictive modeling techniques.
 - Interpretation of results and model evaluation.
 
-[View Project](link-to-exam-pa-project)
+[View Project](https://github.com/cam-leo/R-assignments)
 
 ## About Me
 
@@ -60,7 +60,9 @@ Feel free to explore the projects and reach out if you have any questions or fee
 
 ## Contact
 
-- **Email:** [your-email@example.com](mailto:your-email@example.com)
-- **LinkedIn:** [your-linkedin-profile](https://www.linkedin.com/in/your-linkedin-profile/)
+- **Email:** [camleo.lc@gmail.com](mailto:camleo.lc@gmail.com)
+- **LinkedIn:** [My-Linkedin](www.linkedin.com/in/leo-cam-445a15284)
+
+
 
 Thank you for visiting my portfolio!
