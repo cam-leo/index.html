@@ -4,8 +4,6 @@ author: "Leo Cam"
 date: "2023-01-22"
 output:
   html_document:
-    df_print: paged
-    self_contained: false
     toc: true
     toc_float: true
     theme: united
@@ -26,16 +24,13 @@ runtime: shiny
 
 ```{r install-packages, include=FALSE}
 options(repos = c(CRAN = "https://cran.rstudio.com/"))
-packages <- c("shiny", "rlang", "caret", "dplyr", "ggplot2", "readr", "rmarkdown", "htmltools")
-
-# Install and load packages
-for (pkg in packages) {
-  if (!requireNamespace(pkg, quietly = TRUE)) {
+packages <- c("shiny", "rlang", "caret", "dplyr", "ggplot2", "readr")
+sapply(packages, function(pkg) {
+  if (!require(pkg, character.only = TRUE)) {
     install.packages(pkg)
+    library(pkg, character.only = TRUE)
   }
-  library(pkg, character.only = TRUE)
-}
-
+})
 ```
 
 ```{r setup, include=FALSE}
@@ -47,10 +42,7 @@ library(caret)
 library(dplyr)
 library(ggplot2)
 library(readr)
-library(rmarkdown)  # Ensure this loads correctly
-library(knitr)
-library(htmltools)
-
+library(rmarkdown)
 ```
 
 ---------------------------------------------------------------------------------
@@ -99,7 +91,6 @@ discount_factors <- v ^ (0:5)
 present_val <- sum(cash_flows * discount_factors)
 cat("Present Value (PV):", present_val)
 ```
-
 So you would have to make a deposit of 19800.98 at this current time to cover all of these future payments.
 
 ------------------------------------------------------------------------------------
@@ -120,40 +111,42 @@ discount_factors <- (1+0.006) ^ - (0:5)
 
 # NPV
 npv <- sum(cash_flows * discount_factors) - 185
-cat("Net Present value (NPV) = ", npv)
+cat("Net Present value (NPV)", npv)
 ```
-
 Since our NPV is positive, this indicates that this would be an overall gain ie profit.
 
 ------------------------------------------------------------------------------------
 
 ## Accumulated Value
-
 Suppose instead of making those expenses, you chose to put them into a savings account. What would be your new present value, assuming same interest rate. What would be your new accumulated value?
 
 ```{r}
 
 # Cash flows
-cash_flows <- c(rep(3000,4), 4000, 5000)
+cash_flows <- c(rep(3000, 4), 4000, 5000)
+cat("Cash flows:", cash_flows)
 
 # Define the discount function 
 discount <- function(s, t, i = 0.0214) {
   (1 + i) ^ - (t - s)
 }
 
-# Calculate the pv
+# Calculate the present value
 pv <- sum(cash_flows * discount(0, 0:5))
-cat("Present Value =", pv)
+cat("Present Value (PV):", pv)
 
 # Calculate the value at time 6
 av <- sum(cash_flows * discount(6, 0:5))
+cat("Accumulated Value (AV):", av)
 
 # Calculate the value at time 6, starting from present_value
-cat("Value at time 6 from Present value =", pv * discount(6, 0))
+pv_at_6 <- pv * discount(6, 0)
+cat("PV at time 6:", pv_at_6)
 
-cat("Difference between Accumulated Value and Present Value =", av - pv)
+difference <- av - pv_at_6
+cat("Difference:", difference)
+
 ```
-
 As you can see, there would be a difference of $2682.41 if you saved the money instead of spending it.
 
 ------------------------------------------------------------------------------------
@@ -181,7 +174,7 @@ PV_payment <- sum(payments * discount_factors)
 
 # Calculate the yearly deposit K in the first 4 years
 yearly_deposit <-  PV_payment / PV_deposit 
-cat("Yearly deposits", yearly_deposit)
+cat("Yearly Payments =", yearly_deposit)
 
 ```
 So your parents would have to make a deposit of 6627.546 for each of the 4 years to finance your university.
@@ -189,7 +182,6 @@ So your parents would have to make a deposit of 6627.546 for each of the 4 years
 ------------------------------------------------------------------------------------
 
 ## Varying Interest Rates
-
 You want to take out a loan to open a new restaurant. You plan to take 1000 this year and 3000 next year. You plan to repay the money with equal yearly payments for the 10 years after next year (t=2 to t=11). Note this time the interest rate isn't constant but changes over time. For the first 3 years it is 4%, then for the next 3 years it is 4.5%, then for the final 5 years it is 6%. How much will your yearly payments be? 
 
 ```{r}
@@ -214,20 +206,20 @@ repayment_years <- 2:11
 discount_factors_repayments <- discount_factors[repayment_years + 1]
 n_payments <- length(discount_factors_repayments)
 
-# yearly payment variable
+# Define the yearly payment variable
 yearly_payment <- PV_loan / sum(discount_factors_repayments)
 
-# full cash flow vector with the repayments
+# Create the full cash flow vector with the repayments
 cash_flow_full <- c(cash_flow, rep(-yearly_payment, n_payments))
 
 # Calculate the PV of the repayments to check the balance
 PV_repayments <- sum(cash_flow_full * discount_factors)
 
 # Display the yearly payment and the PV balance check
-cat("Yearly Payments", yearly_payment)
-cat("Present value of the repayments", PV_repayments)
-```
+cat("Yearly payments =", yearly_payment)
 
+cat("PV of repayments =",PV_repayments)
+```
 Our PV is ~0, meaning the PV of the future payments and PV of your loans are equal, hence the yearly payments would be 515.2757
 
 ------------------------------------------------------------------------------------
@@ -256,9 +248,8 @@ payments <- rep(1, number_payments)
 
 # Calculate the monthly loan payment K
 K <- 100000 / sum(payments * discount_factors)
-cat("Monthly payments = ", K)
+cat("Monthly loan payments =", K)
 ```
-
 These monthly payments will be 683.0401
 
 ---------------------------------------------------------------------------------
@@ -286,31 +277,45 @@ Tx <- life_table$Tx
 ex <- life_table$ex
 px <- 1 - qx
 ```
+#### Year: 
+Year or range of years (for both period & cohort data)
 
-| **Variable** | **Description** |
-|--------------|-----------------|
-| Year         | Year or range of years (for period and cohort data) |
-| Age          | Age group, representing an n-year interval from exact age x to just before x + n, where n = 1, 4, 5, or infinity |
-| m(x)         | Central death rate between ages x and x + n |
-| q(x)         | Probability of death between ages x and x + n |
-| a(x)         | Average length of survival between ages x and x + n for persons dying in the interval |
-| l(x)         | Number of survivors at exact age x, assuming l(0) = 100,000 |
-| d(x)         | Number of deaths between ages x and x + n |
-| L(x)         | Number of person-years lived between ages x and x + n |
-| T(x)         | Number of person-years remaining after exact age x |
-| e(x)         | Life expectancy at exact age x (in years) |
+#### Age:
+Age group for n-year interval from exact age x to just before exact age x+n, where n=1, 4, 5, or infinity
 
+#### m(x)
+Central death rate between ages x and x+n
+
+#### q(x)
+Probability of death between ages x and x+n
+
+#### a(x)
+Average length of survival between ages x and x+n for persons dying in the interval
+
+#### l(x)
+Number of survivors at exact age x, assuming l(0) = 100,000
+
+#### d(x)
+Number of deaths between ages x and x+n
+
+#### L(x)
+Number of person-years lived between ages x and x+n
+
+#### T(x)
+Number of person-years remaining after exact age x
+
+#### e(x)
+Life expectancy at exact age x (in years)
 
 ------------------------------------------------------------------------------------
 
 ## Mortality Rates
 ```{r}
-# Adjusting plot size and margins
-par(xpd = TRUE, mar = c(5, 4, 4, 6) + 0.1, pin = c(5, 4))  # Adjusted margins and aspect ratio
+# Setting up the plot
+par(xpd = TRUE, mar = c(5, 4, 4, 6) + 0.1) # To ensure plot doesn't cover data
 
-# Function to convert age to numeric
 convert_age <- function(x) {
-  x[x == "110+"] <- NA  # Exclude "110+" from numeric conversion
+  x[x == "110+"] <- "110"  # Age is character in our dataset, need to change to numeric
   suppressWarnings({
     as.numeric(x)
   })
@@ -321,45 +326,31 @@ age <- convert_age(age)
 years <- unique(year)
 color_palette <- colorRampPalette(c("blue", "green", "yellow", "red"))(length(years))
 
-# Initialize the plot
-plot(NULL, 
-     xlim = range(age, na.rm = TRUE),  # Exclude NAs from range calculation
-     ylim = c(0, 1.0),   # Set y-axis range from 0 to 1.0
-     main = "Mortality rates (Canada, Males & Females, 1921-2021)",
-     xlab = "Age x",
-     ylab = expression(paste("Mortality rate ", q[x])),
-     type = "n"  # Create an empty plot
+# Initialize plot
+plot2 <- plot(NULL, 
+              xlim = range(age, na.rm = TRUE),  # Exclude NAs from range calculation
+              ylim = range(qx, na.rm = TRUE),   # Exclude NAs from range calculation
+              main = "Mortality rates (Canada, Males & Females, 1921-2021)",
+              xlab = "Age x",
+              ylab = expression(paste("Mortality rate ", q[x])),
+              type = "l"
 )
 
 # Plot each year's data
 suppressWarnings({
   for (i in seq_along(years)) {
     year_data <- subset(life_table, Year == years[i])
-    
-    # Exclude "110+" age category
-    year_data <- year_data[year_data$Age != "110+", ]
-    
-    # Convert Age to numeric
-    year_data$Age <- convert_age(year_data$Age)
-    
-    # Ensure data is sorted by Age for proper line connection
-    year_data <- year_data[order(year_data$Age), ]
-    
-    lines(year_data$Age, year_data$qx, col = color_palette[i])
+    lines(year_data$Age, year_data$qx, col = color_palette[i], type = "l")
   }
 })
 
 # Colored legend
-legend("topright", inset = c(-0.2, 0),
+legend("topright", inset = c(-0.2,0),
        legend = c("1921", "1955", "1988", "2021"),
        col = color_palette[c(1, which.min(abs(years - 1955)), 
                              which.min(abs(years - 1988)), length(years))],
        lty = 1, 
        title = "Year")
-
-
-
-
 
 ```
 
@@ -448,12 +439,12 @@ px <- 1 - qx
 ```
 
 
-### Probability an invidual of age X dies before age Y, future life of age X
+### Probability an invidual of age x dies before age x, future life of age x
 
 #### Finding the probability that an 23 year old dies before turning 24
 ```{r}
 
-cat("qx value", qx[23 + 1])
+cat("qx =",qx[23 + 1])
 
 ```
 As we can see, it is a very low probability, < 0.098%
@@ -462,7 +453,7 @@ As we can see, it is a very low probability, < 0.098%
 
 #### The expected future lifetime of an 23 year old
 ```{r}
-cat("ex value", ex[23 + 1])
+cat("ex =",ex[23 + 1])
 
 ```
 It is expected that an average 23 year old from Canada will live for 57.06 more years in Canada in 2021
@@ -707,20 +698,23 @@ points(age, sims,
 
 #### Calculate the probability that (25) survives 5 more years
 ```{r}
-prod(px[(25 + 1):(30 + 1)])
+value1 <- prod(px[(25 + 1):(30 + 1)])
+cat("Prob that a 25 year old survives for 5 more years =", value1)
 ```
 
 #### Compute the survival probabilities of (25) until the age of 100
 
 ```{r}
 kpx <- cumprod(px[(25 + 1):(99 + 1)])
+cat("Survival prob's of a 25 year old until 100 =", kpx)
 ```
 
 
 #### Extract the probability that (25) survives until the age of 100
 
 ```{r}
-kpx[length(kpx)]
+value3 <- kpx[length(kpx)]
+cat("Prob that a 25 year old survives until 100", value3)
 ```
 
 
@@ -737,11 +731,13 @@ plot(1:length(kpx), kpx,
 #### Compute the survival probabilities of (25)
 ```{r}
 kpx <- c(1, cumprod(px[(25 + 1):(length(px) - 1)]))
+cat("Survival prob's of a 25 year old", kpx)
 ```
 
 #### Compute the deferred mortality probabilities of (25)
 ```{r}
 kqx <- kpx * qx[(25 + 1):length(qx)]
+cat("Deferred mortality prob's of a 25 year old =", kpx)
 ```
 
 
@@ -758,18 +754,24 @@ plot(0:(length(kqx) - 1), kqx,
 #### Survival probabilities and curtate expected future lifetime of (0)
 ```{r}
 kp0 <- cumprod(px)
-sum(kp0)
+cat("Survival prob's of a 0 year old", kp0)
+sum_kp0 <- sum(kp0)
+cat("Curtate expected future lifetime of a 0 year old",sum_kp0 )
 ```
 
 #### Survival probabilities and curtate expected future lifetime of a 25 year old
 ```{r}
 kp25 <- cumprod(px[(25 + 1):length(px)])
-sum(kp25)
+cat("Survival prob's of a 25 year old", kp25)
+sum_kp25 <- sum(kp25)
+cat("Curtate expected future lifetime of a 25 year old",sum_kp25 )
+
 ```
 
 #### Complete expected future lifetime of (0) and (25)
 ```{r}
-ex[c(0 + 1, 25 + 1)]
+efl <- ex[c(0 + 1, 25 + 1)]
+cat("Expected future lifetime of a 0 and 25 year old", efl)
 ```
 
 ### Function to compute the curtate expected future lifetime for a given age and life table
@@ -788,7 +790,7 @@ curtate_future_lifetime <- function(age2, life_table) {
 ```{r}
 valid_ages <- age2[!is.na(age2)]
 future_lifetimes <- sapply(valid_ages, function(age) curtate_future_lifetime(age, life_table))
-future_lifetimes
+cat("Future lifetimes for all ages:", future_lifetimes)
 ```
 
 ```{r}
@@ -850,33 +852,39 @@ life_table_1981
 #### 1981 cohort one-year survival probabilities
 ```{r}
 px <- 1 - life_table_1981$qx
+cat("One year survival probabilities for 1981 birth year = ", px)
 ```
 
 #### 1981 cohort survival probability that (18) survives 5 more years
 ```{r}
-prod(px[(18 + 1):(22 + 1)])
+prodp <- prod(px[(18 + 1):(22 + 1)])
+cat("Survival probability that an 18 year old survives 5 more years for 1981 birth year =", prodp)
 ```
 
 #### 1881 cohort survival probability that (18) survives 5 more years
 ```{r}
-with(subset(life_table, Year - Age == 1881), prod(1 - qx[(18 + 1):(22 + 1)]))
+prodp2 <- with(subset(life_table, Year - Age == 1881), prod(1 - qx[(18 + 1):(22 + 1)]))
+cat("Survival probability that an 18 year old survives 5 more years for 1881 birth year =", prodp2)
+
 ```
 
 
 #### PV of guaranteed payment of 10,000 in 5 years
 ```{r}
 PV <- 10000 * (1 + 0.02) ^ -5
-PV
+cat("PV =",PV)
 ```
 
 #### 5 year survival probabilities of (20)
 ```{r}
 kpx <- prod(px[(20 + 1):(24 + 1)])
+cat("kpx =", kpx)
 ```
 
 #### EPV of pure endowment of 10,000 in 5 years for (20)
 ```{r}
-PV * kpx
+epv <- PV * kpx
+cat("Expected Present value =", epv)
 ```
 
 # Life Annuities
@@ -885,17 +893,19 @@ PV * kpx
 #### PV of guaranteed payments of 10,000 in 5, 10 and 30 years
 ```{r}
 PV <- 10000 * (1 + 0.02) ^ - c(5, 10, 30)
-PV
+cat("Present value =",PV)
 ```
 
 #### Survival probabilities of (20)
 ```{r}
 kpx <- cumprod(px[(20 + 1):length(px)])
+cat("kpx =", kpx)
 ```
 
 #### EPV of pure endowments of 10,000 in 5, 10 and 30 years for (20)
 ```{r}
-PV * kpx[c(5, 10, 30)]
+epv2 <- PV * kpx[c(5, 10, 30)]
+cat("Expected Present Value =", epv)
 ```
 
 ## Whole Life Annuity Due
@@ -909,6 +919,7 @@ kpx <-
 discount_facotrs <- (1+0.03)^-(0:(length(kpx)-1))
 benefits <- rep(1,length(kpx))
 sum(benefits*discount_factors*kpx)
+
 ```
 ## Whole Life Immediate Annuity
 
@@ -920,7 +931,8 @@ kpx <-
   c(1, cumprod(px[(35+1):length(px)]))
 discount_facotrs <- (1+0.03)^-(1:(length(kpx)))
 benefits <- rep(1,length(kpx))
-sum(benefits*discount_factors*kpx)
+wid <- sum(benefits*discount_factors*kpx)
+cat("Whole life immediate annuity =", wid)
 ```
 
 ## Expected Present Value 
@@ -971,19 +983,19 @@ shinyApp(ui = ui, server = server)
 
 #### EPV of a whole life annuity due for (20) at interest rate 2% using life_table
 ```{r}
-life_annuity_due(20, 0.02, life_table)
+epv3 <- life_annuity_due(20, 0.02, life_table)
+cat("EPV of whole life annuity due =", epv3)
 ```
 
 #### EPV of a whole life annuity due for (20) at interest rate 5% and for (65) at interest rate 2% using life_table
 ```{r}
-life_annuity_due(20, 0.05, life_table)
-life_annuity_due(65, 0.02, life_table)
+epv4 <- life_annuity_due(20, 0.05, life_table)
+cat("EPV of life annuity due for 20 year old at 5% interest rate =", epv4)
+epv5 <- life_annuity_due(65, 0.02, life_table)
+cat("EPV of life annuity due for 65 year old at 5% interest rate =", epv5)
+
 ```
 
-#### EPV of a whole life annuity due for (20) at interest rate 2% using life_table
-```{r}
-life_annuity_due(20, 0.02, life_table)
-```
 
 ### Function to compute the EPV of a whole life immediate annuity for a given age, interest rate i and life table
 ```{r}
@@ -997,13 +1009,11 @@ life_immediate_annuity <- function(age, i, life_table) {
 
 #### EPV of a whole life immediate annuity for (20) at interest rate 2% using life_table
 ```{r}
-life_immediate_annuity(20, 0.02, life_table)
+epv6 <- life_immediate_annuity(20, 0.02, life_table)
+cat("EPV of life annuity immediate for a 20 year old using 2% interest rate =", epv6)
 ```
 
-#### EPV of a whole life annuity due for (20) at interest rate 2% using life_table
-```{r}
-life_annuity_due(20, 0.02, life_table)
-```
+
 
 ### Function to compute the EPV of a temporary life annuity due for a given age, period of n years, interest rate i and life table
 ```{r}
@@ -1048,8 +1058,10 @@ shinyApp(ui = ui, server = server)
 
 ### EPV of a temporary life annuity due for (20) over 10 years at interest rate 2% using life_table
 ```{r}
-temporary_life_annuity_due(20, 10, 0.02, life_table)
+epvt <- temporary_life_annuity_due(20, 10, 0.02, life_table)
+cat("EPV of temporary life annuity due for 20 year old over 10 years at 2% interest rate =", epvt)
 ```
+
 ## Pension Valuation
 
 ### Calculating the PV of a pension at age 65
@@ -1065,13 +1077,13 @@ discount_factors <- 1.04 ^ - (0:35)
 # PV of pension at age 65
 
 PV_65 <- sum(benefits * discount_factors)
-PV_65
+cat("PV of pension at age 65 =",PV_65)
 
 
 # PV of pension at age 20
 
 PV_20 <- PV_65 * 1.03 ^ - 45
-PV_20
+cat("PV of pension at age 20 =",PV_20)
 ```
 
 
@@ -1086,13 +1098,13 @@ kpx <- c(1, cumprod(px[(65 + 1):(99 + 1)]))
 # EPV of pension at age 65
 
 EPV_65 <- sum(benefits * discount_factors * kpx)
-cbind(PV_65, EPV_65)
+cat("EPV of pension at age 65 =",cbind(PV_65, EPV_65))
 
 
 # EPV of pension at age 20
 
 EPV_20 <- EPV_65 * (1.03 ^ - 45 * prod(px[(20 + 1):(64 + 1)]))
-cbind(PV_20, EPV_20)
+cat("EPV of pension at age 20 =",cbind(PV_20, EPV_20))
 ```
 
 ### Retirement Plan
@@ -1118,28 +1130,34 @@ benefits <- c(rep(0, 25), rep(10000, length(kpx) - 25))
 # The single premium
 
 single_premium <- sum(benefits * discount_factors * kpx)
-single_premium
+cat("Single premium =",single_premium)
 ```
+
 Suppose you want to finance this deferred life annuity with annual premiums payable for 25 years beginning at age 40. However, you plan to reduce your work hours from age 55 onwards, therefore the premium will reduce by 1 half after 15 years. What is the initial premium you will pay
+
 ```{r}
 # Premium pattern rho
 rho <- c(rep(1, 15), rep(0.5, 10), rep(0, length(kpx) - 25))
 
 # The initial premium
 initial_premium <- single_premium / sum(rho * discount_factors * kpx, na.rm = TRUE)
-initial_premium
+cat("Initial premium =", initial_premium, "\n")
 
 # The annual premiums
 annual_premiums <- initial_premium * rho
 
 # Filter out the zero values from the annual premiums
 filtered_annual_premiums <- annual_premiums[annual_premiums != 0]
+cat("Filtered annual premiums =", filtered_annual_premiums, "\n")
 
 # Sum of the annual premiums (no actuarial discounting)
-sum(filtered_annual_premiums)
+sap <- sum(filtered_annual_premiums)
+cat("Sum of annual premiums =", sap, "\n")
 
 ```
+
 Find out if this product would be a favorable deal for you. How much would you receive if you died instead at 75, or 95?
+
 ```{r}
 # Curtate life expectancy of (40)
 sum(kpx[-1])
@@ -1150,8 +1168,9 @@ sum(benefits[subset1] * discount_factors[subset1])
 
 # Present value of annuity benefits when (40) lives until age 95
 subset2 <- 1:56
-sum(benefits[subset2] * discount_factors[subset2])
+cat("Presnet value of the annuity benefits for a 40 year old living until 95 =",sum(benefits[subset2] * discount_factors[subset2]))
 ```
+
 # Life Insurance
 
 You have bought a life insurance that is sold to 20 year olds and will pay 10000 at the end of the year of death if your death occurs at age 30. How much is the expected present value (EPV)
@@ -1169,7 +1188,7 @@ discount_factor <- (1 + 0.01) ^ - 11
 discount_factor
 
 # EPV of the simple life insurance
-10000 * discount_factor * kqx
+cat("EPV of simple life insurance =",10000 * discount_factor * kqx)
 ```
 ## Whole, Temporary and Deferred Life Insurance
 
@@ -1228,14 +1247,16 @@ temporary_life_insurance <- function(age, n, i, life_table_2021) {
 }
 
 # EPV of a temporary life insurance for (20) over a period of 45 years at interest rate 2% using life_table_2021
-temporary_life_insurance(20, 45, 0.02, life_table_2021)
+cat("EPV of a temporary life insurance for (20) over a period of 45 years at interest rate 2% =",temporary_life_insurance(20, 45, 0.02, life_table_2021))
 
 # EPV of a whole life insurance for (20) at interest rate 2% using life_table
-whole_life_insurance(20, 0.02, life_table_2021)
+cat(" EPV of a whole life insurance for (20) at interest rate 2% =",whole_life_insurance(20, 0.02, life_table_2021))
 ```
+
 ## Deferred Life Insurance
 
 #### Calculating EPV of a deferred life insurance for constant interest rate on age x
+
 ```{r}
 # Function to compute the EPV of a deferred whole life insurance
 deferred_life_insurance <- function(age, u, i, life_table_2021) {
@@ -1248,9 +1269,11 @@ deferred_life_insurance <- function(age, u, i, life_table_2021) {
 }
 
 # EPV of a deferred life insurance for (20) deferred over 45 years at interest rate 2% using life_table_2021
-deferred_life_insurance(20, 45, 0.02, life_table_2021)
+cat("EPV of a deferred life insurance for (20) deferred over 45 years at interest rate 2% =",deferred_life_insurance(20, 45, 0.02, life_table_2021))
 ```
+
 #### Suppose you are age 48 and want to insure a benefit of 40000 for death between the ages of 55 and 75. Assume interest rate is 5%
+
 ```{r}
 # Deferred mortality probabilites of (48)
 kqx <- c(1, cumprod(px[(48 + 1):(73 + 1)])) * qx[(48 + 1):(74 + 1)]
@@ -1264,23 +1287,25 @@ benefits <- c(rep(0, 7), rep(40000, length(kqx) - 7))
 
 # EPV of the death benefits
 EPV_death_benefits <- sum(benefits * discount_factors * kqx)
-EPV_death_benefits
+cat("EPV of death benefits =",EPV_death_benefits)
 ```
+
 #### Now suppose you want to add a savings component to the policy that will add 80000 if you are alive at age 75. You want to finance this endowment insurance with constant premiums.
+
 ```{r}
 # Pure endowment
 EPV_pure_endowment <- 80000 * (1 + i) ^ - 27 * prod(px[(48 + 1):(74 + 1)])
-EPV_pure_endowment
+cat(" EPV of pure endowment =",EPV_pure_endowment)
 
 # Premium pattern
 kpx <- c(1, cumprod(px[(48 + 1):(73 + 1)]))
 discount_factors <- (1 + i) ^ - (0:(length(kpx) - 1))
 rho <- rep(1, length(kpx))
 EPV_rho <- sum(rho * discount_factors * kpx)
-EPV_rho
+cat("Premium pattern EPV = ",EPV_rho)
 
 # Premium level
-(EPV_death_benefits + EPV_pure_endowment) / EPV_rho
+cat("Premium level =", (EPV_death_benefits + EPV_pure_endowment) / EPV_rho)
 ```
 
 ## Shiny App for Life Insurance Calculator
