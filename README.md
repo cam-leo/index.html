@@ -1,6 +1,6 @@
-# Actuarial Projects Portfolio
+# Projects Portfolio
 
-Welcome to my actuarial projects portfolio! This repository contains various projects I have completed as part of my journey in actuarial science and data analysis. The two main projects showcased here are focused on life insurance computations using R and powerlifting data analysis using SQL and Python. Additionally, I have included some minor projects, including an analysis of an Exam PA dataset.
+Welcome to my projects portfolio! This repository contains various projects I have completed as part of my journey in mathematics, statistics and data analysis. The two main projects showcased here are focused on life insurance computations using R and powerlifting data analysis using SQL and Python. Additionally, I have included some minor projects, including an analysis of an Exam PA dataset.
 
 ## Projects
 
@@ -54,7 +54,7 @@ This project includes an analysis of a dataset related to Exam PA (Predictive An
 
 ## About Me
 
-I am an aspiring actuary with a passion for data analysis and predictive modeling. My goal is to leverage my analytical skills to solve complex problems and provide valuable insights. This repository showcases some of the projects I have worked on, highlighting my skills in R, SQL, Python, and data visualization.
+I am a person with a passion for data analysis and predictive modeling. My goal is to leverage my analytical skills to solve complex problems and provide valuable insights. This repository showcases some of the projects I have worked on, highlighting my skills in R, SQL, Python, and data visualization.
 
 Feel free to explore the projects and reach out if you have any questions or feedback!
 
