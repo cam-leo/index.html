@@ -1,6 +1,6 @@
 # Projects Portfolio
 
-Welcome to my projects portfolio! This repository contains various projects I have completed as part of my journey in mathematics, statistics and data analysis. The two main projects showcased here are focused on life insurance computations using R and powerlifting data analysis using SQL and Python. Additionally, I have included some minor projects, including an analysis of an Exam PA dataset.
+Welcome to my projects portfolio! This repository contains various projects I have completed as part of my journey in mathematics, statistics and data analysis. The two main projects showcased here are focused on life insurance computations using R and powerlifting data analysis using SQL and Python. Additionally, I have included some minor projects, including an analysis of an Exam PA dataset and another R project of a Time Series data analysis.
 
 ## Projects
 
