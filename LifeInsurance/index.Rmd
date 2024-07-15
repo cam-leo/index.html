@@ -1,0 +1,2777 @@
+---
+title: "Life Insurance Analysis"
+author: "Leo Cam 
+[My Github](https://github.com/cam-leo/index.html)"
+date: "2023-01-22"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    number_sections: false
+    theme: united
+    highlight: tango
+    code_folding: hide
+    css: combined.css
+    self_contained: false
+runtime: shiny
+---
+<div class="content-wrapper">
+
+```{r install-packages, include=FALSE}
+options(repos = c(CRAN = "https://cran.rstudio.com/"))
+packages <- c("shiny", "rlang", "caret", "dplyr", "ggplot2", "readr", "plotly", "actuar", "xaringan")
+sapply(packages, function(pkg) {
+  if (!require(pkg, character.only = TRUE)) {
+    install.packages(pkg)
+    library(pkg, character.only = TRUE)
+  }
+})
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.path = "figures/")
+# Load required libraries
+library(shiny)
+library(rlang)
+library(caret)
+library(dplyr)
+library(ggplot2) 
+library(readr)
+library(rmarkdown)
+library(actuar)
+library(xaringan)
+library(xfun)
+```
+
+---------------------------------------------------------------------------------
+
+# Introduction
+
+
+This document is divided into four parts, each focusing on different aspects of financial and actuarial analysis<sup><a href="#" title="Actuarial analysis involves the application of mathematical and statistical methods to assess risk in insurance, finance, and other industries. Actuaries use this analysis to model and predict future events, such as life expectancy, accident frequency, and financial losses, enabling companies to develop policies and strategies to mitigate potential risks. This process includes evaluating the likelihood of events, estimating their financial impact, and using this information to set premiums, reserves, and other financial metrics. Actuarial analysis is essential for ensuring the financial stability and sustainability of insurance companies and pension plans.">(?)</a></sup> related to life insurance<sup><a href="#" title="Life insurance is a contract between an individual and an insurance company. The individual pays regular premiums, and in return, the insurance company promises to pay a specified amount of money to designated beneficiaries upon the insured person's death. This financial protection helps beneficiaries cover expenses such as funeral costs, debts, and living expenses, ensuring financial stability during a difficult time.">(?)</a></sup>. I am using actuarial analysis because there is lots of data that we can learn and use from actuaries in overall data analysis. For most key subjects, there is a small question mark that you can hover over and it will give you a blurb of information describing what that topic is. ***If you want to only see the calculations, you can skip ahead through the TOC on the left and click on 'show' to see the code***:
+
+-----------------------------------------------------------------------------------
+
+**Cash Flows**
+
+***Topic***: *Present Value (PV)<sup><a href="#" title="Present Value (PV) represents the current worth of a future sum of money, discounted back to the present using an appropriate discount rate. This concept is rooted in probability theory, where future cash flows are uncertain and thus discounted to reflect the time value of money and the associated risk. Statistical inference techniques help determine appropriate discount rates by analyzing historical data and estimating future uncertainties, such as inflation rates or market risks.">(?)</a></sup>, Net Present Value (NPV)<sup><a href="#" title="Net Present Value (NPV) builds upon PV by considering the difference between the present value of cash inflows and outflows over a specified period. NPV incorporates probability theory by assessing the likelihood of achieving expected cash flows, often using statistical methods to model uncertain future outcomes. It serves as a critical decision-making tool, indicating whether an investment or project is expected to generate positive returns after accounting for the time value of money and risk.">(?)</a></sup>, Accumulated Value (AV)<sup><a href="#" title="Accumulated Value (AV) refers to the total value of an investment or project at a specific point in time, taking into account all cash flows, including initial investments, returns, and reinvestments. Probability theory assists in forecasting AV by analyzing the distribution of possible future cash flows and their associated uncertainties. Statistical inference techniques, such as Monte Carlo simulations or sensitivity analysis, further refine these forecasts by exploring different scenarios and their impacts on AV over time.">(?)</a></sup>, Statistical Inference<sup><a href="#" title="Statistical inference uses data from a sample to make guesses about a larger population. It helps us draw conclusions and make decisions based on limited information.">(?)</a></sup> and Probability Theory<sup><a href="#" title="Probability theory is the study of chance. It helps us understand how likely events are to happen, like rolling a die or predicting the weather.">(?)</a></sup>*
+
+Cash flows are fundamental to financial analysis, involving the movement of money into (income) and out of (expenses) a business or project over time. The concepts of <span style="color: blue;">Present value (PV)</span>, <span style="color: blue;">Net Present Value (NPV)</span>, and <span style="color: blue;">Accumulated Value (AV)</span> are crucial tools in evaluating cash flows, as they can provide insights into their current and future worth.
+
+In summary, integrating statistical inference and probability theory enhances the analysis of cash flows by providing methods to quantify uncertainties, estimate future values, and assess risks. PV, NPV, and AV serve as powerful tools within this framework, enabling informed financial decisions by accounting for the complex interplay between time, risk, and value in financial management and investment evaluation.
+
+**Life Tables**
+
+***Topic***: *Survival probabilities<sup><a href="#" title="Survival probabilities refer to the likelihood of individuals surviving from one age to the next within a specified population or cohort. These probabilities are fundamental in demography, actuarial science, and medical research, where they are used to analyze and predict how long individuals are expected to live.">(?)</a></sup>, Probability and Statistics*
+
+Life tables are foundational in demography and actuarial science, providing a statistical framework to analyze and predict survival probabilities within a population. These tables import and organize mortality data, offering insights into how longevity varies across different age groups and over time.
+
+Life tables utilize probability theory to estimate survival probabilities (qx) at various ages. These probabilities represent the likelihood of individuals surviving from one age to the next, derived from historical mortality data. Statistical inference techniques are employed to analyze and interpret these probabilities, including:
+
+*Estimation Methods*: Statistical methods such as <span style="color: blue;">maximum likelihood estimation</span><sup><a href="#" title="Maximum Likelihood Estimation (MLE) is a method used to estimate the parameters of a statistical model by maximizing the likelihood function. The likelihood function represents the probability of observing the given data under a specific set of parameter values. MLE selects the parameter values that make the observed data most likely, assuming the model is correct. It is widely used in statistical modeling and inference to find the best-fitting model parameters based on the available data.">(?)</a></sup> (MLE) or <span style="color: blue;">Bayesian inference</span><sup><a href="#" title="Bayesian inference is a statistical approach that combines prior beliefs or knowledge with observed data to update and quantify uncertainty about a hypothesis or parameter of interest. Unlike frequentist statistics, which focuses on estimating parameters based solely on observed data, Bayesian inference incorporates prior information into the analysis. It provides a framework for updating beliefs as new evidence becomes available, making it especially useful in decision-making under uncertainty.">(?)</a></sup> are used to derive survival probabilities (qx) from observed mortality rates (mx)<sup><a href="#" title="In demography and actuarial science, mx represents the central mortality rate at exact age x within a population. It denotes the probability of dying during a specific age interval, usually expressed as deaths per unit of population at the exact age x. mx values are essential in constructing life tables, survival models, and mortality projections. They provide insights into age-specific mortality patterns and are used to calculate life expectancies, assess insurance risks, and plan for retirement and healthcare needs..">(?)</a></sup>.
+
+*Population Dynamics*: Statistical analysis of life tables informs demographic studies, healthcare planning, and insurance risk assessment by predicting population growth, mortality patterns, and aging trends.
+
+In summary, probability and statistics play a critical role in understanding life tables and mortality data sets. They facilitate the analysis of survival probabilities (qx) and provide valuable insights into population dynamics, longevity trends, and risk assessment in various fields, from public health to insurance and pension planning.
+
+
+**Life Annuities**
+
+***Topic***: *Generalized Linear Models (GLMs)<sup><a href="#" title="GLMs are a way to predict outcomes using data. They extend regular linear models to handle different types of data, like counts or categories.">(?)</a></sup> and Time Series Analysis<sup><a href="#" title="Time series analysis looks at data collected over time. It helps us find patterns, like trends or cycles, and make forecasts about the future.">(?)</a></sup>*
+
+Life annuities are financial products that provide a stream of payments to an individual over their lifetime or for a specified period. Analyzing these annuities involves applying statistical methods like <span style="color: blue;">Generalized Linear Models (GLMs)</span> and <span style="color: blue;">Time Series Analysis</span> to estimate their PV and expected future payments.
+
+GLMs are utilized to model the relationship between factors like age, gender and economic conditions with the PV of an annuity. They help adjust for non-linear relationships and <span style="color: blue;">heteroscedasticity</span><sup><a href="#" title="Heteroscedasticity refers to the unequal variance of errors (or residuals) in a regression model. In simpler terms, it indicates that the variability of the dependent variable (y) is not constant across all levels of the independent variable(s). This violates the assumption of homoscedasticity, where the variability of y is consistent. Heteroscedasticity can affect the accuracy of statistical tests and predictions, requiring adjustments in modeling techniques to account for varying levels of variability.">(?)</a></sup> in annuity pricing. GLMs also allow for the use of risk factors like mortality rates <span style="color: blue;">(qx)</span><sup><a href="#" title="In actuarial science and demography, qx represents the probability of dying within a specified age interval, often referred to as the mortality rate at age x. It is a fundamental measure used in life tables and survival models to analyze and predict the likelihood of death at different ages within a population. qx values are derived from mortality data and are crucial for assessing life expectancy, pricing life insurance products, and evaluating healthcare and pension plans.">(?)</a></sup>, interest rates and such into pricing models. This way, insurers can assess and price the risk associated with annuity payments.
+
+Time Series Analysis is another critical tool for analyzing annuities, particularly for forecasting future payments and assessing long-term trends:
+
+Models like <span style="color: blue;">ARIMA</span><sup><a href="#" title="ARIMA is a statistical model used for time series analysis and forecasting. It combines autoregressive (AR), moving average (MA), and differencing components (I for Integrated) to model the temporal structure and patterns in data. ARIMA models are useful for predicting future values based on past observations and are widely applied in economics, finance, and other fields where time-dependent data is analyzed.">(?)</a></sup> (*AutoRegressive Integrated Moving Average*) or exponential smooth models can be used to forecast future cash flows from annuities. The Expected Present Value (EPV) is calculated as the discounted sum of expected future payments, incorporating forecasts generated from time series models. Time series also allow for stochastic modeling of uncertain factors affecting annuity payments, such as mortality improvements and economic fluctuations. One such model are the <span style="color: blue;">Monte Carlo simulations</span><sup><a href="#" title="Computational techniques used to understand the impact of uncertainty and variability in mathematical, financial, and scientific models. They involve running numerous random simulations based on input variables that have uncertain values. By repeating these simulations many times, Monte Carlo methods provide estimates of possible outcomes and their probabilities.">(?)</a></sup>, which provide probabilistic forecasts of future annuity cash flows
+
+Application in Financial Decision-Making:
+
+The integration of GLMs and Time Series Analysis enhances the understanding and management of life annuities. In product design, statistical models inform the design of annuity products tailored to demographic trends and customer preferences, ensuring competitive pricing. In risk management, by quantifying risks and uncertainties through GLMs and Time Series Analysis, insurers and financial planners can optimize portfolio allocation and hedging strategies to mitigate adverse impacts on annuity liabilities
+
+In conclusion, GLMs and Time Series Analysis are powerful tools in the evaluation and management of life annuities. They facilitate the calculation of present values (PV) and expected future payments (EPV), providing insights into pricing dynamics, risk assessment, and strategic decision-making in insurance and retirement planning.
+
+**Life Insurance**
+
+***Topic***: *Survival Models<sup><a href="#" title="Survival models predict the time until an event occurs, like how long a patient might live after treatment. They help in planning and understanding risks.">(?)</a></sup> and Credibility Theory<sup><a href="#" title="Credibility theory combines past data with new data to make better predictions. It's often used in insurance to set fair premiums based on individual risk.">(?)</a></sup>*
+
+Life insurance products provide financial protection against the risk of premature death, offering payouts (benefits) to beneficiaries upon the death of the insured. Analyzing these products involves applying statistical methods such as Survival Models and Credibility Theory to assess premiums and estimate their expected future values.
+
+<span style="color: blue;">Survival Models</span><sup><a href="#" title="Survival models are statistical tools used to analyze and predict the time until an event of interest occurs, such as death, failure of a device, or recurrence of a disease. These models help understand factors influencing survival times and can account for censored data (where the event of interest hasn't occurred for all subjects by the end of the study).">(?)</a></sup>, such as the <span style="color: blue;">Kaplan-Meier</span><sup><a href="#" title="The Kaplan-Meier estimator is a statistical method used to estimate the probability of survival over time. It's often used in medical and biological studies to analyze how long patients survive after treatment or diagnosis. It calculates survival probabilities based on observed data, especially when not all individuals have experienced the event of interest (such as death) by the end of the study.">(?)</a></sup> estimator or <span style="color: blue;">Cox proportional hazards model</span><sup><a href="#" title="The Cox proportional hazards model is a statistical technique used to assess the influence of multiple factors (like age, gender, and treatment) on the timing of a specific event (such as death). It doesn't assume a specific distribution for the survival times and allows for the estimation of hazard ratios, which describe how the hazard (or risk) of an event changes with different variables.">(?)</a></sup>, are statistical techniques used to model and analyze the time until an event occurs—in this case, the death of the insured. In the context of life insurance:
+
+Survival models can estimate mortality rates (qx) and predict the likelihood of death at different ages and for different demographic groups. These models help the calculation of premiums by assessing the risk of the insured dying before the policy term. They also help quanity the risk associated with these life insurance policies by considering numerous factors like age, gender, health status etc. By modeling mortality risks, insurers can set appropriate premiums that reflect the expected costs of providing insurance coverage.
+
+<span style="color: blue;">Credibility Theory</span><sup><a href="#" title="Credibility theory is a statistical framework used in insurance and risk management to improve the accuracy of predictions when data is limited or variable. It combines historical data with prior beliefs or external information to estimate future outcomes more reliably. In insurance, it helps set appropriate premiums by adjusting for uncertainties and variations in risk across different policyholders or groups.">(?)</a></sup> is a statistical framework used to improve the accuracy of risk estimation when data is limited or variable. Key aspects in the context of life insurance include:
+
+It can enhance the estimation of Expected Present Value (EPV) through combining historical data with prior beliefs / external info (credibility factors), as well as help insurers reduce estimation errors by incorporating these credibility factors when they optimize pricing strategies
+
+*Application in Insurance Planning*:
+
+The integration of Survival Models and Credibility Theory supports strategic decision-making in life insurance. Statistical models can inform the design of life insurance products tailored to customer needs and risk profiles, as well as provide insights that enable insurers to offer competitive products. Bu helping insurers assess mortality risks, insurers can manage reinsurance arrangements and capital adequacy to mitigate adverse financial impacts from unexpected claims
+
+In summary, Survival Models and Credibility Theory are essential tools in the analysis and management of life insurance. They facilitate the calculation of premiums, estimation of EPV, and strategic decision-making, ensuring sustainable risk management and competitive product offerings in the insurance industry.
+
+---------------------------------------------------------------------------------
+
+# Cash Flows
+
+---------------------------------------------------------------------------------
+
+## Present Value
+
+<details>
+  <summary>What is Present Value (PV)?</summary>
+  <p style="font-weight: bold; color: blue;">
+  Present value is the current worth of a future sum of money. It tells you how much money you would need to invest today to reach a specific amount in the future, considering a certain interest rate.
+   </p>
+</details>
+
+
+
+
+Suppose you want to go on a trip 5 years from now. You have expenses of $3000 each year for 4 years (including this year), followed by an expense of $4000 and a final expense of $5000. How much would you have to deposit at this moment in time to cover all of these future payments? Assume a constant interest rate of 2.14% and payments would take place at the beginning of the year.
+
+
+```{r}
+# Define cash flows and time periods
+cash_flows <- c(3000, 3000, 3000, 3000, 4000, 5000)
+time_periods <- 0:6  
+
+# Create the plot
+plot(time_periods, rep(0, length(time_periods)), type = "n", 
+     ylim = c(0, max(cash_flows) * 1.1),
+     xlim = c(0, 6),  
+     xlab = "t", ylab = "",
+     main = "Cash Flow Timeline",
+     xaxt = "n")
+
+
+axis(1, at = time_periods)
+
+# Here we add labels for the separate cash flows
+for (i in 1:length(cash_flows)) {
+  lines(c(i, i), c(0, cash_flows[i]))
+  text(i, cash_flows[i], labels = cash_flows[i], pos = 3)
+}
+
+# Add horizontal line to connect all labels together and provide some more cohesiveness
+abline(h = 0)
+
+
+
+
+```
+
+Let the annual interest rate be \\(i = 0.0214\\).
+
+The discount factor \\(v\\) is calculated as follows:
+\\[
+v = \\frac{1}{1+i}
+\\]
+
+
+<details>
+  <summary>What is discount factor?</summary>
+  <p style="font-weight: bold; color: blue;">
+  A discount factor is a number used to calculate the present value of a future amount of money. It shows how much a future sum is worth today, considering a specific interest rate over time.
+  </p>
+</details>
+
+
+
+
+The discount factors for the time periods \\(t = 0\\) to \\(t = 5\\) are given by:
+\\[
+v^{(0:5)} = \\left(v^0, v^1, v^2, v^3, v^4, v^5\\right)
+\\]
+
+The present value (PV) of the cash flows is calculated as the sum of the cash flows multiplied by the corresponding discount factors:
+\\[
+\\text{PV} = \\sum_{t=0}^{5} (\\text{cash flow at } t) \\times v^t
+\\]
+
+```{r}
+# We have an expense of 3000 from t=0 to t=3, an expense of 4000 at t=4 and 5000 at t=5
+
+# Cash flows
+cash_flows <- c(rep(3000,4), 4000, 5000)
+                
+# Interest Rate
+i <- 0.0214
+
+# Discount factor
+v <- 1 / (1+i)
+
+# Discount factors
+discount_factors <- v ^ (0:5)
+
+# Present value PV
+present_val <- sum(cash_flows * discount_factors)
+cat("Present Value (PV):", present_val)
+```
+
+So you would have to make a deposit of 19800.98 at this current time to cover all of these future payments.
+
+##### Confidence Interval for Present Value
+
+We can use bootstrapping<sup><a href="#" title="Bootstrapping is used to estimate the accuracy of sample statistics by repeatedly resampling with replacement from the data. It helps to understand the variability and reliability of estimates, especially when the theoretical distribution is unknown or complex.">(?)</a></sup> to estimate the confidence interval for the present value of the cash flows.
+
+
+
+
+```{r}
+# Bootstrapping for confidence interval
+set.seed(123)
+n_bootstrap <- 1000
+bootstrap_pvs <- replicate(n_bootstrap, {
+  sampled_cash_flows <- sample(cash_flows, replace = TRUE)
+  sum(sampled_cash_flows * discount_factors)
+})
+
+# Calculate 95% confidence interval
+ci <- quantile(bootstrap_pvs, c(0.025, 0.975))
+cat("95% Confidence Interval for PV:", ci)
+
+
+```
+
+<details>
+  <summary>Why use confidence interval?</summary>
+  <p style="font-weight: bold; color: blue;">
+  A confidence interval provides a range of values that likely contains the true value of an unknown parameter. It helps us understand the precision of our estimate and gives a measure of uncertainty.
+  </p>
+</details>
+
+**Hypothesis Testing for Present Value**
+
+We can perform a hypothesis<sup><a href="#" title="A hypothesis test is a statistical method used to determine if there is enough evidence to support a specific claim about a population.">(?)</a></sup> test to determine if the present value of the cash flows is significantly different from a hypothesized value, say $20,000.
+
+```{r}
+# Hypothesis testing for PV
+hypothesized_pv <- 20000
+t_stat <- (present_val - hypothesized_pv) / (sd(bootstrap_pvs) / sqrt(length(bootstrap_pvs)))
+p_value <- 2 * pt(-abs(t_stat), df = length(bootstrap_pvs) - 1)
+cat("T-statistic:", t_stat, "\n")
+cat("P-value:", p_value, "\n")
+
+if (p_value < 0.05) {
+  cat("We reject the null hypothesis that the PV is equal to", hypothesized_pv, "\n")
+} else {
+  cat("We fail to reject the null hypothesis that the PV is equal to", hypothesized_pv, "\n")
+}
+
+```
+
+<details>
+  <summary>Why use hypothesis testing?</summary>
+  <p style="font-weight: bold; color: blue;">
+  It helps us decide whether to accept or reject the claim based on sample data, providing a way to make informed decisions in the face of uncertainty.
+  </p>
+</details>
+
+It is consistent that we would reject our null hypothesis here since we calculated earlier that the PV of the deposit would be 19800.98
+
+
+------------------------------------------------------------------------------------
+
+## Net Present Value (NPV)
+
+<details>
+  <summary>What is Net Present value (NPV)?</summary>
+  <p style="font-weight: bold; color: blue;">
+  Net Present Value (NPV) is a financial metric that calculates the value of a series of future cash flows in today's terms. It takes into account the time value of money by discounting future cash flows back to the present. NPV helps determine the profitability of an investment: a positive NPV indicates a good investment, while a negative NPV suggests it may not be worthwhile.
+   </p>
+</details>
+
+You're the head of a lawn mowing company. You want to invest in a new lawn mower than you are confident will generate cash
+flows of 50 each month for 3 months, followed by 20 for 2 months. The issue is it costs 185 and you're unsure if it will be a profitable investment. To find out if it is a good investment or not, you must calculate the NPV for this investment. Assume the monthly interest rate is 0.6%.
+
+
+```{r}
+
+# Define the cash flows
+cash_flows <- c(-185, rep(50, 3), rep(20, 2))
+
+# Discount factors
+monthly_interest_rate <- 0.006
+discount_factors <- (1 + monthly_interest_rate) ^ -(0:5)
+
+times <- 0:5
+
+
+plot(times, cash_flows, type="n", xlab="Time (t)", ylab="Cash Flows", main="Cash Flow Timeline", ylim=c(-200, 70))
+
+
+abline(h = 0)
+
+
+segments(times, 0, times, cash_flows)
+
+# Add text labels for the cash flows
+text(times, cash_flows, labels=cash_flows, pos=ifelse(cash_flows < 0, 1, 3))
+
+
+axis(1, at=times, labels=times)
+axis(2, labels=FALSE)
+
+# NPV calculation
+npv <- sum(cash_flows * discount_factors)
+cat("Net Present Value (NPV):", npv, "\n")
+```
+
+The Net Present Value (NPV) is calculated using the formula:
+\\[
+\\text{NPV} = \\sum_{t=1}^{n} (\\text{cash flow at } t) \\times v^t
+\\]
+
+
+Where:
+
+- \\( CF_t \\) is the cash flow at time \\( t \\)
+
+- \\( r \\) is the monthly interest rate
+
+- \\( C_0 \\) is the initial investment cost
+
+- \\( n \\) is the number of periods
+
+Given:
+
+- Cash flows: \\( CF_1 = 50, CF_2 = 50, CF_3 = 50, CF_4 = 20, CF_5 = 20 \\)
+
+- Initial investment: \\( C_0 = 185 \\)
+
+- Monthly interest rate: \\( r = 0.006 \\)
+
+```{r}
+# NPV calculation
+npv <- sum(cash_flows * discount_factors)
+cat("Net Present Value (NPV):", npv, "\n")
+
+```
+
+
+Since our NPV is positive, this indicates that this would be an overall gain ie profit.
+
+To better understand the risk of the investment, we can simulate the cash flows under uncertainty<sup><a href="#" title="Uncertainty means not knowing exactly what will happen in the future. In this context, it refers to the unpredictable factors that can affect the cash flows of an investment, such as market fluctuations or economic changes.">(?)</a></sup>. Let's assume that the cash flows have a certain variability
+
+```{r}
+# Simulation for NPV under uncertainty
+set.seed(123)
+n_simulations <- 1000
+simulated_npvs <- replicate(n_simulations, {
+  simulated_cash_flows <- cash_flows + rnorm(length(cash_flows), mean = 0, sd = 5)
+  sum(simulated_cash_flows * discount_factors)
+})
+
+# Calculate the mean and standard deviation of simulated NPVs
+mean_npv <- mean(simulated_npvs)
+sd_npv <- sd(simulated_npvs)
+cat("Mean NPV:", mean_npv, "\n")
+cat("Standard Deviation of NPV:", sd_npv, "\n")
+
+# Plot the distribution of simulated NPVs
+hist(simulated_npvs, breaks = 30, main = "Distribution of Simulated NPVs", xlab = "NPV")
+abline(v = mean_npv, col = "red", lwd = 2)
+
+
+```
+
+------------------------------------------------------------------------------------
+
+## Accumulated Value
+
+<details>
+  <summary>What is Accumulated Value (AV)?</summary>
+  <p style="font-weight: bold; color: blue;">
+   The total amount of money accumulated or earned over time from an initial investment or savings, including both the original amount invested (principal) and any interest or earnings gained on it.
+   </p>
+</details>
+
+Suppose instead of making those expenses, you chose to put them into a savings account. What would be your new present value, assuming same interest rate. What would be your new accumulated value?
+
+```{r}
+
+# Cash flows
+cash_flows <- c(rep(3000, 4), 4000, 5000)
+cat("Cash flows:", cash_flows)
+
+# Define the discount function 
+discount <- function(s, t, i = 0.0214) {
+  (1 + i) ^ - (t - s)
+}
+
+# Calculate the present value PV
+pv <- sum(cash_flows * discount(0, 0:5))
+cat("Present Value (PV):", pv)
+
+# Calculate the value at time 6
+av <- sum(cash_flows * discount(6, 0:5))
+cat("Accumulated Value (AV):", av)
+
+# Calculate the value at time 6, starting from the PV
+pv_at_6 <- pv * discount(6, 0)
+cat("PV at time 6:", pv_at_6)
+
+difference <- av - pv
+cat("Difference:", difference)
+
+```
+
+As you can see, there would be a difference of $2682.41 if you saved the money instead of spending it.
+
+#### Sensitivity Analysis of Accumulated Value
+
+To understand how sensitive the accumulated value is to changes in the interest rate, we can perform a sensitivity analysis<sup><a href="#" title="Sensitivity analysis helps us understand how changes in one factor, like sales or costs, affect outcomes such as profit or investment returns. It shows the impact of these changes, helping to make better decisions or prepare for different scenarios.">(?)</a></sup>
+.
+
+```{r}
+# Sensitivity analysis for different interest rates
+interest_rates <- seq(0.01, 0.05, by = 0.005)
+accumulated_values <- sapply(interest_rates, function(i) {
+  discount <- function(s, t) (1 + i) ^ - (t - s)
+  sum(cash_flows * discount(6, 0:5))
+  sum(cash_flows * discount(6, 0:5))
+})
+
+# Plot the sensitivity analysis
+plot(interest_rates, accumulated_values, type = "b", 
+     xlab = "Interest Rate", ylab = "Accumulated Value", 
+     main = "Sensitivity Analysis of Accumulated Value")
+abline(v = 0.0214, col = "red", lwd = 2, lty = 2)
+cat("Accumulated Values for different interest rates:", accumulated_values)
+
+```
+
+
+#### Confidence Interval for Accumulated Value
+
+Using bootstrapping to estimate the confidence interval for the accumulated value.
+
+```{r}
+# Bootstrapping for confidence interval of accumulated value
+set.seed(123)
+n_bootstrap <- 1000
+bootstrap_avs <- replicate(n_bootstrap, {
+  sampled_cash_flows <- sample(cash_flows, replace = TRUE)
+  sum(sampled_cash_flows * discount(6, 0:5))
+})
+
+# Calculate 95% confidence interval
+ci_av <- quantile(bootstrap_avs, c(0.025, 0.975))
+cat("95% Confidence Interval for AV:", ci_av)
+
+
+```
+
+
+#### Hypothesis Testing for Accumulated Value
+
+Perform a hypothesis test to determine if the accumulated value is significantly different from a hypothesized value, say $25,000.
+
+```{r}
+# Hypothesis testing for AV
+hypothesized_av <- 25000
+t_stat_av <- (av - hypothesized_av) / (sd(bootstrap_avs) / sqrt(length(bootstrap_avs)))
+p_value_av <- 2 * pt(-abs(t_stat_av), df = length(bootstrap_avs) - 1)
+cat("T-statistic for AV:", t_stat_av, "\n")
+cat("P-value for AV:", p_value_av, "\n")
+
+if (p_value_av < 0.05) {
+  cat("We reject the null hypothesis that the AV is equal to", hypothesized_av, "\n")
+} else {
+  cat("We fail to reject the null hypothesis that the AV is equal to", hypothesized_av, "\n")
+}
+
+
+
+```
+
+
+------------------------------------------------------------------------------------
+
+## Yearly Payments
+
+Your parents want to start saving money for your university costs. Each year of study will set you guys back by about 7500. You're currently 14 (t=0) and will start attending when you are 19 (t=5). Therefore, your parents will make 1 deposit each year for 4 years (t=1 to t=4). Assume you will attend for 4 years (t=5 to t=22), the constant annual interest rate is 3.14% and each deposit your parents make is equal. Find the amount of the deposit
+
+
+```{r}
+
+times <- 0:8
+cash_flows <- c(rep(0, 5), rep(-7500, 4))
+
+
+plot(times, cash_flows, type="n", xlab="Time (t)", ylab="Cash Flows", main="Cash Flow Timeline", ylim=c(-8000, 7000))
+
+
+abline(h = 0)
+
+
+segments(times, 0, times, cash_flows)
+
+# Add text labels for the cash flows
+text(times, cash_flows, labels=round(cash_flows, 2), pos=ifelse(cash_flows < 0, 1, 3))
+
+
+axis(1, at=times, labels=times)
+axis(2, labels=FALSE)
+```
+
+
+```{r}
+
+# discount factors
+discount_factors <- (1 + 0.0314) ^ - (0:8)
+
+# deposit pattern
+deposits <- c(0, rep(1, 4), rep(0, 4))
+
+# university expenses
+payments <- c(rep(0, 5), rep(7500, 4))
+
+# Calculate the PV of the deposits
+PV_deposit <- sum(deposits * discount_factors)
+
+# Calculate the PV of the payments
+PV_payment <- sum(payments * discount_factors)
+
+# Calculate the yearly deposit K in the first 4 years
+yearly_deposit <-  PV_payment / PV_deposit 
+cat("Yearly Payments =", yearly_deposit)
+
+```
+
+So your parents would have to make a deposit of 6627.546 for each of the 4 years to finance your university.
+
+------------------------------------------------------------------------------------
+
+## Varying Interest Rates
+
+You want to take out a loan to open a new restaurant. You plan to take $1000 this year and $3000 next year. You plan to repay the money with equal yearly payments for the 10 years after next year (t=2 to t=11). Note this time the interest rate isn’t constant but changes over time. For the first 3 years it is 4%, then for the next 3 years it is 4.5%, then for the final 5 years it is 6%. How much will your yearly payments be?
+
+```{r, fig.width=12, fig.height=6}
+
+cash_flows <- c(-1000, -3000, rep(516.39, 10))
+time_periods <- 0:12
+
+# Calculate padding for y-axis
+y_padding <- max(abs(cash_flows)) * 0.2
+
+# Create the plot
+plot(time_periods, rep(0, length(time_periods)), type = "n", 
+     ylim = c(min(cash_flows) - y_padding, max(cash_flows) + y_padding),
+     xlim = c(0, 12),
+     xlab = "t", ylab = "",
+     main = "Cash Flow Timeline",
+     xaxt = "n", yaxt = "n")
+
+
+axis(1, at = time_periods)
+
+
+for (i in 1:length(cash_flows)) {
+  lines(c(i-1, i-1), c(0, cash_flows[i]))
+  
+  
+  if (i <= 2) {
+    # First two negative cash flows
+    label <- round(cash_flows[i], 2)
+  } else if (i == 3 || i == 4 || i == 11 || i == 12) {
+    # First two and last two positive cash flows
+    label <- round(cash_flows[i], 2)
+  } else if (i == 7) {
+    
+    label <- "..."
+  } else {
+    
+    next
+  }
+  
+  text(i-1, cash_flows[i], labels = label, 
+       pos = ifelse(cash_flows[i] > 0, 3, 1),
+       offset = 0.5)
+}
+
+# Add horizontal line
+abline(h = 0)
+
+# Interest rates
+interest <- c(rep(0.04, 3), rep(0.045, 3), rep(0.06, 5))
+
+# Yearly discount factors
+yearly_discount_factors <- (1 + interest) ^ (-1)
+
+# Discount factors
+discount_factors <- cumprod(c(1, yearly_discount_factors))
+
+# Cash flows for the first two years
+cash_flow <- c(1000, 3000)
+
+# Calculate the PV of the loan
+PV_loan <- sum(cash_flow * discount_factors[1:2])
+
+# Calculate the PV of the repayments
+repayment_years <- 2:11
+discount_factors_repayments <- discount_factors[repayment_years + 1]
+n_payments <- length(discount_factors_repayments)
+
+
+yearly_payment <- PV_loan / sum(discount_factors_repayments)
+
+
+cash_flow_full <- c(cash_flow, rep(-yearly_payment, n_payments))
+
+# Calculate the PV of the repayments to check the balance
+PV_repayments <- sum(cash_flow_full * discount_factors)
+
+# Display the yearly payment and the PV balance check
+cat("Yearly payments =", yearly_payment)
+
+cat("PV of repayments =",PV_repayments)
+
+
+cash_flows <- c(-1000, -3000, rep(516.39, 10))
+time_periods <- 0:12
+
+# Calculate padding for y-axis
+y_padding <- max(abs(cash_flows)) * 0.2
+
+
+options(repr.plot.width=12, repr.plot.height=6)  # Adjust as needed
+
+
+plot(time_periods, rep(0, length(time_periods)), type = "n", 
+     ylim = c(min(cash_flows) - y_padding, max(cash_flows) + y_padding),
+     xlim = c(0, 12),
+     xlab = "t", ylab = "",
+     main = "Cash Flow Timeline",
+     xaxt = "n", yaxt = "n")
+
+
+axis(1, at = time_periods)
+
+
+for (i in 1:length(cash_flows)) {
+  lines(c(i-1, i-1), c(0, cash_flows[i]))
+  
+  
+  if (i <= 2) {
+  
+    label <- round(cash_flows[i], 2)
+  } else if (i == 3 || i == 4 || i == 11 || i == 12) {
+    
+    label <- round(cash_flows[i], 2)
+  } else if (i == 7) {
+    
+    label <- "..."
+  } else {
+   
+    next
+  }
+  
+  text(i-1, cash_flows[i], labels = label, 
+       pos = ifelse(cash_flows[i] > 0, 3, 1),
+       offset = 0.5)
+}
+
+# Add horizontal line
+abline(h = 0)
+```
+
+Our PV is ~0, meaning the PV of the future payments and PV of your loans are equal, hence the yearly payments would be 515.2757
+
+#### Simulation for Yearly Payments Analysis
+
+To assess the variability in yearly payments, we can simulate different interest rate scenarios.
+
+```{r}
+# Simulation for varying interest rates
+set.seed(123)
+n_simulations <- 1000
+simulated_payments <- replicate(n_simulations, {
+  interest_sim <- c(rep(runif(1, 0.035, 0.045), 3), rep(runif(1, 0.04, 0.05), 3), rep(runif(1, 0.055, 0.065), 5))
+  yearly_discount_factors_sim <- (1 + interest_sim) ^ (-1)
+  discount_factors_sim <- cumprod(c(1, yearly_discount_factors_sim))
+  
+  PV_loan_sim <- sum(cash_flow * discount_factors_sim[1:2])
+  repayment_years_sim <- 2:11
+  discount_factors_repayments_sim <- discount_factors_sim[repayment_years_sim + 1]
+  yearly_payment_sim <- PV_loan_sim / sum(discount_factors_repayments_sim)
+  
+  return(yearly_payment_sim)
+})
+
+# Calculate the mean and standard deviation of simulated yearly payments
+mean_payment <- mean(simulated_payments)
+sd_payment <- sd(simulated_payments)
+cat("Mean Yearly Payment:", mean_payment, "\n")
+cat("Standard Deviation of Yearly Payment:", sd_payment, "\n")
+
+# Plot the distribution of simulated yearly payments
+hist(simulated_payments, breaks = 30, main = "Distribution of Simulated Yearly Payments", xlab = "Yearly Payment")
+abline(v = mean_payment, col = "red", lwd = 2)
+
+
+```
+
+------------------------------------------------------------------------------------
+
+## Yearly to Monthly Interest Rate
+
+You plan to take out a 100,000 loan with a yearly interest rate of 2.88%. You want to pay back this loan with fixed monthly payments over the next 15 years. Find how much these monthly payments will be.
+
+```{r}
+
+#number of payments
+number_payments <- 12*15
+
+#yearly interest rate
+i <- 0.0288
+
+#monthly interest rate
+
+monthly_interest <- (1+i)^(1/12)-1
+
+
+discount_factors <- (1 + monthly_interest) ^ - (1:number_payments)
+
+
+payments <- rep(1, number_payments)
+
+# Calculate the monthly loan payment K
+K <- 100000 / sum(payments * discount_factors)
+cat("Monthly loan payments =", K)
+```
+These monthly payments will be 683.0401
+
+#### Confidence Interval for Monthly Payments
+
+Using bootstrapping to estimate the confidence interval for the monthly payments.
+
+```{r}
+# Bootstrapping for confidence interval of monthly payments
+set.seed(123)
+bootstrap_payments <- replicate(n_bootstrap, {
+  sampled_payments <- payments + rnorm(length(payments), mean = 0, sd = 10)
+  K_sim <- 100000 / sum(sampled_payments * discount_factors)
+  return(K_sim)
+})
+
+# Calculate 95% confidence interval
+ci_payments <- quantile(bootstrap_payments, c(0.025, 0.975))
+cat("95% Confidence Interval for Monthly Payments:", ci_payments)
+
+
+```
+
+
+#### Hypothesis Testing for Monthly Payments
+
+Perform a hypothesis test to determine if the monthly payment is significantly different from a hypothesized value, say $700.
+
+```{r}
+# Hypothesis testing for monthly payments
+hypothesized_payment <- 700
+t_stat_payment <- (K - hypothesized_payment) / (sd(bootstrap_payments) / sqrt(length(bootstrap_payments)))
+p_value_payment <- 2 * pt(-abs(t_stat_payment), df = length(bootstrap_payments) - 1)
+cat("T-statistic for Monthly Payment:", t_stat_payment, "\n")
+cat("P-value for Monthly Payment:", p_value_payment, "\n")
+
+if (p_value_payment < 0.05) {
+  cat("We reject the null hypothesis that the monthly payment is equal to", hypothesized_payment, "\n")
+} else {
+  cat("We fail to reject the null hypothesis that the monthly payment is equal to", hypothesized_payment, "\n")
+}
+
+```
+
+---------------------------------------------------------------------------------
+
+# Life Tables
+
+<details>
+  <summary>What are Life Tables?</summary>
+  <p style="font-weight: bold; color: blue;">
+  Life tables are statistical tools used in demography and actuarial science to analyze mortality rates and life expectancy within a population. They provide a detailed breakdown of how long people are expected to live, based on age-specific mortality rates. Life tables tell us about the probability of surviving to different ages, expected years of life remaining at various ages, and are crucial for understanding population dynamics, healthcare planning, and insurance risk assessment.In data analysis beyond actuarial science, life tables serve as a model for understanding survival or retention rates in various contexts. For instance, in customer analytics, they can help predict how long customers are likely to remain active or how likely they are to churn based on historical data. Similarly, in medical research, life tables can be adapted to study survival rates after treatments or interventions. Essentially, life tables provide a structured way to analyze and predict durations or outcomes based on observed data, making them versatile tools across different fields of data analysis.
+   </p>
+</details>
+
+**Import the life tables from [mortality.org](https://mortality.org/). We are going to import the dataset of Canada from 1921 - 2021.**
+```{r}
+life_table <- read.table("C:\\Users\\megacrazyleo\\Desktop\\SQL\\R\\bltper_1x1.txt", header=FALSE, skip = 3, sep = "") 
+colnames(life_table) <- c("Year", "Age", "mx", "qx", "ax", "lx", "dx", "Lx", "Tx", "ex")
+```
+
+
+**Setting up variables** 
+```{r}
+year <- life_table$Year
+age <- life_table$Age
+qx <- life_table$qx
+mx <- life_table$mx
+ax <- life_table$ax
+lx <- life_table$lx
+dx <- life_table$dx
+Lx <- life_table$Lx
+Tx <- life_table$Tx
+ex <- life_table$ex
+px <- 1 - qx
+```
+
+
+| **Variable** | **Description** |
+|--------------|-----------------|
+| Year         | Year or range of years (for period and cohort data) |
+| Age          | Age group, representing an n-year interval from exact age x to just before x + n, where n = 1, 4, 5, or infinity |
+| m(x)         | Central death rate between ages x and x + n |
+| q(x)         | Probability of death between ages x and x + n |
+| a(x)         | Average length of survival between ages x and x + n for persons dying in the interval |
+| l(x)         | Number of survivors at exact age x, assuming l(0) = 100,000 |
+| d(x)         | Number of deaths between ages x and x + n |
+| L(x)         | Number of person-years lived between ages x and x + n |
+| T(x)         | Number of person-years remaining after exact age x |
+| e(x)         | Life expectancy at exact age x (in years) |
+
+
+------------------------------------------------------------------------------------
+
+## Mortality Rates
+
+**Plotting the mortality rates from 1921 to 2021 for all ages**
+
+```{r}
+# Setting up the plot
+par(xpd = TRUE, mar = c(5, 4, 4, 6) + 0.1) 
+
+convert_age <- function(x) {
+  x[x == "110+"] <- "110"  # Here age is character in our dataset, need to change to numeric so that we don't run into issues with character 
+  suppressWarnings({
+    as.numeric(x)
+  })
+}
+age <- convert_age(age)
+
+
+years <- unique(year)
+color_palette <- colorRampPalette(c("blue", "green", "yellow", "red"))(length(years))
+
+
+plot2 <- plot(NULL, 
+              xlim = range(age, na.rm = TRUE),  
+              ylim = range(qx, na.rm = TRUE),   
+              main = "Mortality rates (Canada, Males & Females, 1921-2021)",
+              xlab = "Age x",
+              ylab = expression(paste("Mortality rate ", q[x])),
+              type = "l"
+)
+
+
+suppressWarnings({
+  for (i in seq_along(years)) {
+    year_data <- subset(life_table, Year == years[i])
+    lines(year_data$Age, year_data$qx, col = color_palette[i], type = "l")
+  }
+})
+
+
+legend("topright", inset = c(-0.2,0),
+       legend = c("1921", "1955", "1988", "2021"),
+       col = color_palette[c(1, which.min(abs(years - 1955)), 
+                             which.min(abs(years - 1988)), length(years))],
+       lty = 1, 
+       title = "Year")
+
+```
+
+We can see that mortality rates from recent years are much lower compared to the earliest years. 
+
+####Hypothesis Testing on Mortality Rates
+
+We can perform a hypothesis test to determine if the mortality rate at age 50 has significantly changed between 1921 and 2021.
+
+```{r}
+# Hypothesis testing for mortality rates at age 50
+mort_1921 <- subset(life_table, Year == 1921 & Age == 50)$qx
+mort_2021 <- subset(life_table, Year == 2021 & Age == 50)$qx
+
+t_stat <- (mort_2021 - mort_1921) / sqrt((mort_1921 / lx[51]) + (mort_2021 / lx[51]))
+p_value <- 2 * pt(-abs(t_stat), df = lx[51] - 1)
+cat("T-statistic:", t_stat, "\n")
+cat("P-value:", p_value, "\n")
+
+if (p_value < 0.05) {
+  cat("We reject the null hypothesis that the mortality rate at age 50 has not changed between 1921 and 2021\n")
+} else {
+  cat("We fail to reject the null hypothesis that the mortality rate at age 50 has not changed between 1921 and 2021\n")
+}
+```
+
+------------------------------------------------------------------------------------
+
+## Life Expectancy
+
+**Plotting the life expectancy of males and females from Canada from the years 1921 - 2021**
+
+```{r}
+
+par(xpd = TRUE, mar = c(5, 4, 4, 6) + 0.1) 
+
+
+years <- unique(year)
+color_palette <- colorRampPalette(c("blue", "green", "yellow", "red"))(length(years))
+
+plot3 <- suppressWarnings({
+  plot(NULL, 
+       xlim = range(age, na.rm = TRUE),  
+       ylim = range(ex, na.rm = TRUE),   
+       main = "Life Expectancy (Canada, Males & Females, 1921-2021)",
+       xlab = "Age x",
+       ylab = expression(paste("Life Expectancy ", e[x])),
+       type = "l"
+  )
+})
+
+
+suppressWarnings({
+  for (i in seq_along(years)) {
+    year_data <- subset(life_table, Year == years[i])
+    lines(year_data$Age, year_data$ex, col = color_palette[i], type = "l")
+  }
+})
+
+
+legend("topright", inset = c(-0.2, 0),
+       legend = c("1921", "1955", "1988", "2021"),
+       col = color_palette[c(1, which.min(abs(years - 1955)), 
+                             which.min(abs(years - 1988)), length(years))],
+       lty = 1, 
+       title = "Year")
+
+
+
+```
+
+As we can see, the life expectancy is much higher from the years ~ 2021 as opposed to the years from ~1921 or even ~1955. 
+Note for the early years, the life expectancy starts extremely low at age 0 and after a couple years, has a sharp increase. 
+This can be explained mainly because it was much more difficult for an infant to survive the initial years. In later years, thanks
+to modern medicine, the survival rate of infants have risen much higher.
+
+
+#### Confidence Interval for Life Expectancy
+
+Using bootstrapping to estimate the confidence interval for life expectancy at age 0 in 2021.
+
+
+```{r}
+# Bootstrapping for confidence interval of life expectancy
+set.seed(123)
+n_bootstrap <- 1000
+bootstrap_ex <- replicate(n_bootstrap, {
+  sampled_ex <- sample(ex[age == 0], replace = TRUE)
+  mean(sampled_ex)
+})
+
+# Calculate 95% confidence interval
+ci_ex <- quantile(bootstrap_ex, c(0.025, 0.975))
+cat("95% Confidence Interval for Life Expectancy at age 0 in 2021:", ci_ex)
+
+```
+
+
+Let us focus on the year 2021.
+
+**2021 Life Table**
+```{r}
+life_table <- life_table[year == 2021, ]  #Getting only data from the year 2021
+year <- life_table$Year
+age <- life_table$Age
+qx <- life_table$qx
+mx <- life_table$mx
+ax <- life_table$ax
+lx <- life_table$lx
+dx <- life_table$dx
+Lx <- life_table$Lx
+Tx <- life_table$Tx
+ex <- life_table$ex
+px <- 1 - qx
+```
+
+```{r}
+life_table_2021 <- life_table[year == 2021, ]  #Getting only data from the year 2021
+year <- life_table_2021$Year
+age <- life_table_2021$Age
+qx <- life_table_2021$qx
+mx <- life_table_2021$mx
+ax <- life_table_2021$ax
+lx <- life_table_2021$lx
+dx <- life_table_2021$dx
+Lx <- life_table_2021$Lx
+Tx <- life_table_2021$Tx
+ex <- life_table_2021$ex
+px <- 1 - qx
+```
+
+
+### Probability an individual of age X dies before age Y, future life of age X
+
+**Finding the probability that an 23 year old dies before turning 24**
+
+```{r}
+
+cat("qx =",qx[23 + 1])
+
+```
+
+As we can see, it is a very low probability, < 0.098%
+
+**The expected future lifetime of an 23 year old**
+```{r}
+cat("ex =",ex[23 + 1])
+
+```
+It is expected that an average 23 year old from Canada will live for 59.34 more years in Canada in 2021
+
+### Plotting mortality rates
+
+**Plot the mortality rates in the year 2021**
+
+```{r}
+suppressWarnings({
+  plot(age, qx, 
+       main = "Mortality rates (Canada, 2021)", 
+       xlab = "Age x", 
+       ylab = expression(paste("Mortality rate ", q[x])), 
+       type = "l")
+})
+
+```
+
+
+**Plot the logarithm of the mortality rates in the year 2021**
+```{r}
+
+suppressWarnings({
+  plot(age, log(qx), 
+       main = "Log mortality rates (Canada, 2021)", 
+       xlab = "Age x", 
+       ylab = expression(paste("Log mortality rate ", log(q[x]))), 
+       type = "l")
+})
+
+```
+
+------------------------------------------------------------------------------------
+
+**Plot the mortality rates of females vs males in the year 2021**
+
+We need to import the male and female datasets here
+
+```{r}
+#male data
+life_table_m <- read.table("C:\\Users\\megacrazyleo\\Desktop\\SQL\\R\\mltper_1x1.txt", header=FALSE, skip = 3, sep = "")
+colnames(life_table_m) <- c("Year", "Age", "mx", "qx", "ax", "lx", "dx", "Lx", "Tx", "ex")
+male_2021 <- life_table_m[life_table_m$Year == 2021, ]
+year_m <- male_2021$Year
+age_m <- male_2021$Age
+qx_m <- male_2021$qx
+mx_m <- male_2021$mx
+ax_m <- male_2021$ax
+lx_m <- male_2021$lx
+dx_m <- male_2021$dx
+Lx_m <- male_2021$Lx
+Tx_m <- male_2021$Tx
+ex_m <- male_2021$ex
+
+#female data
+life_table_f <- read.table("C:\\Users\\megacrazyleo\\Desktop\\SQL\\R\\fltper_1x1.txt", header=FALSE, skip = 3, sep = "") 
+colnames(life_table_f) <- c("Year", "Age", "mx", "qx", "ax", "lx", "dx", "Lx", "Tx", "ex")
+female_2021 <- life_table_f[life_table_f$Year == 2021, ]
+year_f <- female_2021$Year
+age_f <- female_2021$Age
+qx_f <- female_2021$qx
+mx_f <- female_2021$mx
+ax_f <- female_2021$ax
+lx_f <- female_2021$lx
+dx_f <- female_2021$dx
+Lx_f <- female_2021$Lx
+Tx_f <- female_2021$Tx
+ex_f <- female_2021$ex
+```
+
+**Plot male vs female mortality rates in the year 2021**
+
+```{r}
+suppressWarnings({
+  plot(age_m, qx_m, 
+       main = "Mortality rates (Canada, 2021)", 
+       xlab = "Age x", 
+       ylab = expression(paste("Mortality rate ", q[x])), 
+       type = "l",
+       col = "blue",
+  )  
+  
+  # Add the female line to the same plot
+  lines(age_f, qx_f, col = "red")
+  
+  legend("bottomright", 
+         legend = c("Male", "Female"),
+         col = c("blue", "red"),
+         lty = 1,
+         cex = 0.8)
+})
+
+
+```
+
+```{r}
+
+
+suppressWarnings({
+  plot(age_m, qx_m, 
+       main = "Mortality rates (Canadian Males and Females, 2021)", 
+       xlab = "Age x", 
+       ylab = expression(paste("Mortality rate ", q[x])), 
+       type = "l",
+       col = "blue",
+       log = "y",  
+       ylim = range(c(qx_m, qx_f)) 
+  )
+  
+  lines(age_f, qx_f, col = "red")
+  
+  grid()
+  
+  points(age_m, qx_m, pch = 20, cex = 0.5, col = "blue")
+  points(age_f, qx_f, pch = 20, cex = 0.5, col = "red")
+  
+  legend("bottomright", 
+         legend = c("Males", "Females"),
+         col = c("blue", "red"),
+         lty = 1,
+         pch = 20,
+         cex = 0.8)
+})
+
+```
+
+As we can see, females on average for every age have a lower mortality rate than males. The gap only begins to narrow at the later ages, where it eventually becomes near equal around the age of 100. While there could be multiple reasons for this disparity, a study from [Harvard](https://www.health.harvard.edu/blog/why-men-often-die-earlier-than-women-201602199137) states that one of the reasons could be because men have lower estrogen levels, hence they are more likely to die of heart disease
+
+### Probability for invidivual of age x to reach age y
+
+**Find the probability for a 0 year old female and male in Canada to reach the age of 100 in 2021**
+
+```{r}
+male_prob <- lx_m[100 + 1] / lx_m[0 + 1]
+print(paste("Male probability:", male_prob))
+
+
+female_prob <- lx_f[100 + 1] / lx_f[0 + 1]
+print(paste("Female probability:", female_prob))
+```
+
+------------------------------------------------------------------------------------
+
+**Find the probability for a 0 year old in Canada to reach the age of 100 in 2021**
+
+```{r}
+canada_prob <- lx[100 + 1] / lx[0 + 1]
+print(paste("M/F probability:", canada_prob))
+```
+
+If we compare this with an 18 year old individual
+
+```{r}
+canada_prob_2 <- lx[100 + 1] / lx[18 + 1]
+print(paste("M/F age 18 probability:", canada_prob_2))
+```
+Vs a 40 year old individual
+
+```{r}
+canada_prob_5 <- lx[100 + 1] / lx[40 + 1]
+print(paste("M/F age 40 probability:", canada_prob_5))
+```
+
+
+
+And again with a 75 year old individual
+
+```{r}
+canada_prob_3 <- lx[100 + 1] / lx[75 + 1]
+print(paste("M/F age 75 probability:", canada_prob_3))
+```
+Finally, compare with a 98 year old individual
+
+```{r}
+canada_prob_4 <- lx[100 + 1] / lx[98 + 1]
+print(paste("M/F age 98 probability:", canada_prob_4))
+```
+
+```{r}
+
+ages <- c(0, 18, 75, 98)
+probs <- c(
+  lx[100 + 1] / lx[0 + 1],
+  lx[100 + 1] / lx[18 + 1],
+  lx[100 + 1] / lx[40 + 1],
+  lx[100 + 1] / lx[75 + 1],
+  lx[100 + 1] / lx[98 + 1]
+)
+
+
+prob_data <- data.frame(Age = c("0", "18", "40", "75", "98"), Probability = probs)
+
+
+barplot(prob_data$Probability, 
+        names.arg = prob_data$Age,
+        main = "Probability of Reaching Age 100 from Different Starting Ages",
+        xlab = "Starting Age",
+        ylab = "Probability",
+        col = "skyblue",
+        ylim = c(0, max(probs) * 1.1))  
+
+
+text(x = 1:5, 
+     y = probs,
+     labels = round(probs, 5),
+     pos = 3,
+     cex = 0.8)
+
+grid()
+# Just adding a grid for some better readability
+
+```
+
+
+**Plot the survival probabilties for (18) up to age 100**
+```{r}
+k <- 0:82
+plot(k, lx[18 + k + 1] / lx[18 + 1], 
+    pch = 20, 
+    xlab = "k", 
+    ylab = expression(paste(""[k], "p"[18])), 
+    main = "Survival probabilities for age 18 up to 100")
+```
+
+Compare this with a 50 year old
+
+```{r}
+k <- 0:100
+plot(k, lx[50 + k + 1] / lx[50 + 1], 
+    pch = 20, 
+    xlab = "k", 
+    ylab = expression(paste(""[k], "p"[50])), 
+    main = "Survival probabilities for age 50 up to 100")
+```
+
+**Plot the number of deaths**
+```{r}
+
+suppressWarnings({
+  plot(age, dx, 
+       type = "h", 
+       pch = 20, 
+       xlab = "Age x", 
+       ylab = expression("d"[x]),
+       main = "Number of deaths (Canada, M/F, 2021)")
+  
+  sims <- rbinom(n = length(lx), size = lx, prob = qx)
+  
+  points(age, sims, 
+         pch = 4, 
+         col = "red")
+})
+
+
+```
+
+### Probability that individual of age x survives y more years
+
+**Calculate the probability that (25) survives 5 more years**
+
+<details>
+  <summary style="font-weight: bold; color: blue;">Explanation</summary>
+  <p>
+    <strong>px Calculation:</strong><br>
+    px typically represents the survival probability (1 - qx) at each age x. In this context, it's assumed to be a sequence or vector containing survival probabilities for each age from 25 onwards.<br><br>
+    
+    <strong>Subset of px:</strong><br>
+    px[(25 + 1):(30 + 1)] selects a subset of px starting from age 26 (25 + 1) to age 31 (30 + 1). This corresponds to the ages from 26 to 30, inclusive.<br><br>
+    
+    <strong>Product Calculation:</strong><br>
+    prod(px[(25 + 1):(30 + 1)]) calculates the product of the survival probabilities for the selected ages. This multiplication represents the joint probability that a 25-year-old individual survives consecutively from age 25 to age 30 (5 years in total).<br><br>
+    
+    <strong>Output:</strong><br>
+    cat("Prob that a 25 year old survives for 5 more years =", value1) prints the result to the console in a human-readable format. It displays the calculated probability that a 25-year-old individual survives for exactly 5 more years based on the provided survival probabilities.
+  </p>
+</details>
+
+
+
+```{r}
+value1 <- prod(px[(25 + 1):(30 + 1)])
+cat("Prob that a 25 year old survives for 5 more years =", value1)
+```
+
+*How to interpret these results*: 
+
+At age 25, our survival probability is very high, close to 100% ie nearly all individuals who are 25 years old are expected to survive to the next age, 26. As the individual ages, the survival probabilities gradually decrease. For example, at age 30, the survival probability might be around 0.994, indicating that about 99.4% of individuals who reached age 30 are expected to survive to age 31.
+
+By age 50, the survival probability decreases further, reflecting the increased likelihood of mortality as people grow older. For instance, a survival probability of 0.874 at age 50 means that approximately 87.4% of individuals who reach age 50 are expected to survive to age 51.
+
+Towards older ages, such as age 70 and beyond, the survival probabilities continue to decline more steeply. This reflects the increasing vulnerability to health risks and mortality associated with advanced age.
+
+**Compute the survival probabilities of (25) until the age of 100**
+
+<details>
+  <summary style="font-weight: bold; color: blue;">Explanation</summary>
+  <p>
+    <strong>Survival Probability (px):</strong><br>
+    px is a vector where each element represents the probability of survival (1 - qx) at a specific age x. It starts from age 25 and continues for subsequent ages.<br><br>
+
+    <strong>Subset of Survival Probabilities (px[(25 + 1):(99 + 1)]):</strong><br>
+    This selects a subset of px starting from age 26 (25 + 1) to age 100 (99 + 1). These are the survival probabilities considered for each age from 25 to 100.<br><br>
+
+    <strong>Cumulative Product Calculation (cumprod(px[(25 + 1):(99 + 1)])):</strong><br>
+    cumprod calculates the cumulative product of the selected survival probabilities. It computes the joint probability that a 25-year-old individual survives consecutively from age 25 up to age 100. Each value in kpx represents the accumulated survival probability up to each respective age.
+  </p>
+</details>
+
+
+
+
+```{r}
+kpx <- cumprod(px[(25 + 1):(99 + 1)])
+cat("Survival prob's of a 25 year old until 100 =", kpx)
+```
+
+*How to interpret these results*:
+
+The output kpx provides a sequence of survival probabilities for each age from 25 to 100. For example, if kpx[1] is 0.9992, it means there's a 99.92% chance that a 25-year-old individual will survive until age 26. Similarly, kpx[2] (0.9984006) represents the probability of surviving from age 25 to age 27, and so on.
+
+
+**Extract the probability that (25) survives until the age of 100**
+
+```{r}
+value3 <- kpx[length(kpx)]
+cat("Prob that a 25 year old survives until 100:", value3)
+```
+
+
+**Plot the probabilties for (25) to reach the age of 26, 27, ..., 100**
+
+```{r}
+plot(1:length(kpx), kpx,
+    pch = 20,
+    xlab = "k",
+    ylab = expression(paste(""[k], "p"[25])),
+    main = "Survival probabilities for (25)")
+```
+
+## Survival Probabilities and Curtate Expected Future Lifetime
+
+<details>
+  <summary>What is Curtate Expected Future Lifetime?</summary>
+  <p style="font-weight: bold; color: blue;">
+  Curtate expected future lifetime is a statistical measure used in actuarial science and life insurance. It represents the expected number of whole years a person, starting at a given age, is expected to live into the future. This measure is calculated by considering the probability of surviving each year from the current age until the individual's death. Curtate expected future lifetime provides valuable insights into life expectancy and is crucial for determining insurance premiums and retirement planning.
+   </p>
+</details>
+
+
+**Compute the survival probabilities of (25)**
+
+```{r}
+kpx <- c(1, cumprod(px[(25 + 1):(length(px) - 1)]))
+cat("Survival prob's of a 25 year old:", kpx)
+```
+
+**Compute the deferred mortality probabilities of (25)**
+
+<details>
+  <summary style="font-weight: bold; color: blue;">Explanation</summary>
+  <p>
+    <strong>Deferred Mortality Probabilities of a 25-Year-Old:</strong><br>
+    The `kqx` values calculated represent the adjusted probabilities of dying at each age from 26 onwards, starting from age 25. Here’s how this calculation works:<br><br>
+
+    <strong>Original Survival Probabilities (`kpx`):</strong><br>
+    `kpx` is a sequence of probabilities that a 25-year-old individual will survive from age 25 up to each subsequent age. It starts with a probability of 1 (indicating certainty of survival at age 25) and adjusts slightly with each subsequent age.<br><br>
+
+    <strong>Adjusted for Mortality Rate (`qx`):</strong><br>
+    `qx` represents the mortality rate at each age. It's the probability of dying within the next year at a given age. Multiplying `kpx` by `qx` adjusts the survival probabilities to reflect the increasing risk of mortality as individuals age.<br><br>
+
+    <strong>Interpreting `kqx`:</strong><br>
+    Each value in `kqx` shows the adjusted probability that a 25-year-old individual will survive to each subsequent age, considering the mortality rate specific to that age. For example, `kqx[1]` (0.9992) indicates the probability of surviving from age 25 to age 26, adjusted for mortality at age 26. Similarly, `kqx[2]` (0.9984006) represents the adjusted survival probability from age 25 to age 27, and so on.<br><br>
+
+    
+  </p>
+</details>
+
+
+```{r}
+kqx <- kpx * qx[(25 + 1):length(qx)]
+cat("Deferred mortality prob's of a 25 year old:", kpx)
+```
+
+<details>
+  <summary style="font-weight: bold; color: blue;">Why Use Deferred Mortality Probabilities?</summary>
+  <p>
+    <strong>Risk Assessment:</strong> Deferred mortality probabilities provide a more accurate assessment of mortality risk over time. By adjusting survival probabilities with age-specific mortality rates (`qx`), they reflect the increasing likelihood of death as individuals age.<br><br>
+
+    <strong>Product Design:</strong> Insurance companies and pension funds use deferred mortality probabilities to design products such as life insurance policies and annuities. These products rely on accurate estimates of how mortality risk changes with age to determine premiums and payouts.<br><br>
+
+    <strong>Financial Planning:</strong> Individuals and institutions use deferred mortality probabilities for retirement planning and financial forecasting. They help in estimating life expectancies and determining the financial resources needed for retirement based on expected future lifetimes.<br><br>
+
+    <strong>Actuarial Calculations:</strong> Actuaries use deferred mortality probabilities in complex calculations such as pension fund valuations, reserve calculations, and risk assessments. These calculations ensure that financial institutions have adequate reserves to cover future obligations.<br><br>
+
+    <strong>Long-Term Commitments:</strong> Many financial products, such as pensions and annuities, involve long-term commitments spanning several decades. Deferred mortality probabilities provide insights into how mortality risk impacts these long-term financial commitments.<br><br>
+
+    Overall, deferred mortality probabilities are essential tools in understanding and managing mortality risk in various financial contexts. They provide a nuanced view of how survival probabilities change with age, informing decisions that impact both individuals and financial institutions over the long term.
+  </p>
+</details>
+
+**Plot the deferred mortality probabilities of (25)**
+
+```{r}
+plot(0:(length(kqx) - 1), kqx,
+    pch = 20,
+    xlab = "k",
+    ylab = expression(paste(""['k|'], "q"[25])),
+    main = "Deferred mortality probabilities of (25)")
+```
+
+
+**Survival probabilities and curtate expected future lifetime of (0)**
+
+```{r}
+kp0 <- cumprod(px)
+cat("Survival prob's of a 0 year old", kp0)
+sum_kp0 <- sum(kp0)
+cat("Curtate expected future lifetime of a 0 year old",sum_kp0 )
+```
+
+**Survival probabilities and curtate expected future lifetime of a 25 year old**
+
+```{r}
+kp25 <- cumprod(px[(25 + 1):length(px)])
+cat("Survival prob's of a 25 year old", kp25)
+sum_kp25 <- sum(kp25)
+cat("Curtate expected future lifetime of a 25 year old",sum_kp25 )
+
+```
+
+**Complete expected future lifetime of (0) and (25)**
+
+```{r}
+efl <- ex[c(0 + 1, 25 + 1)]
+cat("Expected future lifetime of a 0 and 25 year old", efl)
+```
+
+### Function to compute the curtate expected future lifetime for a given age and life table
+
+<details>
+  <summary style="font-weight: bold; color: blue;">Explanation: Computing Curtate Expected Future Lifetime</summary>
+  <p>
+    <strong>Function Purpose:</strong> The function `curtate_future_lifetime` calculates the curtate expected future lifetime for a given starting age using a life table dataset.<br><br>
+
+    <strong>Inputs:</strong> 
+    
+    - `age2`: Represents the starting age for which we want to compute the curtate expected future lifetime.
+    - `life_table`: Contains mortality data including qx (probability of dying between ages x and x+1) needed for calculations.<br><br>
+
+    <strong>Steps:</strong>
+    
+    1. <strong>qx Calculation:</strong> Extracts qx values from the `life_table`. qx represents the probability of dying between ages x and x+1.<br>
+    2. <strong>px Calculation:</strong> Computes px as 1 - qx, which represents the probability of survival between ages x and x+1.<br>
+    3. <strong>Subset and Cumulative Product:</strong> Selects and computes the cumulative product of px values starting from `age2 + 1` to the end of the dataset. This sequence represents the joint probability of surviving each subsequent year after `age2`.<br>
+    4. <strong>Summation:</strong> Sums up the cumulative product (`kpx`) to obtain the curtate expected future lifetime, which represents the expected number of full years an individual aged `age2` is expected to live from that age.<br><br>
+
+    <strong>Output:</strong> The function returns the computed curtate expected future lifetime as a numeric value.<br><br>
+
+    This function is crucial in actuarial science and insurance for estimating life expectancies and making financial projections based on mortality data.
+  </p>
+</details>
+
+
+```{r, echo=TRUE}
+suppressWarnings({
+  curtate_future_lifetime <- function(age2, life_table) {
+    qx <- life_table$qx
+    px <- 1 - qx
+    kpx <- cumprod(px[(age2 + 1):length(px)])
+    sum(kpx)
+  }
+})
+
+```
+
+
+**Curtate future lifetimes for all ages**
+
+```{r}
+valid_ages <- age2[!is.na(age2)]
+future_lifetimes <- sapply(valid_ages, function(age) curtate_future_lifetime(age, life_table))
+cat("Future lifetimes for all ages:", future_lifetimes)
+```
+
+*How to interpret*:
+
+These are the expected number of years an individual, starting from each age, is expected to live based on the curtate expected future lifetime calculation.Each value corresponds to the expected future lifetime for individuals starting from different ages.
+
+For example, the first value, 81.15437, indicates that a 25-year-old individual is expected to live approximately 81.15 years on average.
+The values decrease as the starting age increases, reflecting the decreasing life expectancy as individuals age.
+These estimates are based on mortality data and assume that future mortality rates remain consistent with those observed in the life table used for calculation.
+
+```{r}
+# Future lifetime by age
+plot(age2[!is.na(age2)], future_lifetimes, type = 'l', lwd = 2, col = "green", xlab = "Age x", ylab = "Future lifetime", main = "Future lifetime by age")
+```
+
+
+**Plot the logarithm of the male/female mortality rates for (18) by year**
+
+```{r}
+
+suppressWarnings({
+  life_table <- read.table("C:\\Users\\megacrazyleo\\Desktop\\SQL\\R\\bltper_1x1.txt", header=FALSE, skip = 3, sep = "") 
+  colnames(life_table) <- c("Year", "Age", "mx", "qx", "ax", "lx", "dx", "Lx", "Tx", "ex")
+
+  
+  life_table$Age <- as.numeric(life_table$Age)
+
+  # Subset the life table for age 18
+  subset_18 <- subset(life_table, Age == 18)
+
+  
+  if (nrow(subset_18) > 0) {
+    with(subset_18,
+         plot(Year, log(qx),
+              type = "l", main = "Log mortality rates (Canada, M/F, 18-year-old)",
+              xlab = "Year t", ylab = expression(paste("Log mortality rate ", log(q[18])))))
+  } else {
+    print("No data available for age 18")
+  }
+})
+
+
+```
+
+
+
+**Plot the logarithm of the female mortality rates in the year 1950 by age**
+
+```{r}
+# Subset the life table for the year 1950
+subset_1950 <- subset(life_table, Year == 1950)
+
+
+if (nrow(subset_1950) > 0) {
+  with(subset_1950,
+       plot(Age, log(qx),
+            type = "l", main = "Log mortality rates (Canada, M/F, 1950)",
+            xlab = "Age x", ylab = expression(paste("Log mortality rate ", log(q[x])))))
+} else {
+  print("No data available for the year 1950")
+}
+```
+
+**Constructing and printing the cohort life table for birth year 1981**
+
+```{r}
+life_table_1981 <- subset(life_table, Year - Age == 1981)
+life_table_1981
+```
+
+**1981 cohort one-year survival probabilities**
+
+```{r}
+px <- 1 - life_table_1981$qx
+cat("One year survival probabilities for 1981 birth year = ", px)
+```
+
+**1981 cohort survival probability that (18) survives 5 more years**
+
+```{r}
+prodp <- prod(px[(18 + 1):(22 + 1)])
+cat("Survival probability that an 18 year old survives 5 more years for 1981 birth year =", prodp)
+```
+
+**1881 cohort survival probability that (18) survives 5 more years**
+
+```{r}
+prodp2 <- with(subset(life_table, Year - Age == 1881), prod(1 - qx[(18 + 1):(22 + 1)]))
+cat("Survival probability that an 18 year old survives 5 more years for 1881 birth year =", prodp2)
+
+```
+
+
+**PV of guaranteed payment of 10,000 in 5 years**
+
+```{r}
+PV <- 10000 * (1 + 0.02) ^ -5
+cat("PV =",PV)
+```
+
+**5 year survival probabilities of (20)**
+
+```{r}
+kpx <- prod(px[(20 + 1):(24 + 1)])
+cat("kpx =", kpx)
+```
+
+**EPV of pure endowment of 10,000 in 5 years for (20)**
+
+```{r}
+epv <- PV * kpx
+cat("Expected Present value =", epv)
+```
+
+# Life Annuities
+
+**PV of guaranteed payments of 10,000 in 5, 10 and 30 years**
+
+```{r}
+PV <- 10000 * (1 + 0.02) ^ - c(5, 10, 30)
+cat("Present value =",PV)
+```
+
+**Survival probabilities of (20)**
+
+```{r}
+kpx <- cumprod(px[(20 + 1):length(px)])
+cat("kpx =", kpx)
+```
+
+**EPV of pure endowments of 10,000 in 5, 10 and 30 years for (20)**
+
+```{r}
+epv2 <- PV * kpx[c(5, 10, 30)]
+cat("Expected Present Value =", epv)
+```
+
+## Whole Life Annuity Due
+
+A type of annuity where payments are made at the beginning of each period, starting immediately upon purchase and continuing for the lifetime of the annuitant. Payments start immediately and occur at the beginning of each payment period (e.g., monthly, annually)
+
+**Calculating the whole life annuity due of a 35 year old**
+
+```{r}
+kpx <-
+  c(1, cumprod(px[(35+1):length(px)]))
+discount_facotrs <- (1+0.03)^-(0:(length(kpx)-1))
+benefits <- rep(1,length(kpx))
+sum(benefits*discount_factors*kpx)
+
+```
+
+## Whole Life Immediate Annuity
+
+A type of annuity where payments are made at the end of each period, starting immediately upon purchase and continuing for the lifetime of the annuitant. Payments start immediately but occur at the end of each payment period (e.g., monthly, annually).
+
+**Calculating the whole life immediate annuity of a 35 year old**
+
+```{r}
+kpx <-
+  c(1, cumprod(px[(35+1):length(px)]))
+discount_facotrs <- (1+0.03)^-(1:(length(kpx)))
+benefits <- rep(1,length(kpx))
+wid <- sum(benefits*discount_factors*kpx)
+cat("Whole life immediate annuity =", wid)
+```
+
+## Expected Present Value 
+
+#### Function to compute the EPV of a whole life annuity due for a given age, interest rate i and life table
+
+```{r}
+life_annuity_due <- function(age, i, life_table) {
+  px <- 1 - life_table$qx
+  kpx <- c(1, cumprod(px[(age + 1):length(px)]))
+  discount_factors <- (1 + i) ^ - (0:(length(kpx) - 1))
+  sum(discount_factors * kpx)
+}
+```
+
+## Shiny App for Life Annuity Calculator
+
+
+<iframe src="http://camleo.shinyapps.io/life_annuity_app" width="100%" height="300"></iframe>
+
+
+
+**EPV of a whole life annuity due for (20) at interest rate 2% using life_table**
+
+```{r}
+epv3 <- life_annuity_due(20, 0.02, life_table)
+cat("EPV of whole life annuity due =", epv3)
+```
+
+**EPV of a whole life annuity due for (20) at interest rate 5% and for (65) at interest rate 2% using life_table**
+
+```{r}
+epv4 <- life_annuity_due(20, 0.05, life_table)
+cat("EPV of life annuity due for 20 year old at 5% interest rate =", epv4)
+epv5 <- life_annuity_due(65, 0.02, life_table)
+cat("EPV of life annuity due for 65 year old at 5% interest rate =", epv5)
+
+```
+
+
+#### Function to compute the EPV of a whole life immediate annuity for a given age, interest rate i and life table
+
+```{r}
+life_immediate_annuity <- function(age, i, life_table) {
+  px <- 1 - life_table$qx
+  kpx <- cumprod(px[(age + 1):length(px)])
+  discount_factors <- (1 + i) ^ - (1:length(kpx))
+  sum(discount_factors * kpx)
+}
+```
+
+**EPV of a whole life immediate annuity for (20) at interest rate 2% using life_table**
+
+```{r}
+epv6 <- life_immediate_annuity(20, 0.02, life_table)
+cat("EPV of life annuity immediate for a 20 year old using 2% interest rate =", epv6)
+```
+
+
+
+#### Function to compute the EPV of a temporary life annuity due for a given age, period of n years, interest rate i and life table
+
+```{r}
+temporary_life_annuity_due <- function(age, n, i, life_table) {
+  px <- 1 - life_table$qx
+  kpx <- c(1, cumprod(px[(age + 1):(age + n - 1)]))
+  discount_factors <- (1 + i) ^ - (0:(n - 1))
+  sum(discount_factors * kpx)
+}
+```
+
+## Shiny app for Temporary Life Annuity Calculator
+
+```{r}
+library(shiny)
+
+ui <- fluidPage(
+  titlePanel("Temporary Life Annuity Calculator"),
+  sidebarLayout(
+    sidebarPanel(
+      numericInput("age", "Age:", 20, min = 0, max = 110),
+      numericInput("term", "Term (years):", 10, min = 1, max = 50),
+      numericInput("interest", "Interest Rate:", 0.02, min = 0, max = 0.2, step = 0.001)
+    ),
+    mainPanel(
+      h3("Expected Present Value:"),
+      textOutput("epv")
+    )
+  )
+)
+
+server <- function(input, output) {
+  output$epv <- renderText({
+    epv <- temporary_life_annuity_due(input$age, input$term, input$interest, life_table)
+    paste0("$", round(epv, 2))
+  })
+}
+
+shinyApp(ui = ui, server = server)
+```
+
+
+
+**EPV of a temporary life annuity due for (20) over 10 years at interest rate 2% using life_table**
+
+```{r}
+epvt <- temporary_life_annuity_due(20, 10, 0.02, life_table)
+cat("EPV of temporary life annuity due for 20 year old over 10 years at 2% interest rate =", epvt)
+```
+
+## Pension Valuation
+
+<details>
+  <summary>What is a pension and pension valuation?</summary>
+  <p style="font-weight: bold; color: blue;">
+  Pension valuation is the process of determining the present value of future pension benefits that employees or retirees are entitled to receive from their employers or pension funds. It involves estimating the current worth of these future payments, taking into account factors such as inflation, mortality rates, interest rates, and the expected duration of payments.
+   </p>
+</details>
+
+<details>
+  <summary>Purpose and Factors Considered?</summary>
+  <p style="font-weight: bold; color: blue;">
+ Purpose: The primary goal of pension valuation is to assess the financial obligations of a pension plan or fund accurately. This helps pension managers, actuaries, and policymakers understand the funding requirements necessary to meet future pension obligations.
+
+Factors Considered: Key factors considered in pension valuation include:
+
+Discount Rates: Used to discount future cash flows to their present value, reflecting the time value of money and investment returns.
+
+Mortality Assumptions: Expected longevity of pension recipients affects the duration and total amount of pension payments.
+
+Inflation Rates: Adjustments for inflation ensure that future pension payments maintain their purchasing power.
+
+Plan Design: Specific features of the pension plan, such as retirement age, payment options, and eligibility criteria, influence valuation calculations.
+   </p>
+</details>
+
+
+
+**Calculating the PV of a pension at age 65**
+
+```{r}
+benefits <- 20000 * 1.02 ^ (0:35)
+
+
+
+
+discount_factors <- 1.04 ^ - (0:35)
+
+
+
+
+PV_65 <- sum(benefits * discount_factors)
+cat("PV of pension at age 65 =",PV_65)
+
+
+
+PV_20 <- PV_65 * 1.03 ^ - 45
+cat("PV of pension at age 20 =",PV_20)
+```
+
+
+**EPV of pension at age 20**
+
+```{r}
+# Survival probabilities of (65) up to age 100
+px <- 1 - life_table$qx
+kpx <- c(1, cumprod(px[(65 + 1):(99 + 1)]))
+
+
+
+
+EPV_65 <- sum(benefits * discount_factors * kpx)
+cat("EPV of pension at age 65 =",cbind(PV_65, EPV_65))
+
+
+
+
+EPV_20 <- EPV_65 * (1.03 ^ - 45 * prod(px[(20 + 1):(64 + 1)]))
+cat("EPV of pension at age 20 =",cbind(PV_20, EPV_20))
+```
+
+### Retirement Plan
+
+You're planning for your retirement at age 40. You want to buy an annuity that will provide you 10000 annually for life, starting at age 65. If you die before the annuity starts, you get paid nothing.
+
+```{r}
+library(actuar)
+# Survival probabilities of (40)
+
+kpx <- c(1, cumprod(px[(40 + 1):length(px)]))
+
+
+
+discount_factors <- (1 + 0.03) ^ -(0:(length(kpx) - 1))
+
+
+
+
+benefits <- c(rep(0, 25), rep(10000, length(kpx) - 25))
+
+
+
+
+single_premium <- sum(benefits * discount_factors * kpx)
+cat("Single premium =",single_premium)
+
+# Define the premium_gen function
+premium_gen <- function(age, term, interest_rate, mortality_rate) {
+  v <- 1 / (1 + interest_rate)
+  present_value_benefit <- sum(v^(1:term) * (mortality_rate * (1 - mortality_rate)^(0:(term - 1))))
+  
+  
+  premium <- present_value_benefit / sum(v^(1:term) * (1 - mortality_rate)^(0:(term - 1)))
+  return(premium)
+}
+age <- 40
+term <- 20
+interest_rate <- 0.03
+mortality_rate <- 0.005
+premium <- premium_gen(age, term, interest_rate, mortality_rate)
+premium
+```
+
+Suppose you want to finance this deferred life annuity with annual premiums payable for 25 years beginning at age 40. However, you plan to reduce your work hours from age 55 onwards, therefore the premium will reduce by 1 half after 15 years. What is the initial premium you will pay
+
+```{r}
+# Premium pattern rho
+rho <- c(rep(1, 15), rep(0.5, 10), rep(0, length(kpx) - 25))
+
+
+initial_premium <- single_premium / sum(rho * discount_factors * kpx, na.rm = TRUE)
+cat("Initial premium =", initial_premium, "\n")
+
+
+annual_premiums <- initial_premium * rho
+
+
+filtered_annual_premiums <- annual_premiums[annual_premiums != 0]
+cat("Filtered annual premiums =", filtered_annual_premiums, "\n")
+
+# Sum of the annual premiums (no actuarial discounting)
+sap <- sum(filtered_annual_premiums)
+cat("Sum of annual premiums =", sap, "\n")
+
+```
+
+Find out if this product would be a favorable deal for you. How much would you receive if you died instead at 75, or 95?
+
+```{r}
+# Curtate life expectancy of (40)
+sum(kpx[-1])
+
+# Present value of annuity benefits when (40) lives until age 75
+subset1 <- 1:36
+sum(benefits[subset1] * discount_factors[subset1])
+
+# Present value of annuity benefits when (40) lives until age 95
+subset2 <- 1:56
+cat("Present value of the annuity benefits for a 40 year old living until 95 =",sum(benefits[subset2] * discount_factors[subset2]))
+```
+
+
+#### Integrating Generalized Linear Models (GLMs) and Time Series Analysis
+
+**Using GLMs to Model Survival Probabilities**
+
+We can use a logistic regression model (a type of GLM) to model the probability of survival based on age and other factors.
+
+
+```{r}
+library(MASS)
+life_table <- na.omit(life_table)
+
+# Fit a logistic regression model to predict the probability of death based on age
+glm_model <- glm(cbind(dx, lx - dx) ~ Age, family = binomial, data = life_table)
+summary(glm_model)
+
+# Predict survival probabilities using the fitted model
+predicted_qx <- predict(glm_model, type = "response")
+predicted_px <- 1 - predicted_qx
+
+length_actual <- length(life_table$qx)
+length_predicted <- length(predicted_qx)
+
+if (length_actual != length_predicted) {
+  stop(paste("Lengths of predicted and actual values do not match! Actual:", length_actual, "Predicted:", length_predicted))
+}
+
+# Compare predicted survival probabilities with actual values
+plot(life_table$Age, life_table$qx, type = "l", col = "blue", xlab = "Age", ylab = "Probability of Death", main = "Actual vs Predicted Mortality Rates")
+lines(life_table$Age, predicted_qx, col = "red")
+legend("topright", legend = c("Actual", "Predicted"), col = c("blue", "red"), lty = 1)
+
+
+
+```
+
+
+```{r}
+library(MASS)
+library(mgcv)
+
+life_table <- na.omit(life_table)
+
+# Fit a GAM model with smoothing splines for Age, Year, and mx
+gam_model <- gam(cbind(dx, lx - dx) ~ s(Age) + s(Year) + s(mx), family = binomial, data = life_table)
+summary(gam_model)
+
+# Predict survival probabilities using the fitted GAM model
+predicted_qx_gam <- predict(gam_model, type = "response")
+predicted_px_gam <- 1 - predicted_qx_gam
+
+length_actual_gam <- length(life_table$qx)
+length_predicted_gam <- length(predicted_qx_gam)
+
+if (length_actual_gam != length_predicted_gam) {
+  stop(paste("Lengths of predicted and actual values do not match! Actual:", length_actual_gam, "Predicted:", length_predicted_gam))
+}
+
+# Compare predicted survival probabilities with actual values
+plot(life_table$Age, life_table$qx, type = "l", col = "blue", xlab = "Age", ylab = "Probability of Death", main = "Actual vs Predicted Mortality Rates")
+lines(life_table$Age, predicted_qx_gam, col = "red")
+legend("topright", legend = c("Actual", "Predicted"), col = c("blue", "red"), lty = 1)
+
+
+
+```
+
+
+
+# Life Insurance
+
+You have bought a life insurance that is sold to 20 year olds and will pay 10000 at the end of the year of death if your death occurs at age 30. How much is the expected present value (EPV)
+
+```{r}
+# 10-year survival probability of (20)
+kpx <- prod(px[(20 + 1):(29 + 1)])
+kpx
+
+# 10-year deferred mortality probability of (20)
+kqx <- kpx * qx[30 + 1]
+kqx
+
+# Discount factor
+discount_factor <- (1 + 0.01) ^ - 11
+discount_factor
+
+# EPV of the simple life insurance
+cat("EPV of simple life insurance =",10000 * discount_factor * kqx)
+```
+
+## Whole, Temporary and Deferred Life Insurance
+
+### Function to find EPV of a whole life Insurance
+
+```{r}
+
+whole_life_insurance <- function(age, i, life_table_2021) {
+  qx <- life_table_2021$qx
+  px <- 1 - qx
+  kpx <- c(1, cumprod(px[(age + 1):(length(px) - 1)]))
+  kqx <- kpx * qx[(age + 1):length(qx)]
+  discount_factors <- (1 + i) ^ - (1:length(kqx))
+  sum(discount_factors * kqx, na.rm = TRUE)
+}
+
+# Function to plot EPV by age
+plot_by_age <- function(life_table_2021, interest_rate = 0.03) {
+  ages <- 0:(length(life_table_2021$qx) - 1)
+  epvs <- sapply(ages, function(age) whole_life_insurance(age, interest_rate, life_table_2021))
+  plot(ages, epvs, type = "l", col = "blue", 
+       main = "EPV of Whole Life Insurance by Age", 
+       xlab = "Age", ylab = "EPV", lwd = 2)
+}
+
+# Function to plot EPV by interest rate for a given age
+plot_by_interest_rate <- function(life_table_2021, target_age = 20) {
+  interest_rates <- seq(0.01, 0.1, by = 0.01)
+  epvs <- sapply(interest_rates, function(i) whole_life_insurance(target_age, i, life_table_2021))
+  plot(interest_rates, epvs, type = "l", col = "red", 
+       main = paste("EPV of Whole Life Insurance for Age", target_age, "by Interest Rate"), 
+       xlab = "Interest Rate", ylab = "EPV", lwd = 2)
+}
+
+
+plot_by_age(life_table_2021, interest_rate = 0.03)
+
+plot_by_interest_rate(life_table_2021, target_age = 20)
+```
+
+## Temporary Life Insurance
+
+**Finding the EPV of a life insurance where the coverage is restricted in time for a 20 year old in Canada in 2021 using an interest rate of 2%**
+
+```{r}
+whole_life_insurance(20, 0.02, life_table_2021)
+
+# Function to compute the EPV of a temporary life insurance
+temporary_life_insurance <- function(age, n, i, life_table_2021) {
+  qx <- life_table_2021$qx
+  px <- 1 - qx
+  kpx <- c(1, cumprod(px[(age + 1):(age + n - 1)]))
+  kqx <- kpx * qx[(age + 1):(age + n)]
+  discount_factors <- (1 + i) ^ - (1:length(kqx))
+  sum(discount_factors * kqx)
+}
+
+cat("EPV of a temporary life insurance for (20) over a period of 45 years at interest rate 2% =",temporary_life_insurance(20, 45, 0.02, life_table_2021))
+
+cat(" EPV of a whole life insurance for (20) at interest rate 2% =",whole_life_insurance(20, 0.02, life_table_2021))
+```
+
+## Deferred Life Insurance
+
+**Calculating EPV of a deferred life insurance for constant interest rate on age x**
+
+<details>
+  <summary><span style="color:blue;">Explanation of Calculating EPV of a deferred life insurance for constant interest rate on age x</span></summary>
+  In this code, we are calculating the Expected Present Value (EPV) of a deferred whole life insurance policy. The EPV is calculated by considering the mortality rates (`qx`), survival probabilities (`kpx`), and discount factors based on a constant interest rate (`i`). The deferred period (`u`) is taken into account to determine when the insurance benefits start to be paid. The EPV is the sum of the discounted expected benefits.
+</details>
+
+```{r}
+# Function to compute the EPV of a deferred whole life insurance
+deferred_life_insurance <- function(age, u, i, life_table_2021) {
+  qx <- life_table_2021$qx;  px <- 1 - qx
+  kpx <- c(1, cumprod(px[(age + 1):(length(px) - 1)]))
+  kqx <- kpx * qx[(age + 1):length(qx)]
+  discount_factors <- (1 + i) ^ - (1:length(kqx))
+  benefits <- c(rep(0, u), rep(1, length(kpx) - u))
+  sum(benefits * discount_factors * kqx)
+}
+
+
+cat("EPV of a deferred life insurance for (20) deferred over 45 years at interest rate 2% =",deferred_life_insurance(20, 45, 0.02, life_table_2021))
+```
+
+**Suppose you are age 48 and want to insure a benefit of 40000 for death between the ages of 55 and 75. Assume interest rate is 5%**
+
+<details>
+  <summary><span style="color:blue;">Explanation of insuring a benefit of 40000 for death between the ages of 55 and 75</span></summary>
+  In this code, we are calculating the Expected Present Value (EPV) of death benefits for an insurance policy. The policyholder is currently 48 years old and will receive a benefit of 40000 if they die between the ages of 55 and 75. We use mortality rates (`qx`), survival probabilities (`kpx`), and discount factors based on an interest rate (`i`) to calculate the EPV of these benefits.
+</details>
+
+```{r}
+# Deferred mortality probabilites of (48)
+kqx <- c(1, cumprod(px[(48 + 1):(73 + 1)])) * qx[(48 + 1):(74 + 1)]
+i <- 0.05
+
+
+discount_factors <- (1 + i) ^ - (1:length(kqx))
+
+
+benefits <- c(rep(0, 7), rep(40000, length(kqx) - 7))
+
+
+EPV_death_benefits <- sum(benefits * discount_factors * kqx)
+cat("EPV of death benefits =",EPV_death_benefits)
+```
+
+**Now suppose you want to add a savings component to the policy that will add 80000 if you are alive at age 75. You want to finance this endowment insurance with constant premiums.**
+
+<details>
+  <summary><span style="color:blue;">Explanation of adding a savings component to the policy with constant premiums</span></summary>
+  This code calculates the Expected Present Value (EPV) of adding a savings component to an insurance policy. The policyholder will receive an additional 80000 if they are alive at age 75. We calculate the EPV of the pure endowment and then determine the level of constant premiums required to finance both the death benefits and the savings component.
+</details>
+
+```{r}
+# Pure endowment
+EPV_pure_endowment <- 80000 * (1 + i) ^ - 27 * prod(px[(48 + 1):(74 + 1)])
+cat(" EPV of pure endowment =",EPV_pure_endowment)
+
+# Premium pattern
+kpx <- c(1, cumprod(px[(48 + 1):(73 + 1)]))
+discount_factors <- (1 + i) ^ - (0:(length(kpx) - 1))
+rho <- rep(1, length(kpx))
+EPV_rho <- sum(rho * discount_factors * kpx)
+cat("Premium pattern EPV = ",EPV_rho)
+
+# Premium level
+cat("Premium level =", (EPV_death_benefits + EPV_pure_endowment) / EPV_rho)
+```
+
+## Shiny App for Life Insurance Calculator
+
+<details>
+  <summary><span style="color:blue;">Explanation of Shiny App for Life Insurance Calculator</span></summary>
+  This Shiny app allows users to calculate the Expected Present Value (EPV) of different types of life insurance policies (whole life, temporary, or deferred). The user inputs their age, interest rate, and the type of insurance, and the app calculates the EPV using predefined functions for each insurance type.
+</details>
+
+```{r}
+library(shiny)
+
+ui <- fluidPage(
+  titlePanel("Life Insurance Calculator"),
+  sidebarLayout(
+    sidebarPanel(
+      numericInput("age", "Age:", 20, min = 0, max = 110),
+      numericInput("interest", "Interest Rate:", 0.02, min = 0, max = 0.2, step = 0.001),
+      selectInput("type", "Insurance Type:", 
+                  choices = c("Whole Life" = "whole", 
+                              "Temporary" = "temp", 
+                              "Deferred" = "deferred")),
+      conditionalPanel(
+        condition = "input.type == 'temp' || input.type == 'deferred'",
+        numericInput("term", "Term/Deferment (years):", 10, min = 1, max = 50)
+      )
+    ),
+    mainPanel(
+      h3("Expected Present Value:"),
+      textOutput("epv")
+    )
+  )
+)
+
+server <- function(input, output) {
+  output$epv <- renderText({
+    epv <- switch(input$type,
+                  "whole" = whole_life_insurance(input$age, input$interest, life_table),
+                  "temp" = temporary_life_insurance(input$age, input$term, input$interest, life_table),
+                  "deferred" = deferred_life_insurance(input$age, input$term, input$interest, life_table))
+    paste0("$", round(epv, 2))
+  })
+}
+
+shinyApp(ui = ui, server = server)
+
+
+```
+
+
+### Integrating Survival Models
+
+#### Kaplan-Meier Estimator for Survival Probabilities
+
+<details>
+  <summary><span style="color:blue;">Explanation of Kaplan-Meier Estimator for Survival Probabilities</span></summary>
+  This code uses the Kaplan-Meier estimator to calculate the survival probabilities based on the life table data. The Kaplan-Meier estimator is a non-parametric statistic used to estimate the survival function from lifetime data. It plots the probability of survival at different ages.
+</details>
+
+```{r}
+library(survival)
+
+# Creating a survival object
+surv_obj <- Surv(time = life_table$Age, event = life_table$dx > 0)
+
+# Kaplan-Meier estimate
+km_fit <- survfit(surv_obj ~ 1, data = life_table)
+
+# Plot the Kaplan-Meier estimate
+plot(km_fit, xlab = "Age", ylab = "Survival Probability", main = "Kaplan-Meier Estimate of Survival Probability")
+
+
+```
+
+
+#### Cox Proportional Hazards Model
+
+We can use the Cox Proportional Hazards model to analyze the effect of covariates on survival time.
+
+<details>
+  <summary><span style="color:blue;">Explanation of Cox Proportional Hazards Model</span></summary>
+  This code fits a Cox Proportional Hazards model to the life table data. The Cox model is used to analyze the effect of covariates (such as age and mortality rate) on survival time. It helps us understand how these factors influence the risk of death at different ages.
+</details>
+
+
+```{r}
+suppressWarnings({
+
+  library(survival)
+  
+
+  life_table <- read.table("C:\\Users\\megacrazyleo\\Desktop\\SQL\\R\\bltper_1x1.txt", header=FALSE, skip = 3, sep = "") 
+  colnames(life_table) <- c("Year", "Age", "mx", "qx", "ax", "lx", "dx", "Lx", "Tx", "ex")
+  available_columns <- colnames(life_table)
+
+  required_columns <- c("Year", "Age", "mx", "dx", "lx")
+  available_columns <- required_columns[required_columns %in% colnames(life_table)]
+  
+
+  if (length(available_columns) < 5) {
+    stop("Some required columns are missing from life_table")
+  }
+  
+  # Ensure all required columns are numeric
+  for (col in available_columns) {
+    life_table[[col]] <- as.numeric(life_table[[col]])
+  }
+  
+  # Clean the data (remove NAs and infinite values)
+  life_table_clean <- na.omit(life_table[, available_columns])
+  life_table_clean <- life_table_clean[is.finite(rowSums(life_table_clean)), ]
+  
+
+  if (any(!is.finite(as.matrix(life_table_clean)))) {
+    stop("NA/NaN/Inf values detected in life_table_clean")
+  }
+  
+
+  surv_obj <- Surv(time = life_table_clean$Age, event = life_table_clean$dx > 0)
+  if (any(!is.finite(as.matrix(surv_obj)))) {
+    stop("NA/NaN/Inf values detected in surv_obj")
+  }
+  
+  # Fit the Cox Proportional Hazards model (simplified)
+  cox_model <- coxph(surv_obj ~ Age + mx, data = life_table_clean)
+  summary(cox_model)
+  
+
+  newdata <- data.frame(Age = 50, Year = 2021, mx = mean(life_table_clean$mx, na.rm = TRUE))
+  print(newdata)
+  
+
+  if (any(!is.finite(as.matrix(newdata)))) {
+    stop("NA/NaN/Inf values detected in newdata")
+  }
+  
+  # Predict survival probabilities using the Cox model
+  cox_surv_fit <- survfit(cox_model, newdata = newdata)
+  
+  # Check the cox_surv_fit object
+  print(cox_surv_fit)
+  
+  plot(cox_surv_fit, xlab = "Time", ylab = "Survival Probability", main = "Survival Probabilities from Cox Model for Age 50 in 2021")
+})
+
+
+
+
+
+
+
+
+
+``` 
+
+
+## Integrating Credibility Theory
+
+#### Simple Credibility Model
+
+**We will use a simple credibility model to adjust the mortality rates based on past experience and new data.**
+
+<details>
+  <summary><span style="color:blue;">Explanation of Simple Credibility Model</span></summary>
+  This code demonstrates a simple credibility model to adjust mortality rates based on observed and expected data. The credibility model combines past experience (observed mortality rates) with new data (expected mortality rates) to produce adjusted rates. The credibility factor determines the weight given to the observed data.
+</details>
+
+```{r}
+# Create synthetic data for demonstration
+set.seed(123)
+age_range <- 0:110
+
+# Synthetic observed data for life_table_2021
+life_table_2021 <- data.frame(
+  Age = age_range,
+  qx = runif(length(age_range), min = 0.0001, max = 0.01)
+)
+
+# Synthetic expected data for filtered_life_table
+filtered_life_table <- data.frame(
+  Age = age_range,
+  qx = runif(length(age_range), min = 0.0001, max = 0.01)
+)
+
+# Ensure observed_qx and expected_qx cover the same age range
+common_ages <- intersect(life_table_2021$Age, filtered_life_table$Age)
+
+# Filter both life_table_2021 and filtered_life_table to only include common ages
+life_table_2021_filtered <- life_table_2021[life_table_2021$Age %in% common_ages, ]
+filtered_life_table_filtered <- filtered_life_table[filtered_life_table$Age %in% common_ages, ]
+
+# Extract qx values for common ages
+observed_qx <- life_table_2021_filtered$qx
+expected_qx <- filtered_life_table_filtered$qx
+
+cat("Summary of Ages in life_table_2021_filtered:\n")
+print(summary(life_table_2021_filtered$Age))
+
+cat("Summary of Ages in filtered_life_table_filtered:\n")
+print(summary(filtered_life_table_filtered$Age))
+
+
+if (length(observed_qx) != length(expected_qx)) {
+  stop("Lengths of observed_qx and expected_qx do not match after alignment!")
+}
+
+# Apply credibility model
+simple_credibility <- function(observed_qx, expected_qx, credibility_factor) {
+  adjusted_qx <- credibility_factor * observed_qx + (1 - credibility_factor) * expected_qx
+  return(adjusted_qx)
+}
+
+credibility_factor <- 0.8
+adjusted_qx <- simple_credibility(observed_qx, expected_qx, credibility_factor)
+
+
+# Plot the adjusted mortality rates
+plot(life_table_2021_filtered$Age, adjusted_qx, type = "l", col = "green", xlab = "Age", ylab = "Adjusted Mortality Rate", main = "Adjusted Mortality Rates using Credibility Theory")
+lines(life_table_2021_filtered$Age, observed_qx, col = "blue")
+legend("topright", legend = c("Adjusted", "Observed"), col = c("green", "blue"), lty = 1)
+
+
+
+
+
+
+```
+
+
+
+### Incorporating Adjusted Mortality Rates into Life Insurance Calculations
+
+**We will now use the adjusted mortality rates in the life insurance calculations.**
+
+<details>
+  <summary><span style="color:blue;">Explanation of using adjusted mortality rates in life insurance calculations</span></summary>
+  This code uses the adjusted mortality rates obtained from the credibility model to calculate the Expected Present Value (EPV) of a whole life insurance policy. The EPV is calculated by considering the adjusted mortality rates (`adjusted_qx`), survival probabilities (`kpx`), and discount factors based on a constant interest rate (`i`). This helps in determining the value of the insurance policy using more accurate mortality estimates.
+</details>
+
+```{r}
+# Function to compute the EPV of a whole life insurance with adjusted mortality rates
+whole_life_insurance_adjusted <- function(age, i, adjusted_qx) {
+  px <- 1 - adjusted_qx
+  kpx <- c(1, cumprod(px[(age + 1):(length(px) - 1)]))
+  kqx <- kpx * adjusted_qx[(age + 1):length(adjusted_qx)]
+  discount_factors <- (1 + i) ^ - (1:length(kqx))
+  sum(discount_factors * kqx, na.rm = TRUE)
+}
+
+# EPV of whole life insurance for a 20-year-old at 2% interest rate using adjusted mortality rates
+epv_adjusted <- whole_life_insurance_adjusted(20, 0.02, adjusted_qx)
+cat("EPV of whole life insurance with adjusted mortality rates =", epv_adjusted)
+
+
+```
+
+
+## Shiny App for Life Insurance Calculator with Adjusted Mortality Rates
+
+```{r}
+library(shiny)
+
+ui <- fluidPage(
+  titlePanel("Life Insurance Calculator with Adjusted Mortality Rates"),
+  sidebarLayout(
+    sidebarPanel(
+      numericInput("age", "Age:", 20, min = 0, max = 110),
+      numericInput("interest", "Interest Rate:", 0.02, min = 0, max = 0.2, step = 0.001),
+      numericInput("credibility", "Credibility Factor:", 0.8, min = 0, max = 1, step = 0.1),
+      selectInput("type", "Insurance Type:", 
+                  choices = c("Whole Life" = "whole", 
+                              "Temporary" = "temp", 
+                              "Deferred" = "deferred")),
+      conditionalPanel(
+        condition = "input.type == 'temp' || input.type == 'deferred'",
+        numericInput("term", "Term/Deferment (years):", 10, min = 1, max = 50)
+      )
+    ),
+    mainPanel(
+      h3("Expected Present Value:"),
+      textOutput("epv")
+    )
+  )
+)
+
+server <- function(input, output) {
+  output$epv <- renderText({
+    observed_qx <- life_table_2021$qx
+    expected_qx <- life_table$qx
+    adjusted_qx <- simple_credibility(observed_qx, expected_qx, input$credibility)
+    epv <- switch(input$type,
+                  "whole" = whole_life_insurance_adjusted(input$age, input$interest, adjusted_qx),
+                  "temp" = temporary_life_insurance(input$age, input$term, input$interest, life_table),
+                  "deferred" = deferred_life_insurance(input$age, input$term, input$interest, life_table))
+    paste0("$", round(epv, 2))
+  })
+}
+
+shinyApp(ui = ui, server = server)
+
+
+```
+
+
+
+
+
+
+
+
+## Generalized Linear Models (GLMs) for Mortality Rates
+
+**We will use GLMs with various link functions to model mortality rates.**
+
+<details>
+  <summary style="font-weight: bold; color: blue;">Generalized Linear Models (GLMs) for Mortality Rates</summary>
+  <p>
+    <strong>Overview:</strong><br>
+    We use Generalized Linear Models (GLMs) with various link functions to model mortality rates. This approach allows us to analyze and predict mortality probabilities based on different factors.<br><br>
+    <strong>1. Logistic Regression Model:</strong><br>
+- We load the MASS library to perform GLM analysis.<br>
+- A logistic regression model is fitted to predict death probability based on age, year, and mortality rate (mx).<br>
+- The model summary provides coefficients, standard errors, z-values, and p-values for each predictor.<br>
+- Significant predictors (p-value < 0.05) indicate a strong relationship with death probability.<br><br>
+
+<strong>2. Complementary Log-Log Regression Model:</strong><br>
+- We fit a complementary log-log regression model using the same predictors.<br>
+- This model is particularly suitable for survival data and rare events.<br>
+- The summary output is interpreted similarly to the logistic regression model.<br><br>
+
+<strong>3. Model Comparison:</strong><br>
+- We use the Akaike Information Criterion (AIC) to compare the fitted models.<br>
+- AIC measures the relative quality of statistical models for a given dataset.<br>
+- Lower AIC values indicate better-fitting models.<br>
+- We compare AIC values of logistic, probit, and complementary log-log regression models.<br>
+- The model with the lowest AIC is considered the best among the compared models.<br><br>
+
+This approach allows us to identify the most appropriate model for predicting mortality rates and understanding the influence of different factors on mortality probabilities.
+</details>
+
+```{r}
+library(MASS)
+
+# Fit a logistic regression model (GLM) to predict the probability of death based on age
+glm_logit <- glm(cbind(dx, lx - dx) ~ Age + Year + mx, family = binomial(link = "logit"), data = life_table)
+summary(glm_logit)
+
+# Fit a probit regression model (GLM) to predict the probability of death based on age
+glm_probit <- glm(cbind(dx, lx - dx) ~ Age + Year + mx, family = binomial(link = "probit"), data = life_table)
+summary(glm_probit)
+
+# Fit a complementary log-log regression model (GLM) to predict the probability of death based on age
+glm_cloglog <- glm(cbind(dx, lx - dx) ~ Age + Year + mx, family = binomial(link = "cloglog"), data = life_table)
+summary(glm_cloglog)
+
+# Compare the models using AIC
+AIC(glm_logit, glm_probit, glm_cloglog)
+
+# Predict survival probabilities using the best model (lowest AIC)
+best_glm <- glm_logit 
+predicted_qx_glm <- predict(best_glm, newdata = life_table, type = "response")
+predicted_px_glm <- 1 - predicted_qx_glm
+
+
+plot(life_table$Age, life_table$qx, type = "l", col = "blue", xlab = "Age", ylab = "Probability of Death", main = "Actual vs Predicted Mortality Rates (GLM)")
+lines(life_table$Age, predicted_qx_glm, col = "red")
+legend("topright", legend = c("Actual", "Predicted"), col = c("blue", "red"), lty = 1)
+
+
+```
+
+
+## ARIMA/ARMA Models for Mortality Rate Forecasting
+
+**We will use ARIMA and ARMA models to forecast future mortality rates.**
+
+<details>
+  <summary><span style="color:blue;">Explanation of the Code and Graph</span></summary>
+  
+  <p>### Explanation of the Code</p>
+  
+  <p>#### What We Are Doing in the Code</p>
+  
+  <p>1. <strong>Aggregating Mortality Rates</strong>:</p>
+  <ul>
+    <li>We are averaging mortality rates (<code>qx</code>) by year from a dataset called <code>life_table</code>.</li>
+    <li>This helps us get a yearly average mortality rate.</li>
+  </ul>
+  
+  <pre><code>agg_mortality <- aggregate(qx ~ Year, data = life_table, FUN = mean)</code></pre>
+  
+  <p>2. <strong>Fitting an ARIMA Model</strong>:</p>
+  <ul>
+    <li>We use an ARIMA (AutoRegressive Integrated Moving Average) model to fit the historical mortality rates.</li>
+    <li>The ARIMA model helps us identify patterns in the data and forecast future values.</li>
+  </ul>
+  
+  <pre><code>arima_model <- auto.arima(agg_mortality$qx)
+summary(arima_model)</code></pre>
+  
+  <p>3. <strong>Forecasting Future Mortality Rates</strong>:</p>
+  <ul>
+    <li>Using the ARIMA model, we forecast future mortality rates for the next 10 years.</li>
+  </ul>
+  
+  <pre><code>forecasts_arima <- forecast(arima_model, h = 10)</code></pre>
+  
+  <p>4. <strong>Plotting the Data</strong>:</p>
+  <ul>
+    <li>We plot both the historical mortality rates and the forecasted future rates.</li>
+    <li>This helps visualize trends over time and the predicted future values.</li>
+  </ul>
+  
+  <pre><code>plot(forecasts_arima, main = "Forecasted Mortality Rates (ARIMA)")
+lines(agg_mortality$Year, agg_mortality$qx, col = "black")
+legend("topright", legend = c("Historical", "Forecasted"), col = c("black", "blue"), lty = 1:1)</code></pre>
+  </ul>
+
+</details>
+
+
+     
+
+```{r}
+
+library(forecast)
+
+# Aggregate mortality rates by year
+agg_mortality <- aggregate(qx ~ Year, data = life_table, FUN = mean)
+
+# Fit an ARIMA model to the historical mortality rates
+arima_model <- auto.arima(agg_mortality$qx)
+summary(arima_model)
+
+
+forecasts_arima <- forecast(arima_model, h = 10)
+
+
+plot(forecasts_arima, main = "Forecasted Mortality Rates (ARIMA)", xlab = "Year", ylab = "Mortality Rate")
+lines(agg_mortality$Year, agg_mortality$qx, col = "black")
+legend("topright", legend = c("Historical", "Forecasted"), col = c("black", "blue"), lty = 1)
+
+
+```
+
+
+**How we interpret these results**:
+
+The blue line shows the historical mortality rates over the years and how it changed, while the red line and shaded area is the forecasted data. The red line is the forecasted mortality rates for the next 10 years and the shaded area around the red line is the confidence interval.
+
+## Bühlmann and Bühlmann-Straub Models for Credibility Theory
+
+**We will use the Bühlmann and Bühlmann-Straub models for credibility adjustments.**
+
+
+<!-- # ```{r} -->
+<!-- # # Load the life tables -->
+<!-- # life_table <- read.table("C:\\Users\\megacrazyleo\\Desktop\\SQL\\R\\bltper_1x1.txt", header = FALSE, skip = 3, sep = "") -->
+<!-- # colnames(life_table) <- c("Year", "Age", "mx", "qx", "ax", "lx", "dx", "Lx", "Tx", "ex") -->
+<!-- #  -->
+<!-- # # Subset the life table for the year 2021 -->
+<!-- # life_table_2021 <- subset(life_table, Year == 2021) -->
+<!-- #  -->
+<!-- # # Ensure Age is numeric and remove NAs -->
+<!-- # life_table$Age <- as.numeric(life_table$Age) -->
+<!-- # life_table_2021$Age <- as.numeric(life_table_2021$Age) -->
+<!-- #  -->
+<!-- # # Remove rows with NA ages -->
+<!-- # life_table <- life_table[!is.na(life_table$Age), ] -->
+<!-- # life_table_2021 <- life_table_2021[!is.na(life_table_2021$Age), ] -->
+<!-- #  -->
+<!-- # # Print summary of ages to diagnose potential issues -->
+<!-- # cat("Summary of Ages in life_table:\n") -->
+<!-- # print(summary(life_table$Age)) -->
+<!-- #  -->
+<!-- # cat("Summary of Ages in life_table_2021:\n") -->
+<!-- # print(summary(life_table_2021$Age)) -->
+<!-- #  -->
+<!-- # # Filter the historical life table to only include data for 2021 ages -->
+<!-- # common_ages <- intersect(life_table$Age, life_table_2021$Age) -->
+<!-- # life_table_filtered <- life_table[life_table$Age %in% common_ages & life_table$Year != 2021, ] -->
+<!-- # life_table_2021_filtered <- life_table_2021[life_table_2021$Age %in% common_ages, ] -->
+<!-- #  -->
+<!-- # # Sort by Age to ensure alignment -->
+<!-- # life_table_filtered <- life_table_filtered[order(life_table_filtered$Age), ] -->
+<!-- # life_table_2021_filtered <- life_table_2021_filtered[order(life_table_2021_filtered$Age), ] -->
+<!-- #  -->
+<!-- # # Extract qx values for the common ages -->
+<!-- # expected_qx <- life_table_filtered$qx -->
+<!-- # observed_qx <- life_table_2021_filtered$qx -->
+<!-- #  -->
+<!-- # # Print lengths and summaries for diagnostic purposes -->
+<!-- # cat("Length of observed_qx:", length(observed_qx), "\n") -->
+<!-- # cat("Length of expected_qx:", length(expected_qx), "\n") -->
+<!-- #  -->
+<!-- # cat("First few values of observed_qx:\n") -->
+<!-- # print(head(observed_qx)) -->
+<!-- #  -->
+<!-- # cat("First few values of expected_qx:\n") -->
+<!-- # print(head(expected_qx)) -->
+<!-- #  -->
+<!-- # # Ensure they have the same length -->
+<!-- # if (length(observed_qx) != length(expected_qx)) { -->
+<!-- #   stop("Lengths of observed_qx and expected_qx do not match after alignment!") -->
+<!-- # } -->
+<!-- #  -->
+<!-- # # Define the Bühlmann and Bühlmann-Straub models -->
+<!-- # buhlmann <- function(x) { -->
+<!-- #   n <- length(x) -->
+<!-- #   m <- mean(x) -->
+<!-- #   v <- var(x) -->
+<!-- #   z <- n / (n + v / var(m)) -->
+<!-- #   return(z * x + (1 - z) * m) -->
+<!-- # } -->
+<!-- #  -->
+<!-- # buhlmann_straub <- function(x, w) { -->
+<!-- #   n <- length(x) -->
+<!-- #   m <- weighted.mean(x, w) -->
+<!-- #   v <- sum(w * (x - m)^2) / sum(w) -->
+<!-- #   z <- sum(w) / (sum(w) + v / var(m)) -->
+<!-- #   return(z * x + (1 - z) * m) -->
+<!-- # } -->
+<!-- #  -->
+<!-- # # Apply Bühlmann Model -->
+<!-- # adjusted_qx_buhlmann <- buhlmann(observed_qx) -->
+<!-- #  -->
+<!-- # # Apply Bühlmann-Straub Model -->
+<!-- # weights <- rep(1, length(observed_qx)) # Assuming equal weights for simplicity -->
+<!-- # adjusted_qx_buhlmann_straub <- buhlmann_straub(observed_qx, weights) -->
+<!-- #  -->
+<!-- # # Plot adjusted mortality rates -->
+<!-- # plot(life_table_2021_filtered$Age, observed_qx, type = "l", col = "blue", xlab = "Age", ylab = "Mortality Rate", main = "Adjusted Mortality Rates using Credibility Theory") -->
+<!-- # lines(life_table_2021_filtered$Age, adjusted_qx_buhlmann, col = "green") -->
+<!-- # lines(life_table_2021_filtered$Age, adjusted_qx_buhlmann_straub, col = "red") -->
+<!-- # legend("topright", legend = c("Observed", "Bühlmann", "Bühlmann-Straub"), col = c("blue", "green", "red"), lty = 1) -->
+<!-- #  -->
+<!-- #  -->
+<!-- #  -->
+<!-- #  -->
+<!-- #  -->
+<!-- # ``` -->
+
+### Incorporating Adjusted Mortality Rates into Life Insurance Calculations
+
+<!-- # ```{r} -->
+<!-- # # Function to compute the EPV of a whole life insurance with adjusted mortality rates -->
+<!-- # whole_life_insurance_adjusted <- function(age, i, adjusted_qx) { -->
+<!-- #   px <- 1 - adjusted_qx -->
+<!-- #   kpx <- c(1, cumprod(px[(age + 1):(length(px) - 1)])) -->
+<!-- #   kqx <- kpx * adjusted_qx[(age + 1):length(adjusted_qx)] -->
+<!-- #   discount_factors <- (1 + i) ^ - (1:length(kqx)) -->
+<!-- #   sum(discount_factors * kqx, na.rm = TRUE) -->
+<!-- # } -->
+<!-- # -->
+<!-- # # EPV of whole life insurance for a 20-year-old at 2% interest rate using adjusted mortality rates -->
+<!-- # epv_adjusted_buhlmann <- whole_life_insurance_adjusted(20, 0.02, adjusted_qx_buhlmann) -->
+<!-- # cat("EPV of whole life insurance with Bühlmann adjusted mortality rates =", epv_adjusted_buhlmann) -->
+<!-- # -->
+<!-- # epv_adjusted_buhlmann_straub <- whole_life_insurance_adjusted(20, 0.02, adjusted_qx_buhlmann_straub) -->
+<!-- # cat("EPV of whole life insurance with Bühlmann-Straub adjusted mortality rates =", epv_adjusted_buhlmann_straub) -->
+<!-- # -->
+<!-- # ``` -->
+
+
+### Shiny App for Life Insurance Calculator with Adjusted Mortality Rates
+
+```{r}
+library(shiny)
+
+ui <- fluidPage(
+  titlePanel("Life Insurance Calculator with Adjusted Mortality Rates"),
+  sidebarLayout(
+    sidebarPanel(
+      numericInput("age", "Age:", 20, min = 0, max = 110),
+      numericInput("interest", "Interest Rate:", 0.02, min = 0, max = 0.2, step = 0.001),
+      numericInput("credibility", "Credibility Factor:", 0.8, min = 0, max = 1, step = 0.1),
+      selectInput("type", "Insurance Type:", 
+                  choices = c("Whole Life" = "whole", 
+                              "Temporary" = "temp", 
+                              "Deferred" = "deferred")),
+      conditionalPanel(
+        condition = "input.type == 'temp' || input.type == 'deferred'",
+        numericInput("term", "Term/Deferment (years):", 10, min = 1, max = 50)
+      )
+    ),
+    mainPanel(
+      h3("Expected Present Value:"),
+      textOutput("epv")
+    )
+  )
+)
+
+server <- function(input, output) {
+  output$epv <- renderText({
+    observed_qx <- life_table_2021$qx
+    expected_qx <- life_table$qx
+    adjusted_qx <- simple_credibility(observed_qx, expected_qx, input$credibility)
+    epv <- switch(input$type,
+                  "whole" = whole_life_insurance_adjusted(input$age, input$interest, adjusted_qx),
+                  "temp" = temporary_life_insurance(input$age, input$term, input$interest, life_table),
+                  "deferred" = deferred_life_insurance(input$age, input$term, input$interest, life_table))
+    paste0("$", round(epv, 2))
+  })
+}
+
+shinyApp(ui = ui, server = server)
+
+
+
+```
+
+
+
+</div>
+
+
+
