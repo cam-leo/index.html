@@ -553,7 +553,7 @@ So your parents would have to make a deposit of 6627.546 for each of the 4 years
 You want to take out a loan to open a new restaurant. You plan to take $1000 this year and $3000 next year. You plan to repay the money with equal yearly payments for the 10 years after next year (t=2 to t=11). Note this time the interest rate isn’t constant but changes over time. For the first 3 years it is 4%, then for the next 3 years it is 4.5%, then for the final 5 years it is 6%. How much will your yearly payments be?
 
 ```{r, fig.width=12, fig.height=6}
-# Define cash flows
+
 cash_flows <- c(-1000, -3000, rep(516.39, 10))
 time_periods <- 0:12
 
@@ -568,14 +568,14 @@ plot(time_periods, rep(0, length(time_periods)), type = "n",
      main = "Cash Flow Timeline",
      xaxt = "n", yaxt = "n")
 
-# Add x-axis
+
 axis(1, at = time_periods)
 
-# Add vertical lines and labels for cash flows
+
 for (i in 1:length(cash_flows)) {
   lines(c(i-1, i-1), c(0, cash_flows[i]))
   
-  # Label logic
+  
   if (i <= 2) {
     # First two negative cash flows
     label <- round(cash_flows[i], 2)
@@ -583,10 +583,10 @@ for (i in 1:length(cash_flows)) {
     # First two and last two positive cash flows
     label <- round(cash_flows[i], 2)
   } else if (i == 7) {
-    # Middle ellipsis
+    
     label <- "..."
   } else {
-    # Skip other labels
+    
     next
   }
   
@@ -618,10 +618,10 @@ repayment_years <- 2:11
 discount_factors_repayments <- discount_factors[repayment_years + 1]
 n_payments <- length(discount_factors_repayments)
 
-# Define the yearly payment variable
+
 yearly_payment <- PV_loan / sum(discount_factors_repayments)
 
-# Create cash flow vector with the repayments
+
 cash_flow_full <- c(cash_flow, rep(-yearly_payment, n_payments))
 
 # Calculate the PV of the repayments to check the balance
@@ -632,19 +632,17 @@ cat("Yearly payments =", yearly_payment)
 
 cat("PV of repayments =",PV_repayments)
 
-# Define cash flows
-# Define cash flows
-# Define cash flows
+
 cash_flows <- c(-1000, -3000, rep(516.39, 10))
 time_periods <- 0:12
 
 # Calculate padding for y-axis
 y_padding <- max(abs(cash_flows)) * 0.2
 
-# Set up the plot
+
 options(repr.plot.width=12, repr.plot.height=6)  # Adjust as needed
 
-# Create the plot
+
 plot(time_periods, rep(0, length(time_periods)), type = "n", 
      ylim = c(min(cash_flows) - y_padding, max(cash_flows) + y_padding),
      xlim = c(0, 12),
@@ -652,25 +650,25 @@ plot(time_periods, rep(0, length(time_periods)), type = "n",
      main = "Cash Flow Timeline",
      xaxt = "n", yaxt = "n")
 
-# Add x-axis
+
 axis(1, at = time_periods)
 
-# Add vertical lines and labels for cash flows
+
 for (i in 1:length(cash_flows)) {
   lines(c(i-1, i-1), c(0, cash_flows[i]))
   
-  # Label logic
+  
   if (i <= 2) {
-    # First two negative cash flows
+  
     label <- round(cash_flows[i], 2)
   } else if (i == 3 || i == 4 || i == 11 || i == 12) {
-    # First two and last two positive cash flows
+    
     label <- round(cash_flows[i], 2)
   } else if (i == 7) {
-    # Middle ellipsis
+    
     label <- "..."
   } else {
-    # Skip other labels
+   
     next
   }
   
@@ -737,10 +735,10 @@ i <- 0.0288
 
 monthly_interest <- (1+i)^(1/12)-1
 
-# Define the discount factors
+
 discount_factors <- (1 + monthly_interest) ^ - (1:number_payments)
 
-# Define the payment pattern
+
 payments <- rep(1, number_payments)
 
 # Calculate the monthly loan payment K
