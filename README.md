@@ -14,12 +14,25 @@ This project involves the computation of present values and the creation of vari
 - Calculate present values of different life insurance policies.
 - Develop functions to automate the computation of insurance values.
 - Create calculators for user-friendly interactions.
+- Implement Generalized Linear Models (GLMs) for mortality rate predictions.
+- Integrate survival models and credibility theory in the analysis.
+
 
 **Key Features:**
 
 - Detailed analysis of life insurance policies.
 - Custom functions for present value calculations.
 - Interactive calculators for easy use.
+- GLM Implementation for Mortality Rates: Use of logistic regression, probit regression, and complementary log-log regression models to predict mortality rates based on life table data.
+- Model Comparison Using AIC: Application of Akaike Information Criterion (AIC) to compare the fit of different GLM models, ensuring the best model selection for mortality rate predictions.
+- Survival Models Integration: Use of Kaplan-Meier estimator and Cox Proportional Hazards model to analyze survival probabilities and their impact on life insurance.
+- Credibility Theory Application: Adjusted mortality rates using simple credibility models to refine life insurance calculations based on past experiences and new data.
+- Bühlmann and Bühlmann-Straub Credibility Models: Implementation of Bühlmann and Bühlmann-Straub credibility models to provide more accurate premium calculations based on past claims data and new observations.
+
+
+
+
+
 
 [View Project](https://github.com/cam-leo/index.html/tree/main/LifeInsurance)
 
