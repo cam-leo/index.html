@@ -20,8 +20,8 @@ This project involves the computation of present values and the creation of vari
 
 - Detailed analysis of life insurance policies.
 - GLM Implementation for Mortality Rates: Use of logistic regression, probit regression, and complementary log-log regression models to predict mortality rates based on life table data.
-- Survival Models Integration: Use of Kaplan-Meier estimator and Cox Proportional Hazards model to analyze survival probabilities and their impact on life insurance.
-- Credibility Theory Application: Adjusted mortality rates using simple credibility models to refine life insurance calculations based on past experiences and new data.
+- Survival Models: Use of Kaplan-Meier estimator and Cox Proportional Hazards model to analyze survival probabilities and their impact on life insurance.
+- Credibility Theory: Adjusted mortality rates using simple credibility models to refine life insurance calculations based on past experiences and new data.
 - Bühlmann-Straub Credibility Models: Implementation of Bühlmann-Straub credibility models to provide more accurate premium calculations based on past claims data and new observations.
 
 
