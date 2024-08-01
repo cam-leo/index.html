@@ -1,6 +1,6 @@
 # Projects Portfolio
 
-Welcome to my projects portfolio! This repository contains various projects I have completed as part of my journey in mathematics, statistics and data analysis. The two main projects showcased here are focused on life insurance computations using R and powerlifting data analysis using SQL and Python. Additionally, I have included some minor projects, including an analysis of an Exam PA dataset and another R project of a Time Series data analysis.
+Portfolio of all projects I've done or currently am working on.
 
 ## Projects
 
@@ -12,8 +12,6 @@ Welcome to my projects portfolio! This repository contains various projects I ha
 This project involves the computation of present values and the creation of various functions and calculators related to life insurance. The main objectives of this project were to:
 
 - Calculate present values of different life insurance policies.
-- Develop functions to automate the computation of insurance values.
-- Create calculators for user-friendly interactions.
 - Implement Generalized Linear Models (GLMs) for mortality rate predictions.
 - Integrate survival models and credibility theory in the analysis.
 
@@ -21,13 +19,10 @@ This project involves the computation of present values and the creation of vari
 **Key Features:**
 
 - Detailed analysis of life insurance policies.
-- Custom functions for present value calculations.
-- Interactive calculators for easy use.
 - GLM Implementation for Mortality Rates: Use of logistic regression, probit regression, and complementary log-log regression models to predict mortality rates based on life table data.
-- Model Comparison Using AIC: Application of Akaike Information Criterion (AIC) to compare the fit of different GLM models, ensuring the best model selection for mortality rate predictions.
 - Survival Models Integration: Use of Kaplan-Meier estimator and Cox Proportional Hazards model to analyze survival probabilities and their impact on life insurance.
 - Credibility Theory Application: Adjusted mortality rates using simple credibility models to refine life insurance calculations based on past experiences and new data.
-- Bühlmann and Bühlmann-Straub Credibility Models: Implementation of Bühlmann and Bühlmann-Straub credibility models to provide more accurate premium calculations based on past claims data and new observations.
+- Bühlmann-Straub Credibility Models: Implementation of Bühlmann-Straub credibility models to provide more accurate premium calculations based on past claims data and new observations.
 
 
 
@@ -36,7 +31,22 @@ This project involves the computation of present values and the creation of vari
 
 [View Project](https://github.com/cam-leo/index.html/tree/main/LifeInsurance)
 
-### 2. Powerlifting Data Analysis
+### 2. Amazon Stocks Visualization
+
+**Date:** June 2024  
+**Tools:** Power BI, Tableau, Excel
+
+Imported and cleaned a dataset containing stock data of Amazon from 1997-2021. I then computed several North Star metrics to determine how well Amazon stock has been performing over the years. Finally, I offer several recommendations on which course of action to take to continue maximizing company growth.
+
+**Key Features:**
+
+- Data cleaning and preprocessing using Excel.
+- Comprehensive data analysis and visualization using Power BI and Tableau.
+- Recommendations based on business questions.
+
+[View Project](https://github.com/cam-leo/AmazonStocks)
+
+### 3. Powerlifting Data Analysis
 
 **Date:** May 2024  
 **Tools:** SQLite, Python, Streamlit
@@ -51,7 +61,7 @@ In this project, I analyzed a powerlifting dataset to uncover insights and trend
 
 [View Project](https://github.com/cam-leo/index.html/tree/main/Powerlifting)
 
-### 3. Exam PA Dataset Analysis
+### 4. Exam PA Dataset Analysis
 
 **Tools:** R
 
