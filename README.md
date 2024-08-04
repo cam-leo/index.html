@@ -7,7 +7,7 @@ Portfolio of all projects I've done or currently am working on. Links attached f
 ### 1. Life Insurance Data Analysis
 
 **Date:** January 2023  
-**Tools:** R
+**Tools: R, SQL, Python**
 
 This project involves the computation of present values and the creation of various functions and calculators related to life insurance. The main objectives of this project were to:
 
@@ -34,7 +34,7 @@ This project involves the computation of present values and the creation of vari
 ### 2. Amazon Stocks Visualization
 
 **Date:** June 2024  
-**Tools:** Power BI, Tableau, Excel
+**Tools: Power BI, Tableau, Excel**
 
 Imported and cleaned a dataset containing stock data of Amazon from 1997-2021. I then computed several North Star metrics to determine how well Amazon stock has been performing over the years. Finally, I offer several recommendations on which course of action to take to continue maximizing company growth.
 
