@@ -36,13 +36,13 @@ This project involves the computation of present values and the creation of vari
 **Date:** June 2024  
 **Tools: Power BI, Tableau, Excel**
 
-Imported and cleaned a dataset containing stock data of Amazon from 1997-2021. I then computed several North Star metrics to determine how well Amazon stock has been performing over the years. Finally, I offer several recommendations on which course of action to take to continue maximizing company growth.
+Imported and cleaned a dataset containing stock data of Amazon from 1997-2021. I then computed several North Star metrics to determine how well Amazon stock has been performing over the years. Provided several recommendations on which future courses of action to take to continue maximizing company growth.
 
 **Key Features:**
 
 - Data cleaning and preprocessing using Excel.
 - Comprehensive data analysis and visualization using Power BI and Tableau.
-- Recommendations based on business questions.
+- Recommendations based on answering of relevant business questions.
 
 [View Project](https://github.com/cam-leo/AmazonStocks)
 
