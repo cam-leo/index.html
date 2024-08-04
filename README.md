@@ -1,6 +1,6 @@
 # Projects Portfolio
 
-Portfolio of all projects I've done or currently am working on.
+Portfolio of all projects I've done or currently am working on. Links attached for each.
 
 ## Projects
 
