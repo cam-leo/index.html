@@ -6,6 +6,8 @@ Portfolio of all projects I've done or currently am working on. Links attached f
 
 ### 1. Life Insurance Data Analysis
 
+[View Project](https://github.com/cam-leo/index.html/tree/main/LifeInsurance)
+
 **Date:** January 2023  
 **Tools: R, SQL, Python**
 
@@ -19,19 +21,21 @@ This project involves the computation of present values and the creation of vari
 **Key Features:**
 
 - Detailed analysis of life insurance policies.
-- GLM Implementation for Mortality Rates: Use of logistic regression, probit regression, and complementary log-log regression models to predict mortality rates based on life table data.
-- Survival Models: Use of Kaplan-Meier estimator and Cox Proportional Hazards model to analyze survival probabilities and their impact on life insurance.
-- Credibility Theory: Adjusted mortality rates using simple credibility models to refine life insurance calculations based on past experiences and new data.
-- Bühlmann-Straub Credibility Models: Implementation of Bühlmann-Straub credibility models to provide more accurate premium calculations based on past claims data and new observations.
+- GLM for Mortality Rates: *Predict mortality rates* from life table data using logistic and probit regression.
+- Survival Models: Analyzed *survival probabilities and their impact on life insurance* using Kaplan-Meier estimators and Cox Proportional Hazards model.
+- Credibility Theory: *Adjusted mortality rates to better refine life insurance calculations* using credibility models based on past experiences and new data.
+- Bühlmann-Straub Credibility Models: Implementation of Bühlmann-Straub credibility models to *provide more accurate premium calculations* based on past claims data and new observations.
 
 
 
 
 
 
-[View Project](https://github.com/cam-leo/index.html/tree/main/LifeInsurance)
+
 
 ### 2. Amazon Stocks Visualization
+
+[View Project](https://github.com/cam-leo/AmazonStocks)
 
 **Date:** June 2024  
 **Tools: Power BI, Tableau, Excel**
@@ -43,8 +47,8 @@ Imported and cleaned a dataset containing stock data of Amazon from 1997-2021. I
 - Data cleaning and preprocessing using Excel.
 - Comprehensive data analysis and visualization using Power BI and Tableau.
 - Recommendations based on answering of relevant business questions.
+- Produced dashboard containing information on every Amazon employee for HR
 
-[View Project](https://github.com/cam-leo/AmazonStocks)
 
 ### 3. Powerlifting Data Analysis
 
