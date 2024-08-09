@@ -10,17 +10,17 @@ Portfolio of all projects I've done or currently am working on. Links attached f
 
 [View Project](https://github.com/cam-leo/HealthPredict)
 
-### 2. Life Insurance Data Analysis
-
-**Tools:** R, SQL 
-
-[View Project](https://github.com/cam-leo/index.html/tree/main/LifeInsurance)
-
-### 3. Amazon Stocks Visualization
+### 2. Amazon Stocks Visualization
 
 **Tools:** Excel, Tableau, Power BI
 
 [View Project](https://github.com/cam-leo/AmazonStocks)
+
+### 3. Life Insurance Data Analysis
+
+**Tools:** R, SQL 
+
+[View Project](https://github.com/cam-leo/index.html/tree/main/LifeInsurance)
  
 ### 4. Powerlifting Data Analysis
  
