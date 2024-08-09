@@ -4,55 +4,26 @@ Portfolio of all projects I've done or currently am working on. Links attached f
 
 ## Projects
 
-### 1. Life Insurance Data Analysis
+### 1. Health Insurance Premium Predictor
+
+**Tools:** Python, R, SQL, Excel, Tableau, Power BI
+
+[View Project](https://github.com/cam-leo/HealthPredict)
+
+### 2. Life Insurance Data Analysis
+
+**Tools:** R, SQL 
 
 [View Project](https://github.com/cam-leo/index.html/tree/main/LifeInsurance)
 
-**Date:** January 2023  
-**Tools: R, SQL, Python**
+### 3. Amazon Stocks Visualization
 
-This project involves the computation of present values and the creation of various functions and calculators related to life insurance. The main objectives of this project were to:
-
-- Calculate present values of different life insurance policies.
-- Implement Generalized Linear Models (GLMs) for mortality rate predictions.
-- Integrate survival models and credibility theory in the analysis.
-
-
-**Key Features:**
-
-- Detailed analysis of life insurance policies.
-- GLM for Mortality Rates: *Predict mortality rates* from life table data using logistic and probit regression.
-- Survival Models: Analyzed *survival probabilities and their impact on life insurance* using Kaplan-Meier estimators and Cox Proportional Hazards model.
-- Credibility Theory: *Adjusted mortality rates to better refine life insurance calculations* using credibility models based on past experiences and new data.
-- Bühlmann-Straub Credibility Models: Implementation of Bühlmann-Straub credibility models to *provide more accurate premium calculations* based on past claims data and new observations.
-
-
-
-
-
-
-
-
-### 2. Amazon Stocks Visualization
+**Tools:** Excel, Tableau, Power BI
 
 [View Project](https://github.com/cam-leo/AmazonStocks)
-
-**Date:** June 2024  
-**Tools: Power BI, Tableau, Excel**
-
-Imported and cleaned a dataset containing stock data of Amazon from 1997-2021. I then computed several North Star metrics to determine how well Amazon stock has been performing over the years. Provided several recommendations on which future courses of action to take to continue maximizing company growth.
-
-**Key Features:**
-
-- Data cleaning and preprocessing using Excel.
-- Comprehensive data analysis and visualization using Power BI and Tableau.
-- Recommendations based on answering of relevant business questions.
-- Produced dashboard containing information on every Amazon employee for HR
-
-
-### 3. Powerlifting Data Analysis
-
-**Date:** May 2024  
+ 
+### 4. Powerlifting Data Analysis
+ 
 **Tools:** SQLite, Python, Streamlit
 
 In this project, I analyzed a powerlifting dataset to uncover insights and trends in the data. The project involved using SQL for data manipulation and Python, specifically Streamlit, to create a web app for visualizing the results.
@@ -65,7 +36,7 @@ In this project, I analyzed a powerlifting dataset to uncover insights and trend
 
 [View Project](https://github.com/cam-leo/index.html/tree/main/Powerlifting)
 
-### 4. Exam PA Dataset Analysis
+### 5. Exam PA Dataset Analysis
 
 **Tools:** R
 
