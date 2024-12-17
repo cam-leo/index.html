@@ -36,7 +36,7 @@ Portfolio of all personal projects I've done or currently am working on. Links a
 
 ## About Me
 
-I am a person with a passion for data analysis and predictive modeling. My goal is to leverage my analytical skills to solve complex problems and provide valuable insights. This repository showcases some of the projects I have worked on, highlighting my skills in Python, R, SQL, Python, and data visualization (Tableau, Power BI).
+I am a person with a passion for data analysis and predictive modeling. My goal is to leverage my analytical skills to solve complex problems and provide valuable insights. This repository showcases some of the projects I have worked on, highlighting my skills in Python, R, SQL, Python, and data visualization (Tableau, Power BI). I have also done numerous financial modelling projects in Excel
 
 Feel free to explore the projects and reach out if you have any questions or feedback!
 
