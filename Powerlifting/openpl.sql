@@ -14,9 +14,13 @@
 --		2.7 Highest total for weightclasses over the years
 --		2.8 Finding age at which each lifter hit their peak performance
 --		2.9 Effectiveness of each training program for lifters
---		2.10 Competition vs In-training Gym performance
+--		2.10 (removed) Competition vs in-training gym performance
 --		2.11 Recovery time impact on performance
 --		2.12 Lift ratio over time
+--
+-- NOTE: training_data is randomly generated practice data (lifts drawn independently each
+-- week, programs assigned at random, anonymised lifter IDs). Results from sections 2.8-2.12
+-- show how to write the queries; they say nothing about real training.
 -- 3. Creating Raw Nationals Data
 --		3.1 Number of times a person has won nationals
 --		3.2 Number of lifters that got 1st place and went 9/9
@@ -27,9 +31,13 @@
 
 
 
--- 1.1 The number of lifters registered on openPL
+-- 1.1 The number of entries and lifters on openPL
+-- Each row is one entry (one lifter at one meet in one division), so COUNT(name) counts
+-- entries, not people. COUNT(DISTINCT name) counts lifters; OpenPowerlifting adds "#1", "#2"
+-- to names shared by different people, so Name identifies a lifter.
 SELECT
-    COUNT(name)
+    COUNT(*)             AS entries,
+    COUNT(DISTINCT name) AS lifters
 FROM openpowerlifting;
 
 
@@ -50,7 +58,8 @@ FROM openpowerlifting
 WHERE age IS NOT NULL AND sex IS NOT NULL AND AgeClass IS NOT NULL AND BirthYearClass IS NOT NULL;
 
 -- 1.3
---As we can see, this cut down the number of lifters from 1423354 to 757527, we will use this as our main data source
+--As we can see, this cut down the number of entries from 1423354 to 757527, we will use this as our main data source.
+--Keep in mind that every result built on `data` (including all the USAPL results) only covers entries with a known age.
 
 -- Create a new table with the filtered data
 CREATE TABLE data AS
@@ -71,7 +80,7 @@ SELECT
     AgeClass,
     BirthYearClass,
     Division,
-    CAST(WeightClassKg AS DECIMAL) AS WeightClassKg,
+    WeightClassKg,  -- kept as text: CAST would turn the super-heavyweight class '120+' into 120 and merge it with the 120 kg class
     CAST(Squat1Kg AS DECIMAL) AS Squat1Kg,
     CAST(Squat2Kg AS DECIMAL) AS Squat2Kg,
     CAST(Squat3Kg AS DECIMAL) AS Squat3Kg,
@@ -85,7 +94,7 @@ SELECT
     CAST(Deadlift3Kg AS DECIMAL) AS Deadlift3Kg,
     CAST(Best3DeadliftKg AS DECIMAL) AS Best3DeadliftKg,
     CAST(TotalKg AS DECIMAL) AS TotalKg,
-    Place,
+    Place,  -- text: '1', '2', ... or 'DQ', 'G' (guest), etc.
     CAST(Dots AS DECIMAL) AS Dots,
     CAST(Wilks AS DECIMAL) AS Wilks,
     Tested,
@@ -244,7 +253,7 @@ FROM usapl
 WHERE sex = 'M'
 GROUP BY
     strftime('%Y', "date"), WeightClassKg
-ORDER BY year ASC, WeightClassKg ASC;
+ORDER BY year ASC, CAST(REPLACE(WeightClassKg, '+', '') AS REAL), WeightClassKg LIKE '%+';
 
 
 
@@ -292,7 +301,7 @@ FROM
 WHERE Sex = 'M' AND Event = 'SBD' AND Equipment = 'Raw'
 GROUP BY
     WeightClassKg
-ORDER BY WeightClassKg;
+ORDER BY CAST(REPLACE(WeightClassKg, '+', '') AS REAL), WeightClassKg LIKE '%+';
 
 
 
@@ -314,48 +323,11 @@ ORDER BY WeightClassKg;
 --Finding the age at which each lifter hit their peak performance in each lift (S,B,D)
 
 
---Postgres Version
-
-WITH peak_performance AS (
-    SELECT
-        LifterID,
-        'Squat' AS LiftType,
-        MAX(Squat) AS PeakLift,
-        DATE_PART('year', AGE(TrainingDate, 'DateOfBirth')) AS AgeAtPeak
-    FROM training_data
-    GROUP BY LifterID
-
-    UNION ALL
-
-    SELECT
-        LifterID,
-        'BenchPress' AS LiftType,
-        MAX(BenchPress) AS PeakLift,
-        DATE_PART('year', AGE(TrainingDate, 'DateOfBirth')) AS AgeAtPeak
-    FROM training_data
-    GROUP BY LifterID
-
-    UNION ALL
-
-    SELECT
-        LifterID,
-        'Deadlift' AS LiftType,
-        MAX(Deadlift) AS PeakLift,
-        DATE_PART('year', AGE(TrainingDate, 'DateOfBirth')) AS AgeAtPeak
-    FROM training_data
-    GROUP BY LifterID
-)
-
-SELECT
-    LifterID,
-    LiftType,
-    PeakLift,
-    AgeAtPeak
-FROM peak_performance
-ORDER BY LifterID, LiftType;
-
-
---SQlite version
+--SQLite version
+--(An earlier Postgres version is removed: it called AGE() on a 'DateOfBirth' column that
+-- training_data doesn't have, and passed it as a quoted string, so it couldn't run.)
+--In SQLite, a bare column next to MAX() takes its value from the row holding the maximum,
+--so PeakDate is the date of the peak lift.
 
 -- Create table to store peak lifts
 CREATE TABLE peak_performance AS
@@ -399,170 +371,32 @@ ORDER BY LifterID, LiftType;
 
 
 -- 2.9
---Calculating the effectiveness of each training program for each lifter
-
-WITH program_gains AS (
-    SELECT
-        LifterID,
-        Program,
-        MAX(Squat) - MIN(Squat) AS SquatGain,
-        MAX(BenchPress) - MIN(BenchPress) AS BenchGain,
-        MAX(Deadlift) - MIN(Deadlift) AS DeadliftGain
-    FROM training_data
-    GROUP BY LifterID, Program
-)
-
+--Comparing training programs
+--An earlier version used MAX - MIN of each lift as the "gain" from a program. That isn't a gain:
+--it ignores the order of sessions (a drop counts the same as an increase) and it grows with the
+--number of sessions and with noise. Programs here also switch from week to week, so there is no
+--program "block" to measure progress over. Instead we compare average weekly lifts per program;
+--openpl.py tests whether the differences are larger than chance (ANOVA).
 SELECT
     Program,
-    AVG(SquatGain) AS AvgSquatGain,
-    AVG(BenchGain) AS AvgBenchGain,
-    AVG(DeadliftGain) AS AvgDeadliftGain
-FROM program_gains
+    COUNT(*)              AS sessions,
+    ROUND(AVG(Squat), 1)      AS avg_squat,
+    ROUND(AVG(BenchPress), 1) AS avg_bench,
+    ROUND(AVG(Deadlift), 1)   AS avg_deadlift
+FROM training_data
 GROUP BY Program;
 
 
 
 
--- Calculate the gym PRs from training_data
-CREATE TEMPORARY TABLE gym_prs AS
-SELECT
-    LifterID,
-    MAX(Squat) AS GymSquatPR,
-    MAX(BenchPress) AS GymBenchPR,
-    MAX(Deadlift) AS GymDeadliftPR
-FROM training_data
-GROUP BY LifterID;
+-- 2.10 (removed)
+--Gym PRs vs competition results. This compared the synthetic training log with real competition
+--results by joining on lifter name. Since the training numbers are random, the comparison was
+--meaningless, and it put made-up training numbers next to real athletes' names. The training log
+--now uses anonymous IDs, so it no longer joins to competition data.
+--(The "future_competitions" view that followed was also always empty: its HAVING clause asked
+-- for a meet date later than that lifter's latest meet date.)
 
--- Join gym_prs with usapl to compare with competition PRs
-SELECT
-    t.LifterID,
-    t.GymSquatPR,
-    u.Best3SquatKg AS CompetitionSquatPR,
-    t.GymBenchPR,
-    u.Best3BenchKg AS CompetitionBenchPR,
-    t.GymDeadliftPR,
-    u.Best3DeadliftKg AS CompetitionDeadliftPR,
-    (t.GymSquatPR - u.Best3SquatKg) AS SquatPRDifference,
-    (t.GymBenchPR - u.Best3BenchKg) AS BenchPRDifference,
-    (t.GymDeadliftPR - u.Best3DeadliftKg) AS DeadliftPRDifference
-FROM gym_prs t
-JOIN usapl u ON t.LifterID = u.Name
-ORDER BY t.LifterID;
-
-
-
-
-
-
--- 2.10
-CREATE VIEW lifter_prs_before_comp AS
-SELECT
-    t.lifterid,
-    u.date AS competition_date,
-    MAX(t.squat) AS pr_squat,
-    MAX(t.benchpress) AS pr_bench,
-    MAX(t.deadlift) AS pr_deadlift
-FROM
-    training_data t
-JOIN
-    usapl u ON t.lifterid = u.name
-WHERE
-    t.trainingdate < u.date
-GROUP BY
-    t.lifterid, u.date
-ORDER BY t.LifterID ASC, u.Date ASC;
-
-CREATE VIEW competition_prs AS
-SELECT
-    name AS lifterid,
-    date AS competition_date,
-    best3squatkg AS comp_pr_squat,
-    best3benchkg AS comp_pr_bench,
-    best3deadliftkg AS comp_pr_deadlift
-FROM
-    usapl
-ORDER BY lifterid ASC, competition_date ASC;
-
-CREATE VIEW improvements AS
-SELECT
-    b.lifterid,
-    b.competition_date,
-    b.pr_squat,
-    c.comp_pr_squat,
-    c.comp_pr_squat - b.pr_squat AS squat_improvement,
-    b.pr_bench,
-    c.comp_pr_bench,
-    c.comp_pr_bench - b.pr_bench AS bench_improvement,
-    b.pr_deadlift,
-    c.comp_pr_deadlift,
-    c.comp_pr_deadlift - b.pr_deadlift AS deadlift_improvement
-FROM
-    lifter_prs_before_comp b
-JOIN
-    competition_prs c ON b.lifterid = c.lifterid AND b.competition_date = c.competition_date
-ORDER BY b.lifterid, b.competition_date;
-
-SELECT
-    i.lifterid,
-    i.competition_date,
-    i.pr_squat,
-    i.comp_pr_squat,
-    i.squat_improvement,
-    i.pr_bench,
-    i.comp_pr_bench,
-    i.bench_improvement,
-    i.pr_deadlift,
-    i.comp_pr_deadlift,
-    i.deadlift_improvement
-FROM
-    improvements i
-ORDER BY
-    i.lifterid, i.competition_date;
-
-
-
---future
-
-CREATE VIEW future_competitions AS
-SELECT
-    t.lifterid,
-    u.date AS competition_date,
-    MAX(t.squat) AS pr_squat,
-    MAX(t.benchpress) AS pr_bench,
-    MAX(t.deadlift) AS pr_deadlift
-FROM
-    training_data t
-JOIN
-    usapl u ON t.lifterid = u.name
-WHERE
-    t.trainingdate < u.date
-GROUP BY
-    t.lifterid, u.date
-HAVING
-    u.date > (
-        SELECT MAX(u2.date)
-        FROM usapl u2
-        WHERE u2.name = u.name
-    );
-
-SELECT
-    i.lifterid,
-    i.competition_date,
-    i.pr_squat,
-    i.comp_pr_squat,
-    i.squat_improvement,
-    i.pr_bench,
-    i.comp_pr_bench,
-    i.bench_improvement,
-    i.pr_deadlift,
-    i.comp_pr_deadlift,
-    i.deadlift_improvement
-FROM
-    improvements i
-JOIN
-    future_competitions f ON i.lifterid = f.lifterid AND i.competition_date = f.competition_date
-ORDER BY
-    i.lifterid, i.competition_date;
 
 
 
@@ -637,137 +471,78 @@ WHERE (MeetName = 'Raw Nationals' OR MeetName = 'Mega Nationals') AND Equipment 
 
 
 -- 3.1
--- Number of times each person has won Raw Nats
+-- Number of Raw Nationals each person has won
+-- A lifter can place 1st in several divisions (e.g. Open and Masters) at the same meet, so we
+-- count distinct meets rather than first-place rows.
 SELECT
     Name,
     Sex,
-    Count(Name) AS num_times_won
+    COUNT(DISTINCT Date || MeetName) AS national_titles
 FROM raw_nats
-WHERE place = 1
+WHERE Place = '1'
 GROUP BY Name, Sex
-ORDER BY Sex, num_times_won DESC;
+ORDER BY Sex, national_titles DESC;
 
 
 
--- 3.2
--- Number of lifters that got 1st place and went 9/9
-SELECT COUNT(name)
-FROM usapl
-WHERE
-    Squat1Kg IS NOT NULL AND Squat1Kg > 0 AND
-    Squat2Kg IS NOT NULL AND Squat2Kg > 0 AND
-    Squat3Kg IS NOT NULL AND Squat3Kg > 0 AND
-    Bench1Kg IS NOT NULL AND Bench1Kg > 0 AND
-    Bench2Kg IS NOT NULL AND Bench2Kg > 0 AND
-    Bench3Kg IS NOT NULL AND Bench3Kg > 0 AND
-    Deadlift1Kg IS NOT NULL AND Deadlift1Kg > 0 AND
-    Deadlift2Kg IS NOT NULL AND Deadlift2Kg > 0 AND
-    Deadlift3Kg IS NOT NULL AND Deadlift3Kg > 0 AND
-    Event = 'SBD' AND
-    Equipment = 'Raw' AND
-    Place = 1 AND
-    (MeetName = 'Raw Nationals' OR MeetName = 'Mega Nationals');
-
-
-
--- 3.3
--- Number of lifters that did NOT get 1st place and did NOT go 9/9
-SELECT COUNT(name)
-FROM usapl
-WHERE
-    Squat1Kg IS NOT NULL AND Squat1Kg > 0 AND
-    Squat2Kg IS NOT NULL AND Squat2Kg > 0 AND
-    Squat3Kg IS NOT NULL AND Squat3Kg > 0 AND
-    Bench1Kg IS NOT NULL AND Bench1Kg > 0 AND
-    Bench2Kg IS NOT NULL AND Bench2Kg > 0 AND
-    Bench3Kg IS NOT NULL AND Bench3Kg > 0 AND
-    Deadlift1Kg IS NOT NULL AND Deadlift1Kg > 0 AND
-    Deadlift2Kg IS NOT NULL AND Deadlift2Kg > 0 AND
-    Deadlift3Kg IS NOT NULL AND Deadlift3Kg > 0 AND
-    Event = 'SBD' AND
-    Equipment = 'Raw' AND
-    Place IS NOT 1 AND
-    (MeetName = 'Raw Nationals' OR MeetName = 'Mega Nationals');
-
-
-
--- 3.4
--- Number of lifters that got 1st place and did NOT go 9/9
-SELECT COUNT(name)
-FROM usapl
-WHERE
-    Event = 'SBD' AND
-    Equipment = 'Raw' AND
-    Place = 1 AND
-    (MeetName = 'Raw Nationals' OR MeetName = 'Mega Nationals');
+-- 3.2 - 3.4
+-- Going 9/9 (all nine attempts good) for winners vs everyone else.
+-- Missed attempts are stored as negative weights. A blank (NULL) attempt means the meet didn't
+-- record it, not that it was missed, so we only use entries with all nine attempts recorded.
+-- (Earlier versions of 3.3 and 3.4 didn't match their descriptions: 3.3 required all nine
+-- attempts to be good while describing lifters who did NOT go 9/9, and 3.4 had no attempt
+-- condition at all, so it counted every winner.)
+SELECT
+    CASE WHEN Place = '1' THEN 'Winners' ELSE 'Everyone else' END AS grp,
+    COUNT(*) AS entries,
+    SUM(CASE WHEN Squat1Kg > 0 AND Squat2Kg > 0 AND Squat3Kg > 0
+              AND Bench1Kg > 0 AND Bench2Kg > 0 AND Bench3Kg > 0
+              AND Deadlift1Kg > 0 AND Deadlift2Kg > 0 AND Deadlift3Kg > 0
+             THEN 1 ELSE 0 END) AS went_9_for_9,
+    SUM(CASE WHEN Squat1Kg > 0 AND Squat2Kg > 0 AND Squat3Kg > 0
+              AND Bench1Kg > 0 AND Bench2Kg > 0 AND Bench3Kg > 0
+              AND Deadlift1Kg > 0 AND Deadlift2Kg > 0 AND Deadlift3Kg > 0
+             THEN 0 ELSE 1 END) AS missed_at_least_one
+FROM raw_nats
+WHERE Event = 'SBD'
+  AND Squat1Kg IS NOT NULL AND Squat2Kg IS NOT NULL AND Squat3Kg IS NOT NULL
+  AND Bench1Kg IS NOT NULL AND Bench2Kg IS NOT NULL AND Bench3Kg IS NOT NULL
+  AND Deadlift1Kg IS NOT NULL AND Deadlift2Kg IS NOT NULL AND Deadlift3Kg IS NOT NULL
+GROUP BY grp;
+-- 3.2 = Winners / went_9_for_9, 3.3 = Everyone else / missed_at_least_one,
+-- 3.4 = Winners / missed_at_least_one
 
 
 
 
 -- 3.5
 -- The improvement in both total and dots for raw national lifters from their first national competition to their latest
-WITH lifter_competitions AS (
-    SELECT
-        name,
-        date,
-        TotalKg,
-        Dots,
-        WeightClassKg,
-
-        ROW_NUMBER() OVER (PARTITION BY name ORDER BY date) AS competition_order
-    FROM
-        raw_nats
+-- Full-power (SBD) entries only: raw_nats also contains bench-only events, and a bench-only
+-- "total" at a first meet followed by a full-power total later looked like a huge improvement.
+-- Ranked by DOTS gain, which adjusts for bodyweight.
+WITH sbd AS (
+    SELECT Name, Date, TotalKg, Dots,
+           ROW_NUMBER() OVER (PARTITION BY Name ORDER BY Date, TotalKg DESC)      AS first_rank,
+           ROW_NUMBER() OVER (PARTITION BY Name ORDER BY Date DESC, TotalKg DESC) AS last_rank
+    FROM raw_nats
+    WHERE Event = 'SBD' AND TotalKg IS NOT NULL AND Dots IS NOT NULL
 ),
-
-first_latest_competitions AS (
-    SELECT
-        lc.name,
-        MIN(lc.date) AS first_competition_date,
-        MAX(lc.date) AS latest_competition_date,
-        MIN(lc.WeightClassKg) AS first_weight,
-
-        MAX(CASE WHEN lc.competition_order = 1
-                THEN lc.TotalKg END) AS first_competition_total,
-        MAX(CASE WHEN lc.competition_order = (
-            SELECT MAX(competition_order)
-            FROM lifter_competitions lc2
-            WHERE lc2.name = lc.name)
-                THEN lc.TotalKg END
-        ) AS latest_competition_total,
-        MAX(CASE WHEN lc.competition_order = 1
-                THEN lc.dots END) AS first_dots,
-        MAX(CASE WHEN lc.competition_order = (
-            SELECT MAX(competition_order)
-            FROM lifter_competitions lc2
-            WHERE lc2.name = lc.name)
-                THEN lc.dots END
-        ) AS latest_dots
-
-    FROM
-        lifter_competitions lc
-    GROUP BY
-        lc.name
+meet_counts AS (
+    SELECT Name, COUNT(DISTINCT Date) AS meets FROM sbd GROUP BY Name
 )
-
 SELECT
-    flc.name,
-    flc.first_competition_date,
-    flc.latest_competition_date,
-    flc.first_competition_total,
-    flc.latest_competition_total,
-    (flc.latest_competition_total - flc.first_competition_total) AS performance_improvement,
-    ROUND((flc.latest_dots - flc.first_dots),2) AS dots_improvement
-FROM
-    first_latest_competitions flc
-WHERE
-    flc.first_competition_total IS NOT NULL
-    AND flc.latest_competition_total IS NOT NULL
-    AND flc.latest_competition_total > flc.first_competition_total
-    AND flc.first_dots IS NOT NULL
-    AND flc.latest_dots IS NOT NULL
-    AND flc.latest_dots > flc.first_dots
-ORDER BY
-    performance_improvement DESC, dots_improvement DESC;
+    f.Name,
+    f.Date AS first_date,
+    l.Date AS latest_date,
+    f.TotalKg AS first_total,
+    l.TotalKg AS latest_total,
+    l.TotalKg - f.TotalKg AS total_gain_kg,
+    ROUND(l.Dots - f.Dots, 2) AS dots_gain
+FROM sbd f
+JOIN sbd l ON l.Name = f.Name AND l.last_rank = 1
+JOIN meet_counts m ON m.Name = f.Name
+WHERE f.first_rank = 1 AND m.meets >= 2
+ORDER BY dots_gain DESC;
 
 
 

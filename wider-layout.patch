@@ -1,0 +1,194 @@
+diff --git a/LifeInsurance/combined.css b/LifeInsurance/combined.css
+index 74823e8..49c2097 100644
+--- a/LifeInsurance/combined.css
++++ b/LifeInsurance/combined.css
+@@ -6,31 +6,47 @@ body {
+   font-size: 18px;
+   margin: 0;
+   padding: 0;
+-  padding-left: 270px;
+ }
+ 
+-#TOC {
+-  position: fixed;
+-  left: 0;
+-  top: 0;
+-  width: 250px;
+-  height: 100%;
+-  overflow-y: auto;
+-  background-color: #f8f9fa;
+-  border-right: 1px solid #dee2e6;
+-  padding: 20px;
+-  box-sizing: border-box;
+-  z-index: 1000;
+-}
++/* ---- Desktop layout: fixed contents sidebar on the left, wide content on the right ---- */
++@media (min-width: 992px) {
++  /* R Markdown caps the page at 1200px and centres it; use the full window instead.
++     (Extra class in the selector so this wins over R Markdown's own rule, which loads later.) */
++  div.container-fluid.main-container {
++    max-width: none;
++    margin: 0;
++    padding: 20px 40px 20px 300px;   /* 300px leaves room for the sidebar */
++  }
+ 
+-.main-container {
+-  padding: 20px 40px;
+-  max-width: none;
++  /* The sidebar is fixed, so its grid column doesn't need any width */
++  .main-container > .row > .col-md-3 {
++    width: 0;
++    padding: 0;
++  }
++
++  .main-container > .row > .toc-content {
++    width: 100%;
++    max-width: 1400px;               /* keeps lines readable on very wide screens */
++    padding-left: 15px;
++    padding-right: 15px;
++  }
++
++  #TOC,
++  div.tocify {
++    position: fixed;
++    top: 20px;
++    left: 20px;
++    width: 250px;
++    max-width: 250px;
++    max-height: calc(100vh - 40px);
++    overflow-y: auto;
++    margin: 0;
++    z-index: 1000;
++  }
+ }
+ 
+ .content-wrapper {
+   max-width: 1400px;
+-  margin: 0 auto;
+ }
+ 
+ h1, h2, h3, h4, h5, h6 { color: #0056b3; }
+@@ -80,15 +96,16 @@ pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan,
+   font-size: 16px;
+ }
+ 
++/* ---- Tablets and phones: contents list on top, content full width ---- */
+ @media (max-width: 991px) {
+-  #TOC {
+-    display: none;
+-  }
+-  body {
+-    padding-left: 0;
++  div.container-fluid.main-container {
++    max-width: none;
++    padding: 20px 16px;
+   }
+-  .main-container {
+-    margin-left: 0;
+-    padding: 20px;
++
++  /* wide tables scroll sideways instead of stretching the page */
++  .toc-content table {
++    display: block;
++    overflow-x: auto;
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/docs/combined.css b/docs/combined.css
+index 74823e8..49c2097 100644
+--- a/docs/combined.css
++++ b/docs/combined.css
+@@ -6,31 +6,47 @@ body {
+   font-size: 18px;
+   margin: 0;
+   padding: 0;
+-  padding-left: 270px;
+ }
+ 
+-#TOC {
+-  position: fixed;
+-  left: 0;
+-  top: 0;
+-  width: 250px;
+-  height: 100%;
+-  overflow-y: auto;
+-  background-color: #f8f9fa;
+-  border-right: 1px solid #dee2e6;
+-  padding: 20px;
+-  box-sizing: border-box;
+-  z-index: 1000;
+-}
++/* ---- Desktop layout: fixed contents sidebar on the left, wide content on the right ---- */
++@media (min-width: 992px) {
++  /* R Markdown caps the page at 1200px and centres it; use the full window instead.
++     (Extra class in the selector so this wins over R Markdown's own rule, which loads later.) */
++  div.container-fluid.main-container {
++    max-width: none;
++    margin: 0;
++    padding: 20px 40px 20px 300px;   /* 300px leaves room for the sidebar */
++  }
+ 
+-.main-container {
+-  padding: 20px 40px;
+-  max-width: none;
++  /* The sidebar is fixed, so its grid column doesn't need any width */
++  .main-container > .row > .col-md-3 {
++    width: 0;
++    padding: 0;
++  }
++
++  .main-container > .row > .toc-content {
++    width: 100%;
++    max-width: 1400px;               /* keeps lines readable on very wide screens */
++    padding-left: 15px;
++    padding-right: 15px;
++  }
++
++  #TOC,
++  div.tocify {
++    position: fixed;
++    top: 20px;
++    left: 20px;
++    width: 250px;
++    max-width: 250px;
++    max-height: calc(100vh - 40px);
++    overflow-y: auto;
++    margin: 0;
++    z-index: 1000;
++  }
+ }
+ 
+ .content-wrapper {
+   max-width: 1400px;
+-  margin: 0 auto;
+ }
+ 
+ h1, h2, h3, h4, h5, h6 { color: #0056b3; }
+@@ -80,15 +96,16 @@ pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan,
+   font-size: 16px;
+ }
+ 
++/* ---- Tablets and phones: contents list on top, content full width ---- */
+ @media (max-width: 991px) {
+-  #TOC {
+-    display: none;
+-  }
+-  body {
+-    padding-left: 0;
++  div.container-fluid.main-container {
++    max-width: none;
++    padding: 20px 16px;
+   }
+-  .main-container {
+-    margin-left: 0;
+-    padding: 20px;
++
++  /* wide tables scroll sideways instead of stretching the page */
++  .toc-content table {
++    display: block;
++    overflow-x: auto;
+   }
+-}
+\ No newline at end of file
++}

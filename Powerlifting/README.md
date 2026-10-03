@@ -1,101 +1,71 @@
-
 # Powerlifting Data Analysis
 
-This repository contains data and SQL queries for analyzing powerlifting competition results.
+SQL analysis of powerlifting competition results from [OpenPowerlifting](https://www.openpowerlifting.org/), focused on the USAPL federation and its Raw Nationals, presented in a Streamlit app.
 
-## Data File (Large)
+## Data
 
-Due to size limitations on GitHub, the `openpowerlifting-20204-01-06-4c732975.csv` file is hosted externally.
+**Competition results.** The OpenPowerlifting export from 2024-01-06 (`openpowerlifting-2024-01-06-4c732975.csv`) is too large for GitHub. Download it from [Kaggle](https://www.kaggle.com/datasets/open-powerlifting/powerlifting-database/data?select=openpowerlifting-2024-01-06-4c732975.csv). Each row is one *entry*: one lifter at one meet in one division. A lifter usually has many entries.
 
-### Download Instructions
+**Training log (synthetic).** `training_data.csv` is randomly generated practice data. Weekly lifts are drawn independently, programs are assigned at random, and lifters are anonymous IDs (`Lifter 01` to `Lifter 17`). It is useful for practising SQL (window functions, date arithmetic) and for showing how to test for an effect, but it contains no real training information.
 
-To access the powerlifting data, please download it from https://www.kaggle.com/datasets/open-powerlifting/powerlifting-database/data?select=openpowerlifting-2024-01-06-4c732975.csv.
-The training_data csv is provided.
+## How to Run
 
-## Files Included
-
-- **openpl.sql**: SQL queries for analyzing the powerlifting data.
-
-## Overview
-
-The `openpowerlifting-2024-01-06-4c732975.csv` file includes detailed information about powerlifting competition results, including lift types, weights lifted, and competition details. The `openpl.sql` file provides SQL queries to analyze this dataset, such as aggregating results, calculating averages, and filtering data based on various criteria.
-
-## How to Use
-
-1. **CSV File**: Download or clone the `openpowerlifting.csv` file to access the raw data.
-   
-2. **SQL Queries**: Use the `openpl.sql` file to run SQL queries against the CSV data to derive insights and perform analysis tasks.
-
-## Example SQL Queries
-
-```sql
--- Example: Calculate average squat weight lifted by male lifters
-SELECT
-    AVG(Squat_Weight) AS Avg_Squat_Weight
-FROM
-    powerlifting_data
-WHERE
-    Sex = 'M';
+```bash
+pip install -r requirements.txt
+python build_db.py path/to/openpowerlifting-2024-01-06-4c732975.csv   # creates powerlifting.sqlite
+streamlit run openpl.py
 ```
 
-# Powerlifting Data Analysis
+`build_db.py` loads the CSV into SQLite and creates the tables the queries use:
 
-This project analyzes powerlifting competition data using SQL queries and visualizes the results using Streamlit.
+| Table | Contents |
+|---|---|
+| `openpowerlifting` | every entry |
+| `data` | entries with age, sex, age class and birth-year class recorded |
+| `usapl` | USAPL entries from `data` |
+| `raw_nats` | USAPL Raw Nationals / Mega Nationals entries, raw equipment |
+| `training_data` | the synthetic training log |
 
-## Functions and Their Outputs
+## Files
 
-### 1. display_total_lifters()
-**Purpose:** Displays the total number of lifters in the database.
-**Output:** A single number representing the total count of lifters.
+- **openpl.sql**: the full set of SQL queries, with notes on each result.
+- **openpl.py**: the Streamlit app.
+- **build_db.py**: builds the SQLite database.
+- **training_data.csv**: the synthetic training log.
+- **2024-06-24T21-3x_export.csv**: saved results from the app (see below).
 
-[View CSV data](2024-06-24T21-35_export.csv)
+## What the App Shows
 
+### Overview
+Competition entries, distinct lifters and distinct USAPL lifters. Entries and lifters are reported separately: counting rows counts entries, which is several times the number of people.
 
-### 3. weight_and_gender_disparity()
-**Purpose:** Visualizes the distribution of lifters across weight classes and genders.
-**Output:** A multi-bar graph showing the count of male, female, and mx lifters for each weight class.
+[Entries in the full dataset](2024-06-24T21-35_export.csv) · [USAPL lifters](2024-06-24T21-38_export.csv)
 
-![visualization](https://github.com/cam-leo/Powerlifting/assets/172936155/eb6dfaba-be44-44b1-8ed0-ba001f177fd8)
+### USAPL lifters by sex and weight class
+Distinct lifters per weight class and sex. Weight classes are kept as text so super-heavyweight classes such as `120+` aren't merged into `120`.
 
+### Age range
+Youngest and oldest ages recorded ([saved result](2024-06-24T21-37_export.csv)).
 
-### 4. display_age_range()
-**Purpose:** Shows the age range of lifters in the database.
-**Output:** A table with the youngest and oldest ages recorded.
+### Raw Nationals
+- **Most titles:** top 5 per sex, counting distinct meets won. A lifter who wins two divisions at the same meet counts once.
+- **Going 9/9:** how often winners and everyone else make all nine attempts, with a chi-squared test. Only entries with all nine attempts recorded are used, because a blank attempt means "not recorded", not "missed".
+- **Biggest improvements:** first vs latest Raw Nationals full-power (SBD) result for lifters with at least two, ranked by DOTS gain. DOTS adjusts for bodyweight.
 
-[View CSV data](2024-06-24T21-37_export.csv)
+### Training log (synthetic)
+- **Programs:** average weekly lifts per program, with an ANOVA per lift adjusted for testing three lifts. Since the data are random, no real program effect is expected.
+- **Days between sessions vs squat:** scatter plot and Spearman correlation.
 
+## Notes on Earlier Versions
 
-### 5. display_usapl_members()
-**Purpose:** Displays the number of USAPL members.
-**Output:** A single number representing the count of USAPL members.
+These issues were fixed:
 
-[View CSV data](2024-06-24T21-38_export.csv)
+- "Total lifters" counted entries (`SELECT DISTINCT COUNT(name)` applies `DISTINCT` to the result, not to names).
+- The weight-class chart counted entries and merged super-heavyweight classes into the class below.
+- "Top Raw Nationals winners" only showed women (sorted by sex, then cut to 10 rows) and counted division wins rather than meets.
+- The 9/9 comparison treated unrecorded attempts as misses, and the SQL for 3.3 and 3.4 didn't match their descriptions.
+- "Performance improvement" mixed bench-only and full-power totals.
+- "Program effectiveness" measured max minus min, which isn't progress.
+- "Gym PRs vs competition PRs" compared the random training log with real competition results under real athletes' names. It has been removed, and the training log now uses anonymous IDs.
 
-### 6. display_raw_nationals_winners()
-**Purpose:** Lists the top winners of Raw Nationals competitions.
-**Output:** A table showing the names, gender, and number of wins for top performers.
-
-[View CSV data](2024-06-24T21-39_export.csv)
-
-### 7. display_performance_improvement()
-**Purpose:** Shows the lifters with the most significant improvements in their performance.
-**Output:** A table listing lifters, their first and latest competition dates, totals, and improvements in both total weight and DOTS score.
-
-[View CSV data](2024-06-24T21-40_export.csv)
-
-### 8. display_program_effectiveness()
-**Purpose:** Analyzes the effectiveness of different training programs.
-**Output:** A table and bar chart showing average gains for squat, bench press, and deadlift across different programs.
-
-![visualization (2)](https://github.com/cam-leo/Powerlifting/assets/172936155/2a48e0d6-8b8e-43de-9582-bc94b500aa2a)
-
-[View CSV data](2024-06-24T21-41_export.csv)
-
-### 9. display_gym_vs_comp_prs()
-**Purpose:** Compares gym personal records (PRs) with competition PRs.
-**Output:** A scatter plot showing the relationship between recovery days and lift performance, and histograms showing the distribution of improvements.
-
-![visualization (1)](https://github.com/cam-leo/Powerlifting/assets/172936155/c5eebb66-a9dd-45ae-b791-bb2f27556ef2)
-
-[View CSV data](2024-06-24T21-42_export.csv)
-
+The saved results for winners, improvements, programs and gym vs competition came from the earlier queries, so they were removed. Run the app and use the download button on any table to save new ones.

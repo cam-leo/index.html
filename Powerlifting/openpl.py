@@ -1,456 +1,263 @@
-import streamlit as st
+"""
+Powerlifting Data Analysis: Streamlit app.
+
+Build the database first (see README):
+    python build_db.py path/to/openpowerlifting-2024-01-06-4c732975.csv
+then run:
+    streamlit run openpl.py
+"""
 import sqlite3
-import pandas as pd
+from pathlib import Path
+
 import altair as alt
+import pandas as pd
+import streamlit as st
+from scipy import stats
 
-# Function to fetch data from SQLite database
-def fetch_data(query):
-    conn = sqlite3.connect('identifier.sqlite')
-    df = pd.read_sql_query(query, conn)
-    conn.close()
-    return df
+DB_PATH = Path(__file__).parent / "powerlifting.sqlite"
+LIFT_COLOURS = alt.Scale(domain=["Squat", "Bench", "Deadlift"], range=["#1f77b4", "#ff7f0e", "#2ca02c"])
 
-# Function to display total lifters
-def display_total_lifters():
-    query = "SELECT DISTINCT COUNT(name) AS TotalLifters FROM openpowerlifting;"
-    df = fetch_data(query)
-    st.subheader('Total Lifters')
-    st.write(df)
-
-# Displaying gender disparity of the lifters
-def gender_disparity():
-    query = "SELECT COUNT (DISTINCT Name), Sex  FROM usapl GROUP BY sex;"
-    df = fetch_data(query)
-    st.subheader('Gender Disparity')
-    st.write(df)
+# Raw Nationals entries where all nine attempts were recorded. Missed attempts are stored as
+# negative weights; a blank attempt means the meet didn't record it, not that it was missed.
+ALL_ATTEMPTS_RECORDED = " AND ".join(
+    f"{lift}{n}Kg IS NOT NULL" for lift in ("Squat", "Bench", "Deadlift") for n in (1, 2, 3))
+NINE_FOR_NINE = " AND ".join(
+    f"{lift}{n}Kg > 0" for lift in ("Squat", "Bench", "Deadlift") for n in (1, 2, 3))
 
 
-# Displaying count of usapl members
-
-def display_usapl_members():
-    query = "SELECT COUNT(DISTINCT Name) AS USAPL_Members FROM usapl;"
-    df = fetch_data(query)
-    st.subheader('USAPL Members')
-    st.write(df)
-
-# Displaying multi bar graph of weight class and gender disparity
-def weight_and_gender_disparity():
-    query = """
-    SELECT
-        WeightClassKg,
-        SUM(CASE WHEN Sex = 'M' THEN 1 ELSE 0 END) AS male_count,
-        SUM(CASE WHEN Sex = 'F' THEN 1 ELSE 0 END) AS female_count,
-        SUM(CASE WHEN Sex = 'Mx' THEN 1 ELSE 0 END) AS mx_count
-    FROM usapl
-    GROUP BY
-        WeightClassKg
-    ORDER BY WeightClassKg
-    """
-    df = fetch_data(query)
-    df_melted = df.melt(id_vars=['WeightClassKg'],
-                        var_name='Sex',
-                        value_name='count')
-
-    chart = alt.Chart(df_melted).mark_bar().encode(
-        x=alt.X('WeightClassKg:N', title='Weight Class (kg)'),
-        y=alt.Y('count:Q', title='Number of Lifters'),
-        color=alt.Color('Sex:N', scale=alt.Scale(domain=['male_count', 'female_count', 'mx_count'],
-                                                 range=['#1f77b4', '#ff7f0e', '#2ca02c'])),
-        xOffset='Sex:N'
-    ).properties(
-        title='Powerlifters by Weight Class and Gender',
-        width=600,
-        height=400
-    )
+@st.cache_data
+def fetch_data(query, params=()):
+    with sqlite3.connect(DB_PATH) as conn:
+        return pd.read_sql_query(query, conn, params=params)
 
 
-    st.altair_chart(chart, use_container_width=True)
+# ---------------------------------------------------------------------------
+# Overview
+# ---------------------------------------------------------------------------
+def display_overview():
+    df = fetch_data("""
+        SELECT
+            (SELECT COUNT(*)             FROM openpowerlifting) AS entries,
+            (SELECT COUNT(DISTINCT Name) FROM openpowerlifting) AS lifters,
+            (SELECT COUNT(DISTINCT Name) FROM usapl)            AS usapl_lifters
+    """)
+    st.subheader("Overview")
+    c1, c2, c3 = st.columns(3)
+    # One lifter usually has many entries (one per meet and division), so entries != lifters.
+    c1.metric("Competition entries (OpenPowerlifting)", f"{df.entries[0]:,}")
+    c2.metric("Distinct lifters (OpenPowerlifting)", f"{df.lifters[0]:,}")
+    c3.metric("Distinct USAPL lifters", f"{df.usapl_lifters[0]:,}")
+    st.caption("USAPL figures only include entries with age, sex, age class and birth-year class "
+               "recorded (the `data` table), so they understate the federation's full membership.")
 
 
+def display_gender_breakdown():
+    df = fetch_data("""
+        SELECT Sex, COUNT(DISTINCT Name) AS lifters
+        FROM usapl
+        GROUP BY Sex
+        ORDER BY lifters DESC
+    """)
+    st.subheader("USAPL Lifters by Sex")
+    st.dataframe(df, hide_index=True)
 
-# Function to display youngest and oldest lifters
+
+def display_weight_class_breakdown():
+    # Weight classes stay as text so "120+" (super-heavyweight) isn't merged into "120".
+    df = fetch_data("""
+        SELECT WeightClassKg, Sex, COUNT(DISTINCT Name) AS lifters
+        FROM usapl
+        WHERE WeightClassKg IS NOT NULL
+        GROUP BY WeightClassKg, Sex
+    """)
+    order = sorted(df.WeightClassKg.unique(), key=lambda w: (float(w.rstrip("+")), w.endswith("+")))
+    chart = alt.Chart(df).mark_bar().encode(
+        x=alt.X("WeightClassKg:N", sort=order, title="Weight class (kg)"),
+        y=alt.Y("lifters:Q", title="Distinct lifters"),
+        color=alt.Color("Sex:N", scale=alt.Scale(domain=["M", "F", "Mx"], range=["#1f77b4", "#ff7f0e", "#2ca02c"])),
+        xOffset="Sex:N",
+        tooltip=["WeightClassKg", "Sex", "lifters"],
+    ).properties(title="USAPL Lifters by Weight Class and Sex", height=400)
+    st.subheader("Weight Classes")
+    st.altair_chart(chart, width="stretch")
+    st.caption("A lifter who competed in several weight classes is counted once in each. "
+               "Classes changed over the years (e.g. 82.5 kg before 2011, 83 kg after), so old and new classes both appear.")
+
+
 def display_age_range():
-    query = "SELECT MIN(age) AS YoungestAge, MAX(age) AS OldestAge FROM openpowerlifting WHERE age IS NOT NULL AND sex IS NOT NULL AND ageclass IS NOT NULL AND birthyearclass IS NOT NULL;"
-    df = fetch_data(query)
-    st.subheader('Youngest and Oldest Lifters')
-    st.write(df)
+    df = fetch_data("SELECT MIN(Age) AS youngest, MAX(Age) AS oldest FROM data")
+    st.subheader("Youngest and Oldest Lifters")
+    st.dataframe(df, hide_index=True)
 
-# Function to display USAPL members
-def display_usapl_members():
-    query = "SELECT COUNT(DISTINCT Name) AS USAPL_Members FROM usapl;"
-    df = fetch_data(query)
-    st.subheader('USAPL Members')
-    st.write(df)
 
+# ---------------------------------------------------------------------------
+# Raw Nationals
+# ---------------------------------------------------------------------------
 def display_raw_nationals_winners():
-    query = """
-    SELECT
-        Name,
-        Sex,
-        Count(Name) AS num_times_won
-    FROM raw_nats
-    WHERE place = 1
-    GROUP BY Name, Sex
-    ORDER BY Sex, num_times_won DESC
-    LIMIT 10;
-    """
-    df = fetch_data(query)
-    st.subheader('Top Raw Nationals Winners')
-    st.write(df)
+    # Count national titles as distinct meets won: one lifter can place 1st in several
+    # divisions (e.g. Open and Masters) at the same meet. Show the top 5 for each sex;
+    # sorting by sex and then taking 10 rows only ever showed women.
+    df = fetch_data("""
+        WITH titles AS (
+            SELECT Name, Sex, COUNT(DISTINCT Date || MeetName) AS national_titles
+            FROM raw_nats
+            WHERE Place = '1'
+            GROUP BY Name, Sex
+        ),
+        ranked AS (
+            SELECT *, ROW_NUMBER() OVER (PARTITION BY Sex ORDER BY national_titles DESC, Name) AS rank_in_sex
+            FROM titles
+        )
+        SELECT Sex, Name, national_titles
+        FROM ranked
+        WHERE rank_in_sex <= 5
+        ORDER BY Sex, national_titles DESC
+    """)
+    st.subheader("Most Raw Nationals Titles (top 5 per sex)")
+    st.dataframe(df, hide_index=True)
 
 
+def display_nine_for_nine():
+    # Compare how often winners and non-winners go 9/9, using only entries where all nine
+    # attempts were recorded. Treating unrecorded attempts as misses would be wrong.
+    df = fetch_data(f"""
+        SELECT
+            CASE WHEN Place = '1' THEN 'Winners' ELSE 'Everyone else' END AS grp,
+            COUNT(*) AS entries,
+            SUM(CASE WHEN {NINE_FOR_NINE} THEN 1 ELSE 0 END) AS went_9_for_9
+        FROM raw_nats
+        WHERE Event = 'SBD' AND {ALL_ATTEMPTS_RECORDED}
+        GROUP BY grp
+    """)
+    df["share_9_for_9"] = (df.went_9_for_9 / df.entries).round(3)
+    st.subheader("Do Winners Go 9/9 More Often?")
+    st.dataframe(df.rename(columns={"grp": "group"}), hide_index=True)
+    if len(df) == 2:
+        table = df[["went_9_for_9"]].assign(missed=df.entries - df.went_9_for_9).to_numpy()
+        chi2, p, _, _ = stats.chi2_contingency(table)
+        st.caption(f"Chi-squared test of independence: p = {p:.3g}. "
+                   "Raw Nationals full-power (SBD) entries with all nine attempts recorded.")
 
-# Function to display performance improvement for Raw Nationals lifters
+
 def display_performance_improvement():
-    query = """
-    WITH lifter_competitions AS (
-        SELECT
-            name,
-            date,
-            TotalKg,
-            Dots,
-            WeightClassKg,
-            ROW_NUMBER() OVER (PARTITION BY name ORDER BY date) AS competition_order
-        FROM
-            raw_nats
-    ),
-    first_latest_competitions AS (
-        SELECT
-            lc.name,
-            MIN(lc.date) AS first_competition_date,
-            MAX(lc.date) AS latest_competition_date,
-            MIN(lc.WeightClassKg) AS first_weight,
-            MAX(CASE WHEN lc.competition_order = 1
-                    THEN lc.TotalKg END) AS first_competition_total,
-            MAX(CASE WHEN lc.competition_order = (
-                SELECT MAX(competition_order)
-                FROM lifter_competitions lc2
-                WHERE lc2.name = lc.name)
-                    THEN lc.TotalKg END
-            ) AS latest_competition_total,
-            MAX(CASE WHEN lc.competition_order = 1
-                    THEN lc.dots END) AS first_dots,
-            MAX(CASE WHEN lc.competition_order = (
-                SELECT MAX(competition_order)
-                FROM lifter_competitions lc2
-                WHERE lc2.name = lc.name)
-                    THEN lc.dots END
-            ) AS latest_dots
-        FROM
-            lifter_competitions lc
-        GROUP BY
-            lc.name
-    )
-    SELECT
-        flc.name,
-        flc.first_competition_date,
-        flc.latest_competition_date,
-        flc.first_competition_total,
-        flc.latest_competition_total,
-        (flc.latest_competition_total - flc.first_competition_total) AS performance_improvement,
-        ROUND((flc.latest_dots - flc.first_dots),2) AS dots_improvement
-    FROM
-        first_latest_competitions flc
-    WHERE
-        flc.first_competition_total IS NOT NULL
-        AND flc.latest_competition_total IS NOT NULL
-        AND flc.latest_competition_total > flc.first_competition_total
-        AND flc.first_dots IS NOT NULL
-        AND flc.latest_dots IS NOT NULL
-        AND flc.latest_dots > flc.first_dots
-    ORDER BY
-        performance_improvement DESC, dots_improvement DESC
-    LIMIT 10;
-    """
-    df = fetch_data(query)
-    st.subheader('Top Performance Improvements in Raw Nationals')
-    st.write(df)
+    # First vs latest Raw Nationals full-power (SBD) result for lifters with at least two.
+    # Without the SBD filter, a bench-only total at a first meet looked like a huge
+    # "improvement" when the lifter later did all three lifts.
+    df = fetch_data("""
+        WITH sbd AS (
+            SELECT Name, Date, TotalKg, Dots,
+                   ROW_NUMBER() OVER (PARTITION BY Name ORDER BY Date, TotalKg DESC) AS first_rank,
+                   ROW_NUMBER() OVER (PARTITION BY Name ORDER BY Date DESC, TotalKg DESC) AS last_rank
+            FROM raw_nats
+            WHERE Event = 'SBD' AND TotalKg IS NOT NULL AND Dots IS NOT NULL
+        ),
+        meet_counts AS (
+            SELECT Name, COUNT(DISTINCT Date) AS meets FROM sbd GROUP BY Name
+        ),
+        paired AS (
+            SELECT f.Name,
+                   f.Date AS first_date, l.Date AS latest_date,
+                   f.TotalKg AS first_total, l.TotalKg AS latest_total,
+                   f.Dots AS first_dots, l.Dots AS latest_dots
+            FROM sbd f
+            JOIN sbd l ON l.Name = f.Name AND l.last_rank = 1
+            JOIN meet_counts m ON m.Name = f.Name
+            WHERE f.first_rank = 1 AND m.meets >= 2
+        )
+        SELECT Name, first_date, latest_date, first_total, latest_total,
+               latest_total - first_total AS total_gain_kg,
+               ROUND(latest_dots - first_dots, 2) AS dots_gain
+        FROM paired
+        ORDER BY dots_gain DESC
+        LIMIT 10
+    """)
+    st.subheader("Biggest Improvements Between Raw Nationals (full power)")
+    st.dataframe(df, hide_index=True)
+    st.caption("Ranked by DOTS gain, which adjusts for bodyweight, so moving up a weight class "
+               "doesn't count as improvement on its own. Lifters with at least two Raw Nationals.")
 
 
+# ---------------------------------------------------------------------------
+# Training data (synthetic)
+# ---------------------------------------------------------------------------
+SYNTHETIC_NOTE = ("**Note:** `training_data.csv` is randomly generated for practice. Lifts are drawn "
+                  "independently each week and programs are assigned at random, so no real "
+                  "training effect can be found in it. The sections below show how to test for one.")
 
 
+def display_program_comparison():
+    df = fetch_data("SELECT Program, Squat, BenchPress AS Bench, Deadlift FROM training_data")
+    st.subheader("Training Programs (synthetic data)")
+    st.markdown(SYNTHETIC_NOTE)
 
-# Function to display effectiveness of training programs
-def display_program_effectiveness():
-    query = """
-    WITH program_gains AS (
-        SELECT
-            LifterID,
-            Program,
-            MAX(Squat) - MIN(Squat) AS SquatGain,
-            MAX(BenchPress) - MIN(BenchPress) AS BenchGain,
-            MAX(Deadlift) - MIN(Deadlift) AS DeadliftGain
-        FROM training_data
-        GROUP BY LifterID, Program
-    )
-    SELECT
-        Program,
-        AVG(SquatGain) AS AvgSquatGain,
-        AVG(BenchGain) AS AvgBenchGain,
-        AVG(DeadliftGain) AS AvgDeadliftGain
-    FROM program_gains
-    GROUP BY Program;
-    """
-    df = fetch_data(query)
-    st.subheader('Effectiveness of Training Programs')
-    st.write(df)
+    long = df.melt("Program", var_name="Lift", value_name="kg")
+    means = long.groupby(["Program", "Lift"], as_index=False).kg.mean().round(1)
+    chart = alt.Chart(means).mark_bar().encode(
+        x=alt.X("Program:N", title=None),
+        y=alt.Y("kg:Q", title="Average weekly lift (kg)"),
+        color=alt.Color("Lift:N", scale=LIFT_COLOURS),
+        column=alt.Column("Lift:N", sort=["Squat", "Bench", "Deadlift"], title=None),
+    ).properties(width=180, height=300)
+    st.altair_chart(chart)
 
-    # Visualization
-    chart = alt.Chart(df.melt('Program', var_name='Lift', value_name='Average Gain')).mark_bar().encode(
-        x='Program',
-        y='Average Gain',
-        color='Lift',
-        column='Lift'
-    ).properties(
-        width=200,
-        title='Average Gains by Training Program and Lift Type'
-    )
-    st.altair_chart(chart, use_container_width=True)
-
-# Function to display gym vs competition PRs
-def display_gym_vs_comp_prs():
-    query = """
-    WITH lifter_prs_before_comp AS (
-        SELECT
-            t.lifterid,
-            u.date AS competition_date,
-            MAX(t.squat) AS pr_squat,
-            MAX(t.benchpress) AS pr_bench,
-            MAX(t.deadlift) AS pr_deadlift
-        FROM
-            training_data t
-        JOIN
-            usapl u ON t.lifterid = u.name
-        WHERE
-            t.trainingdate < u.date
-        GROUP BY
-            t.lifterid, u.date
-    ),
-    competition_prs AS (
-        SELECT
-            name AS lifterid,
-            date AS competition_date,
-            best3squatkg AS comp_pr_squat,
-            best3benchkg AS comp_pr_bench,
-            best3deadliftkg AS comp_pr_deadlift
-        FROM
-            usapl
-    ),
-    improvements AS (
-        SELECT
-            b.lifterid,
-            b.competition_date,
-            b.pr_squat,
-            c.comp_pr_squat,
-            c.comp_pr_squat - b.pr_squat AS squat_improvement,
-            b.pr_bench,
-            c.comp_pr_bench,
-            c.comp_pr_bench - b.pr_bench AS bench_improvement,
-            b.pr_deadlift,
-            c.comp_pr_deadlift,
-            c.comp_pr_deadlift - b.pr_deadlift AS deadlift_improvement
-        FROM
-            lifter_prs_before_comp b
-        JOIN
-            competition_prs c ON b.lifterid = c.lifterid AND b.competition_date = c.competition_date
-    )
-    SELECT
-        lifterid,
-        competition_date,
-        pr_squat,
-        comp_pr_squat,
-        squat_improvement,
-        pr_bench,
-        comp_pr_bench,
-        bench_improvement,
-        pr_deadlift,
-        comp_pr_deadlift,
-        deadlift_improvement
-    FROM
-        improvements
-    ORDER BY
-        lifterid, competition_date
-    LIMIT 1000;
-    """
-    df = fetch_data(query)
-    st.subheader('Gym PRs vs Competition PRs')
-    st.write(df.head())
-
-    # Prepare data for visualization
-    melted_df = pd.melt(df,
-                        id_vars=['lifterid', 'competition_date'],
-                        value_vars=['squat_improvement', 'bench_improvement', 'deadlift_improvement'],
-                        var_name='lift_type',
-                        value_name='improvement')
-
-    # Create scatter plot
-    scatter = alt.Chart(melted_df).mark_circle().encode(
-        x=alt.X('competition_date:T', title='Competition Date'),
-        y=alt.Y('improvement:Q', title='Improvement (kg)'),
-        color=alt.Color('lift_type:N',
-                        scale=alt.Scale(domain=['squat_improvement', 'bench_improvement', 'deadlift_improvement'],
-                                        range=['#1f77b4', '#ff7f0e', '#2ca02c']),
-                        legend=alt.Legend(title="Lift Type")),
-        tooltip=['lifterid', 'competition_date', 'lift_type', 'improvement']
-    ).properties(
-        width=600,
-        height=400,
-        title='Improvement from Gym PR to Competition PR'
-    )
-
-    # Add a horizontal line at y=0
-    hline = alt.Chart(pd.DataFrame({'y': [0]})).mark_rule().encode(y='y')
-
-    # Combine scatter plot and horizontal line
-    chart = (scatter + hline).interactive()
-
-    st.altair_chart(chart, use_container_width=True)
-
-    # Summary statistics
-    st.subheader('Summary Statistics')
-    summary = df[['squat_improvement', 'bench_improvement', 'deadlift_improvement']].describe()
-    st.write(summary)
-
-    # Distribution of improvements
-    hist = alt.Chart(melted_df).mark_bar().encode(
-        x=alt.X('improvement:Q', bin=alt.Bin(maxbins=30), title='Improvement (kg)'),
-        y=alt.Y('count()', title='Frequency'),
-        color=alt.Color('lift_type:N',
-                        scale=alt.Scale(domain=['squat_improvement', 'bench_improvement', 'deadlift_improvement'],
-                                        range=['#1f77b4', '#ff7f0e', '#2ca02c']),
-                        legend=alt.Legend(title="Lift Type"))
-    ).properties(
-        width=600,
-        height=300,
-        title='Distribution of Improvements'
-    )
-
-    st.altair_chart(hist, use_container_width=True)
+    # One-way ANOVA per lift: does the average differ by program more than chance would explain?
+    # Three lifts means three tests, so p-values are Bonferroni-adjusted (x3): with pure noise,
+    # at least one of three unadjusted p-values falls below 0.05 about 12% of the time.
+    rows = []
+    for lift in ["Squat", "Bench", "Deadlift"]:
+        groups = [g[lift].to_numpy() for _, g in df.groupby("Program")]
+        f, p = stats.f_oneway(*groups)
+        rows.append({"Lift": lift, "F statistic": round(f, 2), "p-value": round(p, 3),
+                     "adjusted p (x3 tests)": round(min(1.0, 3 * p), 3)})
+    results = pd.DataFrame(rows)
+    st.dataframe(results, hide_index=True)
+    n_sig = int((results["adjusted p (x3 tests)"] < 0.05).sum())
+    st.caption(f"{n_sig} of 3 lifts show a significant difference between programs after adjusting for "
+               "testing three lifts. Because the data are random by construction, any borderline result "
+               "here is chance, which is why a single borderline test isn't evidence that a program works. "
+               "An earlier version measured 'gain' as max minus min, which grows with noise and the number "
+               "of weeks, not with progress.")
 
 
-
-# Function to display recovery time impact on performance
 def display_recovery_impact():
-    query = """
-    WITH recovery_time AS (
-        SELECT
-            LifterID,
-            TrainingDate,
-            Squat,
-            BenchPress,
-            Deadlift,
-            LAG(TrainingDate, 1) OVER (PARTITION BY LifterID ORDER BY TrainingDate) AS PrevTrainingDate
+    df = fetch_data("""
+        SELECT LifterID, TrainingDate, Squat,
+               JULIANDAY(TrainingDate)
+                 - JULIANDAY(LAG(TrainingDate) OVER (PARTITION BY LifterID ORDER BY TrainingDate)) AS RecoveryDays
         FROM training_data
-    )
-    SELECT
-        LifterID,
-        TrainingDate,
-        (JULIANDAY(TrainingDate) - JULIANDAY(PrevTrainingDate)) AS RecoveryDays,
-        Squat,
-        BenchPress,
-        Deadlift
-    FROM recovery_time
-    WHERE PrevTrainingDate IS NOT NULL
-    ORDER BY LifterID, TrainingDate
-    LIMIT 1000;
-    """
-    df = fetch_data(query)
-    st.subheader('Recovery Time Impact on Performance')
-    st.write(df.head())
-
-    # Visualization
-    chart = alt.Chart(df).mark_point().encode(
-        x='RecoveryDays',
-        y=alt.Y('Squat', title='Lift Weight'),
-        color=alt.Color('LifterID:N', legend=None)
-    ).properties(
-        width=600,
-        height=400,
-        title='Recovery Days vs Squat Performance'
-    )
-    st.altair_chart(chart, use_container_width=True)
-
-# Function to display Raw Nationals statistics
-def display_raw_nationals_stats():
-    query1 = """
-    SELECT COUNT(name) AS count_9_for_9_winners
-    FROM usapl
-    WHERE
-        Squat1Kg IS NOT NULL AND Squat1Kg > 0 AND
-        Squat2Kg IS NOT NULL AND Squat2Kg > 0 AND
-        Squat3Kg IS NOT NULL AND Squat3Kg > 0 AND
-        Bench1Kg IS NOT NULL AND Bench1Kg > 0 AND
-        Bench2Kg IS NOT NULL AND Bench2Kg > 0 AND
-        Bench3Kg IS NOT NULL AND Bench3Kg > 0 AND
-        Deadlift1Kg IS NOT NULL AND Deadlift1Kg > 0 AND
-        Deadlift2Kg IS NOT NULL AND Deadlift2Kg > 0 AND
-        Deadlift3Kg IS NOT NULL AND Deadlift3Kg > 0 AND
-        Event = 'SBD' AND
-        Equipment = 'Raw' AND
-        Place = 1 AND
-        (MeetName = 'Raw Nationals' OR MeetName = 'Mega Nationals');
-    """
-    df1 = fetch_data(query1)
-
-    query2 = """
-    SELECT COUNT(name) AS count_not_9_for_9_not_winners
-    FROM usapl
-    WHERE
-        (Squat1Kg IS NULL OR Squat1Kg <= 0 OR
-        Squat2Kg IS NULL OR Squat2Kg <= 0 OR
-        Squat3Kg IS NULL OR Squat3Kg <= 0 OR
-        Bench1Kg IS NULL OR Bench1Kg <= 0 OR
-        Bench2Kg IS NULL OR Bench2Kg <= 0 OR
-        Bench3Kg IS NULL OR Bench3Kg <= 0 OR
-        Deadlift1Kg IS NULL OR Deadlift1Kg <= 0 OR
-        Deadlift2Kg IS NULL OR Deadlift2Kg <= 0 OR
-        Deadlift3Kg IS NULL OR Deadlift3Kg <= 0) AND
-        Event = 'SBD' AND
-        Equipment = 'Raw' AND
-        Place != 1 AND
-        (MeetName = 'Raw Nationals' OR MeetName = 'Mega Nationals');
-    """
-    df2 = fetch_data(query2)
-
-    st.subheader('Raw Nationals Statistics')
-    col1, col2 = st.columns(2)
-    col1.metric("Winners with 9/9 Lifts", df1['count_9_for_9_winners'][0])
-    col2.metric("Non-Winners without 9/9 Lifts", df2['count_not_9_for_9_not_winners'][0])
+    """).dropna()
+    r, p = stats.spearmanr(df.RecoveryDays, df.Squat)
+    st.subheader("Days Between Sessions vs Squat (synthetic data)")
+    chart = alt.Chart(df).mark_circle(opacity=0.4).encode(
+        x=alt.X("RecoveryDays:Q", title="Days since previous session"),
+        y=alt.Y("Squat:Q", title="Squat (kg)"),
+        tooltip=["LifterID", "TrainingDate", "RecoveryDays", "Squat"],
+    ).properties(height=350)
+    st.altair_chart(chart, width="stretch")
+    st.caption(f"Spearman correlation = {r:.2f} (p = {p:.2f}). Sessions are mostly a week apart, "
+               "so there is little variation in recovery time to learn from.")
 
 
+# ---------------------------------------------------------------------------
+# App layout
+# ---------------------------------------------------------------------------
+st.set_page_config(page_title="Powerlifting Data Analysis", layout="wide")
+st.title("Powerlifting Data Analysis")
 
+if not DB_PATH.exists():
+    st.error("powerlifting.sqlite not found. Run `python build_db.py <openpowerlifting csv>` first.")
+    st.stop()
 
-
-
-
-
-# Streamlit app layout
-st.title('Powerlifting Data Analysis')
-
-
-
-
-# Display total lifters
-display_total_lifters()
-
-
-weight_and_gender_disparity()
-
-# Display youngest and oldest lifters
+display_overview()
+display_gender_breakdown()
+display_weight_class_breakdown()
 display_age_range()
 
-# Display USAPL members
-display_usapl_members()
-
-display_total_lifters()
-display_usapl_members()
-gender_disparity()
-weight_and_gender_disparity()
-display_age_range()
+st.header("USAPL Raw Nationals")
 display_raw_nationals_winners()
+display_nine_for_nine()
 display_performance_improvement()
-display_program_effectiveness()
-display_gym_vs_comp_prs()
+
+st.header("Training Log")
+display_program_comparison()
 display_recovery_impact()
-display_raw_nationals_stats()
-display_gym_vs_comp_prs()

@@ -1,4 +1,4 @@
-streamlit
+streamlit>=1.50   # width="stretch" on charts needs a recent version
 pandas
-sqlalchemy
-mysql-connector-python 
+altair
+scipy
