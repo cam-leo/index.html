@@ -14,34 +14,58 @@ output:
     code_folding: hide
     css: combined.css
     self_contained: false
-runtime: shiny
 ---
 <div class="content-wrapper">
 
 ```{r install-packages, include=FALSE}
 options(repos = c(CRAN = "https://cran.rstudio.com/"))
-packages <- c("shiny", "rlang", "caret", "dplyr", "ggplot2", "readr", "plotly", "actuar", "xaringan")
-sapply(packages, function(pkg) {
-  if (!require(pkg, character.only = TRUE)) {
-    install.packages(pkg)
-    library(pkg, character.only = TRUE)
-  }
-})
+packages <- c("shiny", "dplyr", "ggplot2", "actuar", "forecast", "mgcv", "survival", "MASS")
+for (pkg in packages) {
+  if (!requireNamespace(pkg, quietly = TRUE)) install.packages(pkg)
+}
 ```
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, fig.path = "figures/")
 # Load required libraries
 library(shiny)
-library(rlang)
-library(caret)
 library(dplyr)
-library(ggplot2) 
-library(readr)
-library(rmarkdown)
+library(ggplot2)
 library(actuar)
-library(xaringan)
-library(xfun)
+
+# ---- Data loading -------------------------------------------------------
+# Life tables come from the Human Mortality Database (https://mortality.org),
+# Canada, period 1x1. Put the raw HMD files in a `data/` folder next to this
+# file. If the combined (both sexes) file isn't there, the bundled
+# life_table.rds (same data, already cleaned) is used instead.
+read_hmd <- function(file) {
+  lt <- read.table(file, header = TRUE, skip = 2, stringsAsFactors = FALSE)
+  colnames(lt) <- c("Year", "Age", "mx", "qx", "ax", "lx", "dx", "Lx", "Tx", "ex")
+  lt$Age <- as.numeric(sub("+", "", lt$Age, fixed = TRUE))  # "110+" -> 110
+  lt[] <- lapply(lt, as.numeric)
+  lt
+}
+
+load_life_table <- function(sex = c("both", "male", "female")) {
+  sex <- match.arg(sex)
+  file <- file.path("data", c(both = "bltper_1x1.txt", male = "mltper_1x1.txt",
+                              female = "fltper_1x1.txt")[[sex]])
+  if (file.exists(file)) return(read_hmd(file))
+  if (sex == "both" && file.exists("life_table.rds")) {
+    lt <- readRDS("life_table.rds")
+    lt$Age[is.na(lt$Age)] <- 110  # the open age group "110+" was stored as NA
+    return(lt)
+  }
+  NULL
+}
+
+life_table_all <- load_life_table("both")
+if (is.null(life_table_all)) stop("No life table found: add data/bltper_1x1.txt or life_table.rds")
+life_table_2021 <- subset(life_table_all, Year == 2021)
+
+life_table_m_all <- load_life_table("male")
+life_table_f_all <- load_life_table("female")
+has_sex_tables <- !is.null(life_table_m_all) && !is.null(life_table_f_all)
 ```
 
 ---------------------------------------------------------------------------------
@@ -153,8 +177,8 @@ axis(1, at = time_periods)
 
 # Here we add labels for the separate cash flows
 for (i in 1:length(cash_flows)) {
-  lines(c(i, i), c(0, cash_flows[i]))
-  text(i, cash_flows[i], labels = cash_flows[i], pos = 3)
+  lines(c(i - 1, i - 1), c(0, cash_flows[i]))
+  text(i - 1, cash_flows[i], labels = cash_flows[i], pos = 3)
 }
 
 # Add horizontal line to connect all labels together and provide some more cohesiveness
@@ -434,7 +458,6 @@ interest_rates <- seq(0.01, 0.05, by = 0.005)
 accumulated_values <- sapply(interest_rates, function(i) {
   discount <- function(s, t) (1 + i) ^ - (t - s)
   sum(cash_flows * discount(6, 0:5))
-  sum(cash_flows * discount(6, 0:5))
 })
 
 # Plot the sensitivity analysis
@@ -553,51 +576,6 @@ So your parents would have to make a deposit of 6627.546 for each of the 4 years
 You want to take out a loan to open a new restaurant. You plan to take $1000 this year and $3000 next year. You plan to repay the money with equal yearly payments for the 10 years after next year (t=2 to t=11). Note this time the interest rate isn’t constant but changes over time. For the first 3 years it is 4%, then for the next 3 years it is 4.5%, then for the final 5 years it is 6%. How much will your yearly payments be?
 
 ```{r, fig.width=12, fig.height=6}
-
-cash_flows <- c(-1000, -3000, rep(516.39, 10))
-time_periods <- 0:12
-
-# Calculate padding for y-axis
-y_padding <- max(abs(cash_flows)) * 0.2
-
-# Create the plot
-plot(time_periods, rep(0, length(time_periods)), type = "n", 
-     ylim = c(min(cash_flows) - y_padding, max(cash_flows) + y_padding),
-     xlim = c(0, 12),
-     xlab = "t", ylab = "",
-     main = "Cash Flow Timeline",
-     xaxt = "n", yaxt = "n")
-
-
-axis(1, at = time_periods)
-
-
-for (i in 1:length(cash_flows)) {
-  lines(c(i-1, i-1), c(0, cash_flows[i]))
-  
-  
-  if (i <= 2) {
-    # First two negative cash flows
-    label <- round(cash_flows[i], 2)
-  } else if (i == 3 || i == 4 || i == 11 || i == 12) {
-    # First two and last two positive cash flows
-    label <- round(cash_flows[i], 2)
-  } else if (i == 7) {
-    
-    label <- "..."
-  } else {
-    
-    next
-  }
-  
-  text(i-1, cash_flows[i], labels = label, 
-       pos = ifelse(cash_flows[i] > 0, 3, 1),
-       offset = 0.5)
-}
-
-# Add horizontal line
-abline(h = 0)
-
 # Interest rates
 interest <- c(rep(0.04, 3), rep(0.045, 3), rep(0.06, 5))
 
@@ -632,15 +610,14 @@ cat("Yearly payments =", yearly_payment)
 
 cat("PV of repayments =",PV_repayments)
 
-
-cash_flows <- c(-1000, -3000, rep(516.39, 10))
+# Cash flow timeline using the computed payment
+cash_flows <- c(-1000, -3000, rep(round(yearly_payment, 2), 10))
 time_periods <- 0:12
 
 # Calculate padding for y-axis
 y_padding <- max(abs(cash_flows)) * 0.2
 
 
-options(repr.plot.width=12, repr.plot.height=6)  # Adjust as needed
 
 
 plot(time_periods, rep(0, length(time_periods)), type = "n", 
@@ -749,14 +726,15 @@ These monthly payments will be 683.0401
 
 #### Confidence Interval for Monthly Payments
 
-Using bootstrapping to estimate the confidence interval for the monthly payments.
+Using simulation to estimate a range for the monthly payments when the yearly interest rate is uncertain (normally distributed around 2.88% with a standard deviation of 0.25%).
 
 ```{r}
 # Bootstrapping for confidence interval of monthly payments
 set.seed(123)
 bootstrap_payments <- replicate(n_bootstrap, {
-  sampled_payments <- payments + rnorm(length(payments), mean = 0, sd = 10)
-  K_sim <- 100000 / sum(sampled_payments * discount_factors)
+  i_sim <- rnorm(1, mean = 0.0288, sd = 0.0025)
+  monthly_sim <- (1 + i_sim)^(1/12) - 1
+  K_sim <- 100000 / sum((1 + monthly_sim) ^ - (1:number_payments))
   return(K_sim)
 })
 
@@ -801,8 +779,9 @@ if (p_value_payment < 0.05) {
 
 **Import the life tables from [mortality.org](https://mortality.org/). We are going to import the dataset of Canada from 1921 - 2021.**
 ```{r}
-life_table <- read.table("C:\\Users\\megacrazyleo\\Desktop\\SQL\\R\\bltper_1x1.txt", header=FALSE, skip = 3, sep = "") 
-colnames(life_table) <- c("Year", "Age", "mx", "qx", "ax", "lx", "dx", "Lx", "Tx", "ex")
+# Loaded in the setup chunk (see load_life_table())
+life_table <- life_table_all
+head(life_table)
 ```
 
 
@@ -888,17 +867,20 @@ legend("topright", inset = c(-0.2,0),
 
 We can see that mortality rates from recent years are much lower compared to the earliest years. 
 
-####Hypothesis Testing on Mortality Rates
+#### Hypothesis Testing on Mortality Rates
 
 We can perform a hypothesis test to determine if the mortality rate at age 50 has significantly changed between 1921 and 2021.
 
 ```{r}
 # Hypothesis testing for mortality rates at age 50
-mort_1921 <- subset(life_table, Year == 1921 & Age == 50)$qx
-mort_2021 <- subset(life_table, Year == 2021 & Age == 50)$qx
-
-t_stat <- (mort_2021 - mort_1921) / sqrt((mort_1921 / lx[51]) + (mort_2021 / lx[51]))
-p_value <- 2 * pt(-abs(t_stat), df = lx[51] - 1)
+row_1921 <- subset(life_table, Year == 1921 & Age == 50)
+row_2021 <- subset(life_table, Year == 2021 & Age == 50)
+mort_1921 <- row_1921$qx
+mort_2021 <- row_2021$qx
+# two-proportion z-test using each year's survivors at age 50 as the sample size
+se <- sqrt(mort_1921 * (1 - mort_1921) / row_1921$lx + mort_2021 * (1 - mort_2021) / row_2021$lx)
+t_stat <- (mort_2021 - mort_1921) / se
+p_value <- 2 * pnorm(-abs(t_stat))
 cat("T-statistic:", t_stat, "\n")
 cat("P-value:", p_value, "\n")
 
@@ -976,7 +958,7 @@ bootstrap_ex <- replicate(n_bootstrap, {
 
 # Calculate 95% confidence interval
 ci_ex <- quantile(bootstrap_ex, c(0.025, 0.975))
-cat("95% Confidence Interval for Life Expectancy at age 0 in 2021:", ci_ex)
+cat("95% Confidence Interval for mean life expectancy at age 0 (1921-2021):", ci_ex)
 
 ```
 
@@ -985,22 +967,7 @@ Let us focus on the year 2021.
 
 **2021 Life Table**
 ```{r}
-life_table <- life_table[year == 2021, ]  #Getting only data from the year 2021
-year <- life_table$Year
-age <- life_table$Age
-qx <- life_table$qx
-mx <- life_table$mx
-ax <- life_table$ax
-lx <- life_table$lx
-dx <- life_table$dx
-Lx <- life_table$Lx
-Tx <- life_table$Tx
-ex <- life_table$ex
-px <- 1 - qx
-```
-
-```{r}
-life_table_2021 <- life_table[year == 2021, ]  #Getting only data from the year 2021
+life_table_2021 <- subset(life_table_all, Year == 2021)  #Getting only data from the year 2021
 year <- life_table_2021$Year
 age <- life_table_2021$Age
 qx <- life_table_2021$qx
@@ -1069,41 +1036,29 @@ suppressWarnings({
 
 We need to import the male and female datasets here
 
-```{r}
-#male data
-life_table_m <- read.table("C:\\Users\\megacrazyleo\\Desktop\\SQL\\R\\mltper_1x1.txt", header=FALSE, skip = 3, sep = "")
-colnames(life_table_m) <- c("Year", "Age", "mx", "qx", "ax", "lx", "dx", "Lx", "Tx", "ex")
-male_2021 <- life_table_m[life_table_m$Year == 2021, ]
-year_m <- male_2021$Year
+```{r, eval = has_sex_tables}
+# Male and female tables are loaded in the setup chunk from data/mltper_1x1.txt
+# and data/fltper_1x1.txt (HMD, Canada). Sections using them are skipped if absent.
+male_2021 <- subset(life_table_m_all, Year == 2021)
 age_m <- male_2021$Age
 qx_m <- male_2021$qx
-mx_m <- male_2021$mx
-ax_m <- male_2021$ax
 lx_m <- male_2021$lx
-dx_m <- male_2021$dx
-Lx_m <- male_2021$Lx
-Tx_m <- male_2021$Tx
 ex_m <- male_2021$ex
 
-#female data
-life_table_f <- read.table("C:\\Users\\megacrazyleo\\Desktop\\SQL\\R\\fltper_1x1.txt", header=FALSE, skip = 3, sep = "") 
-colnames(life_table_f) <- c("Year", "Age", "mx", "qx", "ax", "lx", "dx", "Lx", "Tx", "ex")
-female_2021 <- life_table_f[life_table_f$Year == 2021, ]
-year_f <- female_2021$Year
+female_2021 <- subset(life_table_f_all, Year == 2021)
 age_f <- female_2021$Age
 qx_f <- female_2021$qx
-mx_f <- female_2021$mx
-ax_f <- female_2021$ax
 lx_f <- female_2021$lx
-dx_f <- female_2021$dx
-Lx_f <- female_2021$Lx
-Tx_f <- female_2021$Tx
 ex_f <- female_2021$ex
+```
+
+```{r, echo = FALSE, results = "asis", eval = !has_sex_tables}
+cat("> *The male and female life tables (`data/mltper_1x1.txt`, `data/fltper_1x1.txt`) are not included in this folder, so the male vs female comparisons below are skipped. Download them from mortality.org (Canada, period 1x1) to enable them.*")
 ```
 
 **Plot male vs female mortality rates in the year 2021**
 
-```{r}
+```{r, eval = has_sex_tables}
 suppressWarnings({
   plot(age_m, qx_m, 
        main = "Mortality rates (Canada, 2021)", 
@@ -1126,7 +1081,7 @@ suppressWarnings({
 
 ```
 
-```{r}
+```{r, eval = has_sex_tables}
 
 
 suppressWarnings({
@@ -1163,7 +1118,7 @@ As we can see, females on average for every age have a lower mortality rate than
 
 **Find the probability for a 0 year old female and male in Canada to reach the age of 100 in 2021**
 
-```{r}
+```{r, eval = has_sex_tables}
 male_prob <- lx_m[100 + 1] / lx_m[0 + 1]
 print(paste("Male probability:", male_prob))
 
@@ -1211,7 +1166,7 @@ print(paste("M/F age 98 probability:", canada_prob_4))
 
 ```{r}
 
-ages <- c(0, 18, 75, 98)
+ages <- c(0, 18, 40, 75, 98)
 probs <- c(
   lx[100 + 1] / lx[0 + 1],
   lx[100 + 1] / lx[18 + 1],
@@ -1411,7 +1366,7 @@ cat("Survival prob's of a 25 year old:", kpx)
 
 ```{r}
 kqx <- kpx * qx[(25 + 1):length(qx)]
-cat("Deferred mortality prob's of a 25 year old:", kpx)
+cat("Deferred mortality prob's of a 25 year old:", kqx)
 ```
 
 <details>
@@ -1510,8 +1465,9 @@ suppressWarnings({
 **Curtate future lifetimes for all ages**
 
 ```{r}
+age2 <- life_table_2021$Age
 valid_ages <- age2[!is.na(age2)]
-future_lifetimes <- sapply(valid_ages, function(age) curtate_future_lifetime(age, life_table))
+future_lifetimes <- sapply(valid_ages, function(age) curtate_future_lifetime(age, life_table_2021))
 cat("Future lifetimes for all ages:", future_lifetimes)
 ```
 
@@ -1534,11 +1490,7 @@ plot(age2[!is.na(age2)], future_lifetimes, type = 'l', lwd = 2, col = "green", x
 ```{r}
 
 suppressWarnings({
-  life_table <- read.table("C:\\Users\\megacrazyleo\\Desktop\\SQL\\R\\bltper_1x1.txt", header=FALSE, skip = 3, sep = "") 
-  colnames(life_table) <- c("Year", "Age", "mx", "qx", "ax", "lx", "dx", "Lx", "Tx", "ex")
-
-  
-  life_table$Age <- as.numeric(life_table$Age)
+  life_table <- life_table_all
 
   # Subset the life table for age 18
   subset_18 <- subset(life_table, Age == 18)
@@ -1593,15 +1545,15 @@ cat("One year survival probabilities for 1981 birth year = ", px)
 **1981 cohort survival probability that (18) survives 5 more years**
 
 ```{r}
-prodp <- prod(px[(18 + 1):(22 + 1)])
+prodp <- with(life_table_1981, prod(1 - qx[Age %in% 18:22]))
 cat("Survival probability that an 18 year old survives 5 more years for 1981 birth year =", prodp)
 ```
 
-**1881 cohort survival probability that (18) survives 5 more years**
+**1903 cohort survival probability that (18) survives 5 more years** (the data start in 1921, so 1903 is the earliest birth year observed at age 18)
 
 ```{r}
-prodp2 <- with(subset(life_table, Year - Age == 1881), prod(1 - qx[(18 + 1):(22 + 1)]))
-cat("Survival probability that an 18 year old survives 5 more years for 1881 birth year =", prodp2)
+prodp2 <- with(subset(life_table, Year - Age == 1903 & Age %in% 18:22), prod(1 - qx))
+cat("Survival probability that an 18 year old survives 5 more years for 1903 birth year =", prodp2)
 
 ```
 
@@ -1616,6 +1568,9 @@ cat("PV =",PV)
 **5 year survival probabilities of (20)**
 
 ```{r}
+# Back to the 2021 period life table for the actuarial calculations
+qx <- life_table_2021$qx
+px <- 1 - qx
 kpx <- prod(px[(20 + 1):(24 + 1)])
 cat("kpx =", kpx)
 ```
@@ -1647,7 +1602,7 @@ cat("kpx =", kpx)
 
 ```{r}
 epv2 <- PV * kpx[c(5, 10, 30)]
-cat("Expected Present Value =", epv)
+cat("Expected Present Value =", epv2)
 ```
 
 ## Whole Life Annuity Due
@@ -1659,9 +1614,10 @@ A type of annuity where payments are made at the beginning of each period, start
 ```{r}
 kpx <-
   c(1, cumprod(px[(35+1):length(px)]))
-discount_facotrs <- (1+0.03)^-(0:(length(kpx)-1))
+discount_factors <- (1+0.03)^-(0:(length(kpx)-1))
 benefits <- rep(1,length(kpx))
-sum(benefits*discount_factors*kpx)
+wld <- sum(benefits*discount_factors*kpx)
+cat("Whole life annuity due =", wld)
 
 ```
 
@@ -1672,9 +1628,8 @@ A type of annuity where payments are made at the end of each period, starting im
 **Calculating the whole life immediate annuity of a 35 year old**
 
 ```{r}
-kpx <-
-  c(1, cumprod(px[(35+1):length(px)]))
-discount_facotrs <- (1+0.03)^-(1:(length(kpx)))
+kpx <- cumprod(px[(35+1):length(px)])
+discount_factors <- (1+0.03)^-(1:(length(kpx)))
 benefits <- rep(1,length(kpx))
 wid <- sum(benefits*discount_factors*kpx)
 cat("Whole life immediate annuity =", wid)
@@ -1685,7 +1640,7 @@ cat("Whole life immediate annuity =", wid)
 #### Function to compute the EPV of a whole life annuity due for a given age, interest rate i and life table
 
 ```{r}
-life_annuity_due <- function(age, i, life_table) {
+life_annuity_due <- function(age, i, life_table_2021) {
   px <- 1 - life_table$qx
   kpx <- c(1, cumprod(px[(age + 1):length(px)]))
   discount_factors <- (1 + i) ^ - (0:(length(kpx) - 1))
@@ -1696,24 +1651,24 @@ life_annuity_due <- function(age, i, life_table) {
 ## Shiny App for Life Annuity Calculator
 
 
-<iframe src="http://camleo.shinyapps.io/life_annuity_app" width="100%" height="300"></iframe>
+<iframe src="https://camleo.shinyapps.io/life_annuity_app" width="100%" height="300"></iframe>
 
 
 
-**EPV of a whole life annuity due for (20) at interest rate 2% using life_table**
+**EPV of a whole life annuity due for (20) at interest rate 2% using the 2021 life table**
 
 ```{r}
-epv3 <- life_annuity_due(20, 0.02, life_table)
+epv3 <- life_annuity_due(20, 0.02, life_table_2021)
 cat("EPV of whole life annuity due =", epv3)
 ```
 
-**EPV of a whole life annuity due for (20) at interest rate 5% and for (65) at interest rate 2% using life_table**
+**EPV of a whole life annuity due for (20) at interest rate 5% and for (65) at interest rate 2% using the 2021 life table**
 
 ```{r}
-epv4 <- life_annuity_due(20, 0.05, life_table)
+epv4 <- life_annuity_due(20, 0.05, life_table_2021)
 cat("EPV of life annuity due for 20 year old at 5% interest rate =", epv4)
-epv5 <- life_annuity_due(65, 0.02, life_table)
-cat("EPV of life annuity due for 65 year old at 5% interest rate =", epv5)
+epv5 <- life_annuity_due(65, 0.02, life_table_2021)
+cat("EPV of life annuity due for 65 year old at 2% interest rate =", epv5)
 
 ```
 
@@ -1721,7 +1676,7 @@ cat("EPV of life annuity due for 65 year old at 5% interest rate =", epv5)
 #### Function to compute the EPV of a whole life immediate annuity for a given age, interest rate i and life table
 
 ```{r}
-life_immediate_annuity <- function(age, i, life_table) {
+life_immediate_annuity <- function(age, i, life_table_2021) {
   px <- 1 - life_table$qx
   kpx <- cumprod(px[(age + 1):length(px)])
   discount_factors <- (1 + i) ^ - (1:length(kpx))
@@ -1729,10 +1684,10 @@ life_immediate_annuity <- function(age, i, life_table) {
 }
 ```
 
-**EPV of a whole life immediate annuity for (20) at interest rate 2% using life_table**
+**EPV of a whole life immediate annuity for (20) at interest rate 2% using the 2021 life table**
 
 ```{r}
-epv6 <- life_immediate_annuity(20, 0.02, life_table)
+epv6 <- life_immediate_annuity(20, 0.02, life_table_2021)
 cat("EPV of life annuity immediate for a 20 year old using 2% interest rate =", epv6)
 ```
 
@@ -1741,7 +1696,7 @@ cat("EPV of life annuity immediate for a 20 year old using 2% interest rate =", 
 #### Function to compute the EPV of a temporary life annuity due for a given age, period of n years, interest rate i and life table
 
 ```{r}
-temporary_life_annuity_due <- function(age, n, i, life_table) {
+temporary_life_annuity_due <- function(age, n, i, life_table_2021) {
   px <- 1 - life_table$qx
   kpx <- c(1, cumprod(px[(age + 1):(age + n - 1)]))
   discount_factors <- (1 + i) ^ - (0:(n - 1))
@@ -1751,7 +1706,7 @@ temporary_life_annuity_due <- function(age, n, i, life_table) {
 
 ## Shiny app for Temporary Life Annuity Calculator
 
-```{r}
+```{r, eval = FALSE}
 library(shiny)
 
 ui <- fluidPage(
@@ -1771,7 +1726,7 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   output$epv <- renderText({
-    epv <- temporary_life_annuity_due(input$age, input$term, input$interest, life_table)
+    epv <- temporary_life_annuity_due(input$age, input$term, input$interest, life_table_2021)
     paste0("$", round(epv, 2))
   })
 }
@@ -1779,12 +1734,22 @@ server <- function(input, output) {
 shinyApp(ui = ui, server = server)
 ```
 
+*The live Shiny app can't run on this static GitHub Pages site. Open `index.Rmd` in RStudio, run the earlier chunks, then run this chunk to launch it. Sample results:*
+
+```{r, echo = FALSE}
+grid <- expand.grid(Age = c(20, 40, 65), Term = c(10, 20), Interest = c(0.02, 0.05))
+grid$EPV <- round(mapply(temporary_life_annuity_due, grid$Age, grid$Term, grid$Interest,
+                         MoreArgs = list(life_table = life_table_2021)), 4)
+knitr::kable(grid, caption = "EPV of a temporary life annuity due of 1 per year (2021 Canada table)")
+```
 
 
-**EPV of a temporary life annuity due for (20) over 10 years at interest rate 2% using life_table**
+
+
+**EPV of a temporary life annuity due for (20) over 10 years at interest rate 2% using the 2021 life table**
 
 ```{r}
-epvt <- temporary_life_annuity_due(20, 10, 0.02, life_table)
+epvt <- temporary_life_annuity_due(20, 10, 0.02, life_table_2021)
 cat("EPV of temporary life annuity due for 20 year old over 10 years at 2% interest rate =", epvt)
 ```
 
@@ -1843,7 +1808,7 @@ cat("PV of pension at age 20 =",PV_20)
 
 ```{r}
 # Survival probabilities of (65) up to age 100
-px <- 1 - life_table$qx
+px <- 1 - life_table_2021$qx
 kpx <- c(1, cumprod(px[(65 + 1):(99 + 1)]))
 
 
@@ -2013,6 +1978,9 @@ legend("topright", legend = c("Actual", "Predicted"), col = c("blue", "red"), lt
 You have bought a life insurance that is sold to 20 year olds and will pay 10000 at the end of the year of death if your death occurs at age 30. How much is the expected present value (EPV)
 
 ```{r}
+qx <- life_table_2021$qx
+px <- 1 - qx
+
 # 10-year survival probability of (20)
 kpx <- prod(px[(20 + 1):(29 + 1)])
 kpx
@@ -2106,7 +2074,7 @@ deferred_life_insurance <- function(age, u, i, life_table_2021) {
   kpx <- c(1, cumprod(px[(age + 1):(length(px) - 1)]))
   kqx <- kpx * qx[(age + 1):length(qx)]
   discount_factors <- (1 + i) ^ - (1:length(kqx))
-  benefits <- c(rep(0, u), rep(1, length(kpx) - u))
+  benefits <- c(rep(0, u), rep(1, length(kqx) - u))
   sum(benefits * discount_factors * kqx)
 }
 
@@ -2167,7 +2135,7 @@ cat("Premium level =", (EPV_death_benefits + EPV_pure_endowment) / EPV_rho)
   This Shiny app allows users to calculate the Expected Present Value (EPV) of different types of life insurance policies (whole life, temporary, or deferred). The user inputs their age, interest rate, and the type of insurance, and the app calculates the EPV using predefined functions for each insurance type.
 </details>
 
-```{r}
+```{r, eval = FALSE}
 library(shiny)
 
 ui <- fluidPage(
@@ -2195,9 +2163,9 @@ ui <- fluidPage(
 server <- function(input, output) {
   output$epv <- renderText({
     epv <- switch(input$type,
-                  "whole" = whole_life_insurance(input$age, input$interest, life_table),
-                  "temp" = temporary_life_insurance(input$age, input$term, input$interest, life_table),
-                  "deferred" = deferred_life_insurance(input$age, input$term, input$interest, life_table))
+                  "whole" = whole_life_insurance(input$age, input$interest, life_table_2021),
+                  "temp" = temporary_life_insurance(input$age, input$term, input$interest, life_table_2021),
+                  "deferred" = deferred_life_insurance(input$age, input$term, input$interest, life_table_2021))
     paste0("$", round(epv, 2))
   })
 }
@@ -2206,6 +2174,17 @@ shinyApp(ui = ui, server = server)
 
 
 ```
+
+*The live Shiny app can't run on this static GitHub Pages site. Open `index.Rmd` in RStudio, run the earlier chunks, then run this chunk to launch it. Sample results:*
+
+```{r, echo = FALSE}
+grid <- expand.grid(Age = c(20, 40, 65), Interest = c(0.02, 0.05))
+grid$`Whole life` <- mapply(whole_life_insurance, grid$Age, grid$Interest, MoreArgs = list(life_table_2021 = life_table_2021))
+grid$`Temporary (20 yrs)` <- mapply(temporary_life_insurance, grid$Age, 20, grid$Interest, MoreArgs = list(life_table_2021 = life_table_2021))
+grid$`Deferred (20 yrs)` <- mapply(deferred_life_insurance, grid$Age, 20, grid$Interest, MoreArgs = list(life_table_2021 = life_table_2021))
+knitr::kable(grid, digits = 4, caption = "EPV of a death benefit of 1 (2021 Canada table)")
+```
+
 
 
 ### Integrating Survival Models
@@ -2249,8 +2228,7 @@ suppressWarnings({
   library(survival)
   
 
-  life_table <- read.table("C:\\Users\\megacrazyleo\\Desktop\\SQL\\R\\bltper_1x1.txt", header=FALSE, skip = 3, sep = "") 
-  colnames(life_table) <- c("Year", "Age", "mx", "qx", "ax", "lx", "dx", "Lx", "Tx", "ex")
+  life_table <- life_table_all
   available_columns <- colnames(life_table)
 
   required_columns <- c("Year", "Age", "mx", "dx", "lx")
@@ -2326,21 +2304,13 @@ suppressWarnings({
 </details>
 
 ```{r}
-# Create synthetic data for demonstration
-set.seed(123)
-age_range <- 0:110
-
-# Synthetic observed data for life_table_2021
-life_table_2021 <- data.frame(
-  Age = age_range,
-  qx = runif(length(age_range), min = 0.0001, max = 0.01)
-)
-
-# Synthetic expected data for filtered_life_table
-filtered_life_table <- data.frame(
-  Age = age_range,
-  qx = runif(length(age_range), min = 0.0001, max = 0.01)
-)
+# Observed experience: the 2021 table. Expected (prior) experience: the
+# average 2015-2019 table, i.e. pre-pandemic mortality.
+filtered_life_table <- life_table_all %>%
+  filter(Year >= 2015, Year <= 2019) %>%
+  group_by(Age) %>%
+  summarise(qx = mean(qx), .groups = "drop") %>%
+  as.data.frame()
 
 # Ensure observed_qx and expected_qx cover the same age range
 common_ages <- intersect(life_table_2021$Age, filtered_life_table$Age)
@@ -2375,9 +2345,10 @@ adjusted_qx <- simple_credibility(observed_qx, expected_qx, credibility_factor)
 
 
 # Plot the adjusted mortality rates
-plot(life_table_2021_filtered$Age, adjusted_qx, type = "l", col = "green", xlab = "Age", ylab = "Adjusted Mortality Rate", main = "Adjusted Mortality Rates using Credibility Theory")
+plot(life_table_2021_filtered$Age, adjusted_qx, type = "l", col = "green", xlab = "Age", ylab = "Mortality Rate (log scale)", main = "Adjusted Mortality Rates using Credibility Theory", log = "y")
 lines(life_table_2021_filtered$Age, observed_qx, col = "blue")
-legend("topright", legend = c("Adjusted", "Observed"), col = c("green", "blue"), lty = 1)
+lines(life_table_2021_filtered$Age, expected_qx, col = "grey50", lty = 2)
+legend("topleft", legend = c("Adjusted", "Observed (2021)", "Expected (2015-2019 avg)"), col = c("green", "blue", "grey50"), lty = c(1, 1, 2))
 
 
 
@@ -2417,7 +2388,7 @@ cat("EPV of whole life insurance with adjusted mortality rates =", epv_adjusted)
 
 ## Shiny App for Life Insurance Calculator with Adjusted Mortality Rates
 
-```{r}
+```{r, eval = FALSE}
 library(shiny)
 
 ui <- fluidPage(
@@ -2445,13 +2416,12 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   output$epv <- renderText({
-    observed_qx <- life_table_2021$qx
-    expected_qx <- life_table$qx
     adjusted_qx <- simple_credibility(observed_qx, expected_qx, input$credibility)
+    adjusted_table <- data.frame(Age = life_table_2021_filtered$Age, qx = adjusted_qx)
     epv <- switch(input$type,
                   "whole" = whole_life_insurance_adjusted(input$age, input$interest, adjusted_qx),
-                  "temp" = temporary_life_insurance(input$age, input$term, input$interest, life_table),
-                  "deferred" = deferred_life_insurance(input$age, input$term, input$interest, life_table))
+                  "temp" = temporary_life_insurance(input$age, input$term, input$interest, adjusted_table),
+                  "deferred" = deferred_life_insurance(input$age, input$term, input$interest, adjusted_table))
     paste0("$", round(epv, 2))
   })
 }
@@ -2460,6 +2430,19 @@ shinyApp(ui = ui, server = server)
 
 
 ```
+
+*The live Shiny app can't run on this static GitHub Pages site. Open `index.Rmd` in RStudio, run the earlier chunks, then run this chunk to launch it. Sample results:*
+
+```{r, echo = FALSE}
+cred <- c(0, 0.5, 0.8, 1)
+res <- data.frame(`Credibility factor` = cred, check.names = FALSE)
+for (a in c(20, 40, 65)) {
+  res[[paste0("Whole life, age ", a)]] <- sapply(cred, function(z)
+    whole_life_insurance_adjusted(a, 0.02, simple_credibility(observed_qx, expected_qx, z)))
+}
+knitr::kable(res, digits = 4, caption = "EPV of whole life insurance of 1 at 2% using credibility-adjusted rates")
+```
+
 
 
 
@@ -2517,7 +2500,9 @@ summary(glm_cloglog)
 AIC(glm_logit, glm_probit, glm_cloglog)
 
 # Predict survival probabilities using the best model (lowest AIC)
-best_glm <- glm_logit 
+aics <- AIC(glm_logit, glm_probit, glm_cloglog)
+best_glm <- list(glm_logit, glm_probit, glm_cloglog)[[which.min(aics$AIC)]]
+cat("Best model by AIC:", rownames(aics)[which.min(aics$AIC)], "\n")
 predicted_qx_glm <- predict(best_glm, newdata = life_table, type = "response")
 predicted_px_glm <- 1 - predicted_qx_glm
 
@@ -2555,7 +2540,8 @@ legend("topright", legend = c("Actual", "Predicted"), col = c("blue", "red"), lt
     <li>The ARIMA model helps us identify patterns in the data and forecast future values.</li>
   </ul>
   
-  <pre><code>arima_model <- auto.arima(agg_mortality$qx)
+  <pre><code>qx_ts <- ts(agg_mortality$qx, start = min(agg_mortality$Year))
+arima_model <- auto.arima(qx_ts)
 summary(arima_model)</code></pre>
   
   <p>3. <strong>Forecasting Future Mortality Rates</strong>:</p>
@@ -2572,7 +2558,7 @@ summary(arima_model)</code></pre>
   </ul>
   
   <pre><code>plot(forecasts_arima, main = "Forecasted Mortality Rates (ARIMA)")
-lines(agg_mortality$Year, agg_mortality$qx, col = "black")
+lines(qx_ts, col = "black")
 legend("topright", legend = c("Historical", "Forecasted"), col = c("black", "blue"), lty = 1:1)</code></pre>
   </ul>
 
@@ -2589,16 +2575,17 @@ library(forecast)
 agg_mortality <- aggregate(qx ~ Year, data = life_table, FUN = mean)
 
 # Fit an ARIMA model to the historical mortality rates
-arima_model <- auto.arima(agg_mortality$qx)
+qx_ts <- ts(agg_mortality$qx, start = min(agg_mortality$Year))
+arima_model <- auto.arima(qx_ts)
 summary(arima_model)
 
 
 forecasts_arima <- forecast(arima_model, h = 10)
 
 
-plot(forecasts_arima, main = "Forecasted Mortality Rates (ARIMA)", xlab = "Year", ylab = "Mortality Rate")
-lines(agg_mortality$Year, agg_mortality$qx, col = "black")
-legend("topright", legend = c("Historical", "Forecasted"), col = c("black", "blue"), lty = 1)
+plot(forecasts_arima, main = "Forecasted Mortality Rates (ARIMA)", xlab = "Year", ylab = "Mortality Rate", fcol = "red")
+lines(qx_ts, col = "blue")
+legend("topright", legend = c("Historical", "Forecasted"), col = c("blue", "red"), lty = 1)
 
 
 ```
@@ -2722,52 +2709,7 @@ The blue line shows the historical mortality rates over the years and how it cha
 <!-- # ``` -->
 
 
-### Shiny App for Life Insurance Calculator with Adjusted Mortality Rates
 
-```{r}
-library(shiny)
-
-ui <- fluidPage(
-  titlePanel("Life Insurance Calculator with Adjusted Mortality Rates"),
-  sidebarLayout(
-    sidebarPanel(
-      numericInput("age", "Age:", 20, min = 0, max = 110),
-      numericInput("interest", "Interest Rate:", 0.02, min = 0, max = 0.2, step = 0.001),
-      numericInput("credibility", "Credibility Factor:", 0.8, min = 0, max = 1, step = 0.1),
-      selectInput("type", "Insurance Type:", 
-                  choices = c("Whole Life" = "whole", 
-                              "Temporary" = "temp", 
-                              "Deferred" = "deferred")),
-      conditionalPanel(
-        condition = "input.type == 'temp' || input.type == 'deferred'",
-        numericInput("term", "Term/Deferment (years):", 10, min = 1, max = 50)
-      )
-    ),
-    mainPanel(
-      h3("Expected Present Value:"),
-      textOutput("epv")
-    )
-  )
-)
-
-server <- function(input, output) {
-  output$epv <- renderText({
-    observed_qx <- life_table_2021$qx
-    expected_qx <- life_table$qx
-    adjusted_qx <- simple_credibility(observed_qx, expected_qx, input$credibility)
-    epv <- switch(input$type,
-                  "whole" = whole_life_insurance_adjusted(input$age, input$interest, adjusted_qx),
-                  "temp" = temporary_life_insurance(input$age, input$term, input$interest, life_table),
-                  "deferred" = deferred_life_insurance(input$age, input$term, input$interest, life_table))
-    paste0("$", round(epv, 2))
-  })
-}
-
-shinyApp(ui = ui, server = server)
-
-
-
-```
 
 
 
