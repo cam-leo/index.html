@@ -34,9 +34,11 @@ This repository contains an R-based actuarial calculator for life insurance and 
 
 1. Clone this repository
 2. Ensure you have R and the required packages installed (shiny, etc.)
-3. Run the Shiny app:
+3. Render the report (data comes from `life_table.rds`, or the raw Human Mortality Database files placed in a `data/` folder: `bltper_1x1.txt`, plus `mltper_1x1.txt` and `fltper_1x1.txt` for the male vs female sections):
    ```r
-   shiny::runApp("path_to_app_directory")
+   rmarkdown::render("index.Rmd")
+   ```
+4. The Shiny calculators are shown as code with sample result tables on the static site. To use them live, open `index.Rmd` in RStudio, run the earlier chunks, then run a calculator chunk.
 
 Future Enhancements
 
