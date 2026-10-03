@@ -1,24 +1,124 @@
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  line-height: 1.6;
-  color: #333;
-  background-color: #f8f9fa;
-  font-size: 18px;
-  margin: 0;
-  padding: 0;
+/* =========================================================================
+   Life Insurance Analysis: navy theme
+   ========================================================================= */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+
+:root {
+  --navy-900: #0b2545;   /* sidebar, title */
+  --navy-700: #13315c;   /* headings */
+  --navy-500: #1d4e89;   /* links, accents */
+  --navy-100: #e8eef7;   /* tints */
+  --navy-50:  #f3f6fb;
+  --ink:      #1f2933;   /* body text */
+  --muted:    #52606d;
+  --line:     #d9e2ec;
+  --page:     #ffffff;
 }
 
-/* ---- Desktop layout: fixed contents sidebar on the left, wide content on the right ---- */
+/* ---- Base ---------------------------------------------------------------- */
+html, body {
+  background: var(--page);
+}
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--ink);
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+p { margin: 0 0 1em; }
+
+a { color: var(--navy-500); }
+a:hover, a:focus { color: var(--navy-900); }
+
+strong { font-weight: 600; }
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 2.2em 0;
+}
+
+/* ---- Title block ---------------------------------------------------------- */
+#header {
+  margin: 10px 0 30px;
+  padding-bottom: 24px;
+  border-bottom: 3px solid var(--navy-900);
+}
+
+h1.title {
+  font-size: 44px;
+  font-weight: 700;
+  color: var(--navy-900);
+  letter-spacing: -0.02em;
+  margin: 0 0 10px;
+  padding: 0;
+  border: 0;
+}
+
+h4.author, h4.date {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--muted);
+  margin: 4px 0;
+}
+
+h4.author a { color: var(--navy-500); }
+
+/* ---- Headings ------------------------------------------------------------- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: inherit;
+  color: var(--navy-700);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+h1 {                       /* part titles: Cash Flows, Life Tables, ... */
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--navy-900);
+  margin-top: 2.2em;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+h2 { font-size: 27px; margin-top: 1.9em; }
+h3 { font-size: 22px; margin-top: 1.6em; }
+h4 { font-size: 19px; margin-top: 1.4em; }
+h5 { font-size: 17px; margin-top: 1.3em; }
+h6 { font-size: 16px; }
+
+/* highlighted terms in the introduction (were inline blue) */
+.term {
+  color: var(--navy-500);
+  font-weight: 500;
+}
+
+/* the (?) hover hints */
+sup a[title] {
+  color: var(--navy-500);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.75em;
+  margin-left: 1px;
+  cursor: help;
+}
+
+/* ---- Desktop layout: fixed navy sidebar, content fills the window ------- */
 @media (min-width: 992px) {
   /* R Markdown caps the page at 1200px and centres it; use the full window instead.
      (Extra class in the selector so this wins over R Markdown's own rule, which loads later.) */
   div.container-fluid.main-container {
     max-width: none;
     margin: 0;
-    padding: 20px 40px 20px 300px;   /* 300px leaves room for the sidebar */
+    padding: 24px 48px 40px 340px;   /* 340px leaves room for the sidebar */
   }
 
-  /* The sidebar is fixed, so its grid column doesn't need any width */
+  /* the sidebar is fixed, so its grid column doesn't need any width */
   .main-container > .row > .col-md-3 {
     width: 0;
     padding: 0;
@@ -26,7 +126,7 @@ body {
 
   .main-container > .row > .toc-content {
     width: 100%;
-    max-width: 1400px;               /* keeps lines readable on very wide screens */
+    max-width: 1800px;
     padding-left: 15px;
     padding-right: 15px;
   }
@@ -34,78 +134,250 @@ body {
   #TOC,
   div.tocify {
     position: fixed;
-    top: 20px;
-    left: 20px;
-    width: 250px;
-    max-width: 250px;
-    max-height: calc(100vh - 40px);
+    top: 0;
+    left: 0;
+    width: 290px;
+    max-width: 290px;
+    height: 100vh;
+    max-height: 100vh;
     overflow-y: auto;
     margin: 0;
+    padding: 28px 14px;
+    background: var(--navy-900);
+    border: 0;
+    border-radius: 0;
     z-index: 1000;
+  }
+
+  #TOC::before {
+    content: "Contents";
+    display: block;
+    padding: 0 12px 14px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  #TOC .list-group-item {
+    background: transparent;
+    border: 0;
+    color: #c9d6e8;
+  }
+
+  #TOC .list-group-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+  }
+
+  #TOC .list-group-item.active,
+  #TOC .list-group-item.active:hover,
+  #TOC .list-group-item.active:focus {
+    background: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+    box-shadow: inset 3px 0 0 #8fb3de;
   }
 }
 
-.content-wrapper {
-  max-width: 1400px;
+/* ---- Sidebar items (all sizes) ------------------------------------------- */
+.tocify .list-group-item {
+  font-size: 14.5px;
+  padding: 7px 12px;
+  border-radius: 6px !important;
+  margin-bottom: 1px;
 }
 
-h1, h2, h3, h4, h5, h6 { color: #0056b3; }
-h1 { font-size: 36px; }
-h2 { font-size: 32px; }
-h3 { font-size: 28px; }
-h4 { font-size: 24px; }
-h5 { font-size: 22px; }
-h6 { font-size: 20px; }
+.tocify-subheader .tocify-item {
+  font-size: 13.5px;
+  padding-left: 22px;
+}
+
+.list-group-item.active,
+.list-group-item.active:hover,
+.list-group-item.active:focus {
+  background-color: var(--navy-500);
+  border-color: var(--navy-500);
+}
+
+.content-wrapper {
+  max-width: 1800px;
+}
+
+/* ---- Math ------------------------------------------------------------------ */
+.katex { font-size: 1.08em; }
+
+.katex-display {
+  margin: 1.1em 0 1.4em;
+  padding: 14px 18px;
+  background: var(--navy-50);
+  border-left: 3px solid var(--navy-500);
+  border-radius: 4px;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* ---- Callouts (the expandable explanations) ----------------------------- */
+details {
+  margin: 1.2em 0;
+  padding: 0 18px;
+  background: var(--navy-50);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--navy-500);
+  border-radius: 6px;
+}
+
+details > summary {
+  padding: 12px 0;
+  color: var(--navy-700);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+details[open] > summary {
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 12px;
+}
+
+details p,
+details > :not(summary) {
+  color: var(--ink);
+  font-weight: 400;
+}
+
+details[open] {
+  padding-bottom: 6px;
+}
+
+/* math boxes inside callouts don't need a second box */
+details .katex-display {
+  background: transparent;
+  border-left: 0;
+  padding: 4px 0;
+}
+
+/* ---- Code ------------------------------------------------------------------ */
+code, pre, kbd, samp {
+  font-family: "JetBrains Mono", SFMono-Regular, Menlo, Consolas, monospace;
+}
 
 code {
-  background-color: #e9ecef;
-  padding: 2px 4px;
+  font-size: 0.86em;
+  color: var(--navy-700);
+  background-color: var(--navy-100);
+  padding: 2px 5px;
   border-radius: 4px;
-  font-size: 16px;
 }
 
+pre {
+  font-size: 14px;
+  line-height: 1.55;
+  background: #f7f9fc;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+
+pre code {
+  color: inherit;
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* printed R output */
+pre:not(.r) {
+  background: #ffffff;
+  border-left: 3px solid #8fb3de;
+}
+
+/* code-folding buttons */
+.btn-default,
+.btn-default.btn-xs {
+  color: var(--navy-700);
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  font-weight: 500;
+}
+
+.btn-default:hover,
+.btn-default:focus,
+.open > .dropdown-toggle.btn-default {
+  color: #ffffff;
+  background: var(--navy-500);
+  border-color: var(--navy-500);
+}
+
+/* ---- Charts --------------------------------------------------------------- */
+.main-container img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 18px 0 26px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+/* ---- Tables --------------------------------------------------------------- */
 table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0;
-}
-
-table, th, td {
-  border: 1px solid #dee2e6;
+  margin: 18px 0 24px;
+  font-size: 15.5px;
 }
 
 th, td {
-  padding: 12px;
+  padding: 10px 14px;
   text-align: left;
+  border: 0;
+  border-bottom: 1px solid var(--line);
 }
 
-th {
-  background-color: #f2f2f2;
+th,
+.table > thead > tr > th {
+  background: var(--navy-900);
+  color: #ffffff;
+  font-weight: 600;
+  border-bottom: 0;
 }
 
-.bootstrap-styles {
-  font-size: 18px;
+tbody tr:nth-child(even) { background: var(--navy-50); }
+
+caption {
+  color: var(--muted);
+  font-size: 14px;
+  padding: 0 0 8px;
+  caption-side: top;
 }
 
-.bootstrap-styles .btn {
-  font-size: 16px;
-}
-
-pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan,
-.r-output, pre code, code {
-  font-size: 16px;
-}
-
-/* ---- Tablets and phones: contents list on top, content full width ---- */
+/* ---- Tablets and phones: contents list on top, content full width ------- */
 @media (max-width: 991px) {
   div.container-fluid.main-container {
     max-width: none;
     padding: 20px 16px;
   }
 
+  h1.title { font-size: 34px; }
+  h1 { font-size: 28px; }
+  h2 { font-size: 23px; }
+
   /* wide tables scroll sideways instead of stretching the page */
   .toc-content table {
     display: block;
     overflow-x: auto;
   }
+}
+
+/* first divider right under the title block is redundant with its border */
+.content-wrapper > hr:first-of-type { display: none; }
+
+/* output text wraps at spaces, not in the middle of numbers */
+pre, pre code {
+  white-space: pre-wrap;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
